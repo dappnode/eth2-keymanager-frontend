@@ -34,7 +34,7 @@ export default function ImportScreen() {
       }}>
         <Typography variant='h4' sx={{
           marginBottom: 4
-        }}><b>Import Validator Keystore</b></Typography>
+        }}><b>Import Validator Keystore(s)</b></Typography>
         <Typography sx={{
           marginBottom: 4
         }}>

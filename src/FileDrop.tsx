@@ -16,7 +16,7 @@ const baseStyle = {
   borderRadius: 2,
   borderColor: '#666666',
   borderStyle: 'dashed',
-  backgroundColor: '#3e3e3e',
+  backgroundColor: '#323232',
   color: '#f0f0f0',
   outline: 'none',
   transition: 'border .24s ease-in-out',

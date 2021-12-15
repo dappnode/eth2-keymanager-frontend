@@ -1,31 +1,39 @@
 import './App.css';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Card, Typography } from '@mui/material';
 import KeystoreList from './KeystoreList';
 import { Link } from "react-router-dom";
+import { GridSelectionModel } from '@mui/x-data-grid';
+import { useState } from 'react';
 
 export default function ListScreen() {
+
+  const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   return (
     <Box
       sx={{
-        marginTop: 8,
+        margin: 8,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'left',
       }}
     >
-      <Box
-        sx={{
-          marginBottom: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'end',
-          width: '100%'
-        }}
-      >
-        <Link to="/import"><Button variant="contained" size='large'>Import Keystores</Button></Link>
-      </Box>
-
-      <KeystoreList />
+      <Card sx={{ padding: 4 }}>
+        <Typography variant='h5' sx={{ marginBottom: 4 }}><b>Your Validator Accounts List</b></Typography>
+        <KeystoreList selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+        <Box
+          sx={{
+            marginTop: 4,
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            alignContent: 'end',
+            alignItems: 'end',
+            width: '100%'
+          }}
+        >
+          <Link to="/import"><Button variant="contained" size='large' >Import Keystores</Button></Link>
+          <Button variant='contained' size='large' color='error' disabled={selectedRows.length == 0} sx={{ marginRight: 4 }}>Delete Keystores</Button>
+        </Box>
+      </Card>
     </Box>
   );
 }
