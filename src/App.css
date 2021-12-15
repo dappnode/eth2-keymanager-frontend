@@ -24,9 +24,25 @@
   color: white;
 }
 
+.tableHeader {
+  font-weight: bold;
+  color: #4d88e7;
+}
+
 .App-link {
   color: #61dafb;
 }
+
+a:link { text-decoration: none; }
+
+
+a:visited { text-decoration: none; }
+
+
+a:hover { text-decoration: none; }
+
+
+a:active { text-decoration: none; }
 
 @keyframes App-logo-spin {
   from {
