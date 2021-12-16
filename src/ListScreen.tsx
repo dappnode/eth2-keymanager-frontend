@@ -4,6 +4,8 @@ import KeystoreList from './KeystoreList';
 import { Link } from "react-router-dom";
 import { GridSelectionModel } from '@mui/x-data-grid';
 import { useState } from 'react';
+import BackupIcon from '@mui/icons-material/Backup';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export default function ListScreen() {
 
@@ -30,8 +32,8 @@ export default function ListScreen() {
             width: '100%'
           }}
         >
-          <Link to="/import"><Button variant="contained" size='large' >Import Keystores</Button></Link>
-          <Button variant='contained' size='large' color='error' disabled={selectedRows.length == 0} sx={{ marginRight: 4 }}>Delete Keystores</Button>
+          <Link to="/import"><Button variant="contained" size='large' endIcon={<BackupIcon />}>Import Keystores</Button></Link>
+          <Button variant='contained' size='large' color='error' disabled={selectedRows.length == 0} sx={{ marginRight: 4 }} endIcon={<DeleteForeverIcon />}>Delete Keystores</Button>
         </Box>
       </Card>
     </Box>

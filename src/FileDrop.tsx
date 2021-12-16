@@ -14,9 +14,9 @@ const baseStyle = {
   padding: '20px',
   borderWidth: 2,
   borderRadius: 2,
-  borderColor: '#666666',
+  borderColor: '#424242',
   borderStyle: 'dashed',
-  backgroundColor: '#323232',
+  backgroundColor: '#121212',
   color: '#f0f0f0',
   outline: 'none',
   transition: 'border .24s ease-in-out',
@@ -40,12 +40,6 @@ interface Props {
 }
 
 export default function FileDrop({ callback }: Props) {
-
-  // const onDrop = useCallback(acceptedFiles => {
-  //   // Do something with the files
-  // }, [])
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
   const {
     acceptedFiles,
     getRootProps,
@@ -78,8 +72,8 @@ export default function FileDrop({ callback }: Props) {
       <input {...getInputProps()} />
       {
         isDragActive ?
-          <p>Drop the files here ...</p> :
-          <p>Drop keystore JSON files here, or click to select files</p>
+          <p>Drop the file here ...</p> :
+          <p>Drop JSON file here, or click to select file</p>
       }
     </div>
     </div>
