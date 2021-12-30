@@ -6,6 +6,7 @@ import { useState } from 'react';
 import FileDrop from './FileDrop';
 import BackupIcon from '@mui/icons-material/Backup';
 import CloseIcon from '@mui/icons-material/Close';
+import { importKeystores } from './DataStore';
 
 export type KeystoreInfo = {
   file: File,
@@ -13,6 +14,9 @@ export type KeystoreInfo = {
 }
 
 export default function ImportScreen() {
+
+  // TODO loading spinnner + result dialog
+  const [importing, setImporting] = useState(false);
 
   const [acceptedFiles, setAcceptedFiles] = useState<File[]>([]);
   const keystoreFilesCallback = (files: File[], event: DropEvent) => {
@@ -26,8 +30,20 @@ export default function ImportScreen() {
     setSlashingFile(files[0]);
   }
 
-  const files = acceptedFiles ? Array.from(acceptedFiles).map(file => (
-    <Card key={file.name} raised sx={{ padding: 2, marginTop: 4, width: '80%' }}>
+  const [passwords, setPasswords] = useState<string[]>([]);
+  const passwordEntered = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, index: number) => {
+    const p = event.target.value;
+    const newList = Array.from(passwords);
+    if (!newList[index]) {
+      newList.push(p)
+    } else {
+      newList[index] = p
+    }
+    setPasswords(newList);
+  }
+
+  const files = acceptedFiles ? Array.from(acceptedFiles).map((file, index) => (
+    <Card key={index} raised sx={{ padding: 2, marginTop: 4, width: '80%' }}>
       <Box
         sx={{
           display: 'flex',
@@ -39,9 +55,10 @@ export default function ImportScreen() {
         <a onClick={() => setAcceptedFiles(acceptedFiles.filter(f => f.name != file.name))}><CloseIcon /></a>
       </Box>
       <TextField
-        id={`outlined-password-input-${file.name}`}
+        id={`outlined-password-input-${index}`}
         label="Keystore Password"
         type="password"
+        onChange={(event) => passwordEntered(event, index)}
         sx={{ marginTop: 2, width: '60%' }}
       />
     </Card>
@@ -104,7 +121,13 @@ export default function ImportScreen() {
           width: '100%'
         }}
       >
-        <Button variant="contained" size='large' endIcon={<BackupIcon />} disabled={acceptedFiles.length == 0}>Submit Keystores</Button>
+        <Button variant="contained"
+          size='large'
+          endIcon={<BackupIcon />}
+          disabled={acceptedFiles.length < 0}
+          onClick={async () => {
+            importKeystores(acceptedFiles, passwords, slashingFile);
+          }}>Submit Keystores</Button>
         <Link to="/"><Button variant="outlined" size='large' color='warning' sx={{ marginRight: 4 }} >Back to Accounts</Button></Link>
       </Box>
     </Box>

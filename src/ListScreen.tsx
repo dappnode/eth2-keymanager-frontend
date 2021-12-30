@@ -8,7 +8,6 @@ import BackupIcon from '@mui/icons-material/Backup';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export default function ListScreen() {
-
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   return (
     <Box

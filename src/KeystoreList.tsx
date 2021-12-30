@@ -3,6 +3,7 @@ import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, GridSelection
 import './App.css';
 import { useState } from 'react';
 import { Box, Button } from '@mui/material';
+import { useListFetcher } from './DataStore';
 
 const columns: GridColDef[] = [
     { field: 'pubkey', headerName: 'Validating Public Key', flex: 1, headerClassName: 'tableHeader' },
@@ -22,8 +23,10 @@ interface Props {
     setSelectedRows: (arg0: GridSelectionModel) => void;
 }
 
-export default function KeystoreList({selectedRows, setSelectedRows}: Props) {
-    // const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
+export default function KeystoreList({ selectedRows, setSelectedRows }: Props) {
+
+    const rows = useListFetcher();
+
     const selection = (selectionModel: GridSelectionModel, details: GridCallbackDetails) => {
         setSelectedRows(selectionModel)
     };
