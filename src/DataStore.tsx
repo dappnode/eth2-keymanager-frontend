@@ -20,10 +20,11 @@ export const useListFetcher = (): readonly { [key: string]: any }[] => {
     useEffect(() => {
         fetch(full_url, { method: 'GET' })
             .then((response) => response.json())
-            .then((data) =>
-                setRows(data.data.map((index: number, item: any) => {
-                    return { id: `${index}`, pubkey: item.pubkey, readonly: item.readonly }
-                })))
+            .then((data) => {
+                setRows(data.data.map((item: any, index: number) => {
+                    return { id: `${index}`, pubkey: item.validating_pubkey, readonly: item.readonly }
+                }));
+            })
             .catch((error) => console.log(error));
     }, [])
     return rows

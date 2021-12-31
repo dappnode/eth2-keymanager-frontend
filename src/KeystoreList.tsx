@@ -7,15 +7,7 @@ import { useListFetcher } from './DataStore';
 
 const columns: GridColDef[] = [
     { field: 'pubkey', headerName: 'Validating Public Key', flex: 1, headerClassName: 'tableHeader' },
-    { field: 'readonly', headerName: 'Editable', width: 100, align: 'right', headerAlign: 'right', headerClassName: 'tableHeader' },
-];
-
-const rows = [
-    { id: '1', pubkey: "0x98d083489b3b06b8740da2dfec5cc3c01b2086363fe023a9d7dc1f907633b1ff11f7b99b19e0533e969862270061d884", status: 'Active', readonly: 'Yes' },
-    { id: '2', pubkey: "0x98d083489b3b06b8740da2dfec5cc3c01b2086363fe023a9d7dc1f907633b1ff11f7b99b19e0533e969862270061d884", status: 'Active', readonly: 'No' },
-    { id: '3', pubkey: "0x98d083489b3b06b8740da2dfec5cc3c01b2086363fe023a9d7dc1f907633b1ff11f7b99b19e0533e969862270061d884", status: 'Active', readonly: 'No' },
-    { id: '4', pubkey: "0x98d083489b3b06b8740da2dfec5cc3c01b2086363fe023a9d7dc1f907633b1ff11f7b99b19e0533e969862270061d884", status: 'Active', readonly: 'Yes' },
-    { id: '5', pubkey: "0x98d083489b3b06b8740da2dfec5cc3c01b2086363fe023a9d7dc1f907633b1ff11f7b99b19e0533e969862270061d884", status: 'Active', readonly: 'Yes' },
+    { field: 'readonly', headerName: 'Read Only', width: 120, align: 'right', headerAlign: 'right', headerClassName: 'tableHeader' },
 ];
 
 interface Props {
