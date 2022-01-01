@@ -99,7 +99,8 @@ export const extractPubkey = async (file: File): Promise<string> => {
     return json.pubkey;
 }
 
-export const shortenPubkey = (key: string): string => {
+export const shortenPubkey = (key: string | undefined): string => {
+    if(!key) return ''
     var prefix = ''
     if (!key.startsWith('0x')) {
         prefix = `0x`

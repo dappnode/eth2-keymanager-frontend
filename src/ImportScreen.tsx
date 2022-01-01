@@ -98,7 +98,7 @@ export default function ImportScreen() {
       <DialogContent>
         <Box
           sx={{
-            margin: 2,
+            marginTop: 2,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'left',
@@ -107,8 +107,9 @@ export default function ImportScreen() {
           {results ?
             results.error ? `Error: ${results.error.message}` : (
               <div>
-                {results.data.map((result) => (
+                {results.data.map((result, index) => (
                   <div style={{ marginBottom: '20px' }}>
+                    <Typography variant='h5' color='GrayText'>{shortenPubkey(acceptedFiles[index]?.pubkey)}</Typography>
                     <Typography variant='h6'><b>Status:</b> {result.status} {getEmoji(result.status)}</Typography>
                     {result.message ? <Typography variant='h6'><b>Message:</b> {result.message}</Typography> : null}
                   </div>
@@ -136,7 +137,7 @@ export default function ImportScreen() {
       </DialogContent>
       {results ?
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose} variant="contained">Close</Button>
         </DialogActions> : null}
     </Dialog>
   )
@@ -202,7 +203,7 @@ export default function ImportScreen() {
           <Button variant="contained"
             size='large'
             endIcon={<BackupIcon />}
-            disabled={acceptedFiles.length < 0}
+            disabled={acceptedFiles.length == 0}
             onClick={async () => {
               setResults(undefined);
               handleClickOpen();
@@ -217,7 +218,7 @@ export default function ImportScreen() {
   );
 }
 function getEmoji(status: string) {
-  switch(status) {
+  switch (status) {
     case 'error': return "❌"
     case 'imported': return "✅"
     default: return "⚠️"
