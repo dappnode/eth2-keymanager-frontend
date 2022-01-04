@@ -5,12 +5,12 @@ const base_url = "http://localhost:9000/"; // TODO as query param
 const endpoint = "eth/v1/keystores";
 const full_url = base_url + endpoint;
 
-export type ImportResponse = {
-    data: ImportResult[]
+export type Response = {
+    data: Result[]
     error?: { message: string }
 }
 
-export type ImportResult = {
+export type Result = {
     status: string,
     message?: string
 }
@@ -33,7 +33,7 @@ export const useListFetcher = (): readonly { [key: string]: any }[] => {
 export const importKeystores = async function (
     keystores: File[],
     passwords: string[],
-    slashingProtection: File | undefined): Promise<ImportResponse> {
+    slashingProtection: File | undefined): Promise<Response> {
     const data = JSON.stringify({
         keystores: await readText(keystores),
         passwords: passwords,
@@ -65,7 +65,7 @@ export const importKeystores = async function (
     }
 }
 
-export const deleteKeystores = async function (pubkeys: string[]) {
+export const deleteKeystores = async function (pubkeys: string[]): Promise<Response> {
     const data = JSON.stringify({
         pubkeys: pubkeys
     });
@@ -78,9 +78,17 @@ export const deleteKeystores = async function (pubkeys: string[]) {
             },
             body: data,
         });
-        const json = await response.json()
+        if (response.ok) {
+            const json = await response.json()
+            return json
+        } else {
+            return { data: [], error: { message: response.statusText } };
+        }
     } catch (e) {
         console.log(e)
+        let message = 'Unknown Error'
+        if (e instanceof Error) message = e.message
+        return { data: [], error: { message: message } };
     }
 }
 
@@ -100,10 +108,22 @@ export const extractPubkey = async (file: File): Promise<string> => {
 }
 
 export const shortenPubkey = (key: string | undefined): string => {
-    if(!key) return ''
+    if (!key) return ''
     var prefix = ''
+    var end = 4
     if (!key.startsWith('0x')) {
         prefix = `0x`
+    } else {
+        end = 6
     }
-    return `${prefix}${key.substring(0, 4)}...${key.substring(key.length - 4, key.length)}`
+    return `${prefix}${key.substring(0, end)}...${key.substring(key.length - 4, key.length)}`
 }
+
+export function getEmoji(status: string) {
+    switch (status) {
+      case 'error': return "❌"
+      case 'imported': return "✅"
+      default: return "⚠️"
+    }
+  }
+  

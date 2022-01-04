@@ -11,13 +11,12 @@ const columns: GridColDef[] = [
 ];
 
 interface Props {
+    rows: readonly { [key: string]: any }[] 
     selectedRows: GridSelectionModel,
     setSelectedRows: (arg0: GridSelectionModel) => void;
 }
 
-export default function KeystoreList({ selectedRows, setSelectedRows }: Props) {
-
-    const rows = useListFetcher();
+export default function KeystoreList({ rows, selectedRows, setSelectedRows }: Props) {
 
     const selection = (selectionModel: GridSelectionModel, details: GridCallbackDetails) => {
         setSelectedRows(selectionModel)

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import FileDrop from './FileDrop';
 import BackupIcon from '@mui/icons-material/Backup';
 import CloseIcon from '@mui/icons-material/Close';
-import { extractPubkey, importKeystores, ImportResponse, shortenPubkey } from './DataStore';
+import { extractPubkey, getEmoji, importKeystores, Response, shortenPubkey } from './DataStore';
 import { AirlineSeatLegroomReducedRounded } from '@mui/icons-material';
 
 export type KeystoreInfo = {
@@ -69,7 +69,7 @@ export default function ImportScreen() {
 
   // DIALOG
   const [open, setOpen] = useState(false);
-  const [results, setResults] = useState<ImportResponse>()
+  const [results, setResults] = useState<Response>();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -216,12 +216,5 @@ export default function ImportScreen() {
       {dialog}
     </div>
   );
-}
-function getEmoji(status: string) {
-  switch (status) {
-    case 'error': return "❌"
-    case 'imported': return "✅"
-    default: return "⚠️"
-  }
 }
 
