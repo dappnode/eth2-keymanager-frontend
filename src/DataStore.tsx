@@ -15,7 +15,7 @@ export type Result = {
     message?: string
 }
 
-export const useListFetcher = (): readonly { [key: string]: any }[] => {
+export const useListFetcher = (refresh: boolean): readonly { [key: string]: any }[] => {
     const [rows, setRows] = useState([]);
     useEffect(() => {
         fetch(full_url, { method: 'GET' })
@@ -26,7 +26,7 @@ export const useListFetcher = (): readonly { [key: string]: any }[] => {
                 }));
             })
             .catch((error) => console.log(error));
-    }, [])
+    }, [refresh])
     return rows
 }
 
@@ -123,6 +123,7 @@ export function getEmoji(status: string) {
     switch (status) {
       case 'error': return "❌"
       case 'imported': return "✅"
+      case 'deleted': return "✅"
       default: return "⚠️"
     }
   }

@@ -10,13 +10,11 @@ import { deleteKeystores, shortenPubkey, useListFetcher, Response, getEmoji } fr
 
 export default function ListScreen() {
 
-  const rows = useListFetcher();
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
-
-  // DIALOG
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<Response>();
   const [requestInFlight, setRequestInFlight] = useState(false);
+  const rows = useListFetcher(!open);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,7 +48,7 @@ export default function ListScreen() {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Delete Keystores?
+        {results ? "Done" : "Delete Keystores?"}
       </DialogTitle>
       <DialogContent>
         <Box
@@ -108,7 +106,7 @@ export default function ListScreen() {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => deleteSelectedKeystores()} variant="contained" sx={{ marginRight: 1 }}>Confirm</Button>
+        {!results && !requestInFlight ? <Button onClick={() => deleteSelectedKeystores()} variant="contained" sx={{ marginRight: 1 }}>Confirm</Button> : null}
         <Button onClick={handleClose} variant="outlined">Close</Button>
       </DialogActions>
     </Dialog >
