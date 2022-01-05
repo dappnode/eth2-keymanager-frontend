@@ -1,9 +1,10 @@
-import { GridSelectionModel } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
-const base_url = "http://localhost:9000/"; // TODO as query param
-const endpoint = "eth/v1/keystores";
+const search = new URLSearchParams(window.location.search)
+export const base_url = search.get("signer_url");
+const endpoint = "/eth/v1/keystores";
 const full_url = base_url + endpoint;
+const auth_token = search.get("auth_token");
 
 export type Response = {
     data: Result[]
@@ -18,7 +19,14 @@ export type Result = {
 export const useListFetcher = (refresh: boolean): readonly { [key: string]: any }[] => {
     const [rows, setRows] = useState([]);
     useEffect(() => {
-        fetch(full_url, { method: 'GET' })
+        fetch(full_url, { 
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth_token}`
+            }
+        })
             .then((response) => response.json())
             .then((data) => {
                 setRows(data.data.map((item: any, index: number) => {
@@ -45,7 +53,8 @@ export const importKeystores = async function (
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth_token}`
             },
             body: data
         });
@@ -74,7 +83,8 @@ export const deleteKeystores = async function (pubkeys: string[]): Promise<Respo
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${auth_token}`
             },
             body: data,
         });

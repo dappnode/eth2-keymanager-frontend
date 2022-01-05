@@ -6,7 +6,7 @@ import { GridSelectionModel } from '@mui/x-data-grid';
 import { useState } from 'react';
 import BackupIcon from '@mui/icons-material/Backup';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { deleteKeystores, shortenPubkey, useListFetcher, Response, getEmoji } from './DataStore';
+import { deleteKeystores, shortenPubkey, useListFetcher, Response, getEmoji, base_url } from './DataStore';
 
 export default function ListScreen() {
 
@@ -122,7 +122,8 @@ export default function ListScreen() {
         }}
       >
         <Card sx={{ padding: 4 }}>
-          <Typography variant='h5' sx={{ marginBottom: 4 }}><b>Your Validator Accounts List</b></Typography>
+          <Typography variant='h5' ><b>Your Validator Accounts List</b></Typography>
+          <Typography color='GrayText' sx={{ marginBottom: 4 }}>{base_url ? `Signer URL: ${base_url}` : "⚠️ No value passed for signer_url"}</Typography>
           <KeystoreList rows={rows} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
           <Box
             sx={{
