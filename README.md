@@ -8,12 +8,14 @@ This is a simple react app to manage your ETH2 validator keystores. It allows to
 
 ## Running
 
-In the project directory, run:
+Requires a running signer instance like a ETH2 validator client or a [web3signer](https://github.com/ConsenSys/web3signer) instance.
+
+With the signer running at a given URL, in the project directory, run:
 
 `yarn start`
 
 Then open [http://localhost:3000?signer_url=<SIGNER_URL>&auth_token=<AUTH_TOKEN>](http://localhost:3000) to view it in the browser.
 
-`signer_url` - The url of the signer to send API requests to
-`auth_token` - Optional auth token to pass in API requests
+- `signer_url` - The url of the signer to send API requests to
+- `auth_token` - Optional auth token to pass in API requests
 
