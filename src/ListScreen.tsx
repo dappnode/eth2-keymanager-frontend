@@ -69,6 +69,16 @@ export default function ListScreen() {
                     {result.message ? <Typography variant='h6'><b>Message:</b> {result.message}</Typography> : null}
                   </div>
                 ))}
+                {results.slashing_protection ? (
+                  <div>
+                    <Button variant='contained' href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                      results.slashing_protection
+                    )}`}
+                      download="slashing_protection.json">
+                      Download Slashing Protection Data
+                    </Button>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div>

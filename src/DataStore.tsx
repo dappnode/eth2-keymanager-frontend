@@ -9,6 +9,7 @@ const auth_token = search.get("auth_token");
 export type Response = {
     data: Result[]
     error?: { message: string }
+    slashing_protection?: string
 }
 
 export type Result = {
