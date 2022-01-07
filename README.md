@@ -6,6 +6,8 @@ This is a simple react app to manage your ETH2 validator keystores. It allows to
 - import new keystores and existing slashing protection data
 - remove active keys and download the associated slashing protection data
 
+![Demo](images/list.png?raw=true "List of active keys")
+
 ## Running
 
 Requires a running signer instance like a ETH2 validator client or a [web3signer](https://github.com/ConsenSys/web3signer) instance.
