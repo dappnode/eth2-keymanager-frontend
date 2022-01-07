@@ -18,4 +18,4 @@
 
 ![Demo](delete.png?raw=true "delete")
 
-![Demo](delete_success.png?raw=true "delete success")
+![Demo](delete_complete.png?raw=true "delete complete")
