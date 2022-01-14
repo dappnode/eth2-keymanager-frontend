@@ -46,7 +46,7 @@ export const importKeystores = async function (
     const data = JSON.stringify({
         keystores: await readText(keystores),
         passwords: passwords,
-        slashingProtection: slashingProtection ? await slashingProtection?.text() : null
+        slashing_protection: slashingProtection ? await slashingProtection?.text() : null
     });
     console.log(data)
     try {
