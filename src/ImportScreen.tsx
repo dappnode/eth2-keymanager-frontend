@@ -18,13 +18,19 @@ export default function ImportScreen() {
 
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
-    const pubkey = await extractPubkey(files[0]);
-    if (pubkey) {
-      if (acceptedFiles.some(e => e.pubkey === pubkey) === false) {
-        setAcceptedFiles([...acceptedFiles].concat([{ file: files[0], pubkey: pubkey }]));
-        setPasswords([...passwords].concat([""]))
+    const keystoresToAdd: KeystoreInfo[] = [];
+    const passwordsToAdd: string[] = [];
+    for (var file of files) {
+      const pubkey = await extractPubkey(file);
+      if (pubkey) {
+        if (acceptedFiles.some(e => e.pubkey === pubkey) === false) {
+          keystoresToAdd.push({ file: file, pubkey: pubkey });
+          passwordsToAdd.push("");
+        }
       }
     }
+    setAcceptedFiles([...acceptedFiles].concat(keystoresToAdd));
+    setPasswords([...passwords].concat(passwordsToAdd))
   }
 
   const [slashingFile, setSlashingFile] = useState<File>();
