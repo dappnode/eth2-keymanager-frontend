@@ -73,6 +73,13 @@ export default function ImportScreen() {
     </Card>
   )) : [];
 
+
+  // SLASHING PROTECTION SWITCH
+  const [slashingProtectionIncluded, setSlashingProtectionIncluded] = useState(true);
+  const onSlashingChecked = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setSlashingProtectionIncluded(checked);
+  }
+
   // DIALOG
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<Response>();
@@ -184,16 +191,19 @@ export default function ImportScreen() {
             }}
           >
             <Typography variant='h5' sx={{ marginRight: 2 }}><b>Import slashing protection data? (recommended)</b></Typography>
-            <Switch defaultChecked />
+            <Switch defaultChecked onChange={onSlashingChecked} />
           </Box>
-          <Typography>Upload your slashing protection file to protect your keystore(s).</Typography>
-          <Typography variant='body2' color='GrayText' sx={{ marginBottom: 4 }}><i>only for previously-used keystores</i></Typography>
-          <FileDrop callback={slashingFilesCallback} />
-          {slashingFile ? (
-            <Card key={slashingFile.name} raised sx={{ padding: 2, marginTop: 4, width: '80%' }}>
-              <Typography variant='h6'><b>✅ {slashingFile.name}</b><br /></Typography>
-            </Card>
-          ) : null}
+          {slashingProtectionIncluded ?
+            <div>
+              <Typography>Upload your slashing protection file to protect your keystore(s).</Typography>
+              <Typography variant='body2' color='GrayText' sx={{ marginBottom: 4 }}><i>only for previously-used keystores</i></Typography>
+              <FileDrop callback={slashingFilesCallback} />
+              {slashingFile ? (
+                <Card key={slashingFile.name} raised sx={{ padding: 2, marginTop: 4, width: '80%' }}>
+                  <Typography variant='h6'><b>✅ {slashingFile.name}</b><br /></Typography>
+                </Card>
+              ) : null}
+            </div> : null}
         </Card>
 
         <Box
@@ -216,7 +226,7 @@ export default function ImportScreen() {
               const results = await importKeystores(acceptedFiles.map(f => f.file), passwords, slashingFile);
               setResults(results);
             }}>Submit Keystores</Button>
-          <Link to={{ pathname: '/', search: window.location.search}}><Button variant="outlined" size='large' color='warning' sx={{ marginRight: 4 }} >Back to Accounts</Button></Link>
+          <Link to={{ pathname: '/', search: window.location.search }}><Button variant="outlined" size='large' color='warning' sx={{ marginRight: 4 }} >Back to Accounts</Button></Link>
         </Box>
       </Box>
       {dialog}
