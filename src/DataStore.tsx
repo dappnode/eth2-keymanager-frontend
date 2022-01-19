@@ -20,7 +20,7 @@ export type Result = {
 export const useListFetcher = (refresh: boolean): readonly { [key: string]: any }[] => {
     const [rows, setRows] = useState([]);
     useEffect(() => {
-        fetch(full_url, { 
+        fetch(full_url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -43,12 +43,19 @@ export const importKeystores = async function (
     keystores: File[],
     passwords: string[],
     slashingProtection: File | undefined): Promise<Response> {
-    const data = JSON.stringify({
-        keystores: await readText(keystores),
-        passwords: passwords,
-        slashing_protection: slashingProtection ? await slashingProtection?.text() : ""
-    });
-    console.log(data)
+    var data;
+    if (slashingProtection) {
+        data = JSON.stringify({
+            keystores: await readText(keystores),
+            passwords: passwords,
+            slashing_protection: await slashingProtection?.text()
+        });
+    } else {
+        data = JSON.stringify({
+            keystores: await readText(keystores),
+            passwords: passwords
+        });
+    }
     try {
         const response = await fetch(full_url, {
             method: 'POST',
@@ -132,10 +139,9 @@ export const shortenPubkey = (key: string | undefined): string => {
 
 export function getEmoji(status: string) {
     switch (status) {
-      case 'error': return "❌"
-      case 'imported': return "✅"
-      case 'deleted': return "✅"
-      default: return "⚠️"
+        case 'error': return "❌"
+        case 'imported': return "✅"
+        case 'deleted': return "✅"
+        default: return "⚠️"
     }
-  }
-  
+}
