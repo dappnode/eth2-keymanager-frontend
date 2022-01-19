@@ -216,7 +216,7 @@ export default function ImportScreen() {
               const results = await importKeystores(acceptedFiles.map(f => f.file), passwords, slashingFile);
               setResults(results);
             }}>Submit Keystores</Button>
-          <Link to="/"><Button variant="outlined" size='large' color='warning' sx={{ marginRight: 4 }} >Back to Accounts</Button></Link>
+          <Link to={{ pathname: '/', search: window.location.search}}><Button variant="outlined" size='large' color='warning' sx={{ marginRight: 4 }} >Back to Accounts</Button></Link>
         </Box>
       </Box>
       {dialog}

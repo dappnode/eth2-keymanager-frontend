@@ -145,7 +145,7 @@ export default function ListScreen() {
               width: '100%'
             }}
           >
-            <Link to="/import"><Button variant="contained" size='large' endIcon={<BackupIcon />}>Import Keystores</Button></Link>
+            <Link to={{ pathname: '/import', search: window.location.search}}><Button variant="contained" size='large' endIcon={<BackupIcon />}>Import Keystores</Button></Link>
             <Button variant='contained' size='large' color='error'
               disabled={selectedRows.length == 0}
               sx={{ marginRight: 4 }}
