@@ -22,13 +22,19 @@ export default function KeystoreList({ rows, selectedRows, setSelectedRows }: Pr
         setSelectedRows(selectionModel)
     };
 
+    const [pageSize, setPageSize] = useState(10);
+    const pageSizeChange = (pageSize: number, details: GridCallbackDetails) => {
+        setPageSize(pageSize);
+    };
+
     return (
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
+                pageSize={pageSize}
+                rowsPerPageOptions={[10,20,50,100]}
+                onPageSizeChange={pageSizeChange}
                 checkboxSelection
                 onSelectionModelChange={selection}
             />
