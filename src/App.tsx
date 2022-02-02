@@ -1,30 +1,35 @@
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import './App.css';
-import { Container } from '@mui/material';
-import { BrowserRouter, Route, Routes, useSearchParams } from "react-router-dom";
-import ImportScreen from './ImportScreen';
-import ListScreen from './ListScreen';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import "./App.css";
+import { Container } from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ImportScreen from "./ImportScreen";
+import ListScreen from "./ListScreen";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
     primary: {
-      main: '#4872b5',
+      main: "#4872b5",
     },
     background: {
-      default: '#0a0a0a',
-      paper: '#121212',
-    }
+      default: "#0a0a0a",
+      paper: "#121212",
+    },
   },
 });
 
 function toolbar(): JSX.Element {
   return (
     <Toolbar>
-      <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+      <Typography
+        variant="h6"
+        noWrap
+        component="div"
+        sx={{ flexGrow: 1, fontWeight: "bold" }}
+      >
         ETH2 Key Manager
       </Typography>
     </Toolbar>
