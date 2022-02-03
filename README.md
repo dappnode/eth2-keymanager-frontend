@@ -17,7 +17,7 @@ This tool requires nodejs 16 or better and yarn as well as react-scripts and typ
 `sudo apt update && sudo apt install -y curl` and then `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -` and finally `sudo apt install -y nodejs`.
 
 Once nodejs and npm have been installed, install yarn: `sudo corepack enable` and test it's there with `yarn --version`
-> If this fails, install yarn via npm instead: `sudo npm install --global yarn`
+> Alternatively you can [install yarn and let it pull in nodejs](https://linuxize.com/post/how-to-install-yarn-on-ubuntu-20-04/); instead of installing nodejs and relying on its yarn.
 
 Install react-scripts and typescript: `yarn add react-scripts typescript`
 
