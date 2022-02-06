@@ -10,6 +10,14 @@ This is a simple react app to manage your ETH2 validator keystores. It allows to
 
 [See more screenshots](images)
 
+## Prerequisites
+
+Install `yarn` on your system. See installation instructions [here](https://classic.yarnpkg.com/lang/en/docs/install/).
+
+Once `yarn` is installed, from the project directory, run:
+
+`yarn install`
+
 ## Running
 
 Requires a running signer instance like a ETH2 validator client or a [web3signer](https://github.com/ConsenSys/web3signer) instance.
