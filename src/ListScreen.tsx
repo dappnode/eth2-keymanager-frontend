@@ -17,21 +17,14 @@ import { GridSelectionModel } from "@mui/x-data-grid";
 import { useState } from "react";
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {
-  deleteKeystores,
-  shortenPubkey,
-  useListFetcher,
-  Response,
-  getEmoji,
-  base_url,
-} from "./DataStore";
+import { deleteKeystores, shortenPubkey, useListFetcher, Response, getEmoji, base_url } from "./DataStore";
 
-export default function ListScreen() {
+export default function ListScreen({ network }: { network: string }) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<Response>();
   const [requestInFlight, setRequestInFlight] = useState(false);
-  const rows = useListFetcher(!open);
+  const rows = useListFetcher(network, !open);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,7 +40,8 @@ export default function ListScreen() {
     setResults(undefined);
     setRequestInFlight(true);
     const deleteResults = await deleteKeystores(
-      selectedRows.map((row) => rows[parseInt(row.toString())].pubkey)
+      selectedRows.map((row) => rows[parseInt(row.toString())].pubkey),
+      network
     );
     setRequestInFlight(false);
     setResults(deleteResults);
@@ -66,9 +60,7 @@ export default function ListScreen() {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {results ? "Done" : "Delete Keystores?"}
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{results ? "Done" : "Delete Keystores?"}</DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -101,9 +93,7 @@ export default function ListScreen() {
                 <div>
                   <Button
                     variant="contained"
-                    href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                      results.slashing_protection
-                    )}`}
+                    href={`data:text/json;charset=utf-8,${encodeURIComponent(results.slashing_protection)}`}
                     download="slashing_protection.json"
                   >
                     Download Slashing Protection Data
@@ -127,27 +117,21 @@ export default function ListScreen() {
                       marginBottom: 4,
                     }}
                   />
-                  <DialogContentText id="alert-dialog-description">
-                    Please wait
-                  </DialogContentText>
+                  <DialogContentText id="alert-dialog-description">Please wait</DialogContentText>
                 </Box>
               ) : (
                 <DialogContentText id="alert-dialog-description">
                   Are you sure you want to delete these keystores?
                   <ul>
                     {selectedRows.map((row) => (
-                      <li>
-                        {shortenPubkey(rows[parseInt(row.toString())].pubkey)}
-                      </li>
+                      <li>{shortenPubkey(rows[parseInt(row.toString())].pubkey)}</li>
                     ))}
                   </ul>
-                  After deletion, these keystores won't be used for signing
-                  anymore and your slashing protection data will be downloaded.{" "}
-                  <br />
+                  After deletion, these keystores won't be used for signing anymore and your slashing protection data
+                  will be downloaded. <br />
                   <br />
                   <b>
-                    Keep the slashing protection data for when you want to
-                    import these keystores to a new validator.
+                    Keep the slashing protection data for when you want to import these keystores to a new validator.
                   </b>
                 </DialogContentText>
               )}
@@ -157,11 +141,7 @@ export default function ListScreen() {
       </DialogContent>
       <DialogActions>
         {!results && !requestInFlight ? (
-          <Button
-            onClick={() => deleteSelectedKeystores()}
-            variant="contained"
-            sx={{ marginRight: 1 }}
-          >
+          <Button onClick={() => deleteSelectedKeystores()} variant="contained" sx={{ marginRight: 1 }}>
             Confirm
           </Button>
         ) : null}
@@ -186,15 +166,9 @@ export default function ListScreen() {
             <b>Your Validator Accounts List</b>
           </Typography>
           <Typography color="GrayText" sx={{ marginBottom: 4 }}>
-            {base_url
-              ? `Signer URL: ${base_url}`
-              : "⚠️ No value passed for signer_url"}
+            {base_url ? `Signer URL: ${base_url}` : "⚠️ No value passed for signer_url"}
           </Typography>
-          <KeystoreList
-            rows={rows}
-            selectedRows={selectedRows}
-            setSelectedRows={setSelectedRows}
-          />
+          <KeystoreList rows={rows} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
           <Box
             sx={{
               marginTop: 4,

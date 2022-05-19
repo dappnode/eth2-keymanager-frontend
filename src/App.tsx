@@ -7,6 +7,8 @@ import { Container } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ImportScreen from "./ImportScreen";
 import ListScreen from "./ListScreen";
+import React, { useEffect } from "react";
+import { getNetwork } from "./network";
 
 const darkTheme = createTheme({
   palette: {
@@ -21,32 +23,33 @@ const darkTheme = createTheme({
   },
 });
 
-function toolbar(): JSX.Element {
+function toolbar({ network }: { network: string }): JSX.Element {
   return (
     <Toolbar>
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
-        sx={{ flexGrow: 1, fontWeight: "bold" }}
-      >
-        ETH2 Key Manager
+      <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: "bold" }}>
+        ETH2 Key Manager ({network} chain)
       </Typography>
     </Toolbar>
   );
 }
 
 function App() {
+  const [network, setNetwork] = React.useState("");
+
+  useEffect(() => {
+    setNetwork(getNetwork());
+  }, []);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="static" color="primary">
-        {toolbar()}
+        {toolbar({ network })}
       </AppBar>
       <Container component="main" maxWidth="lg">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<ListScreen />} />
-            <Route path="import" element={<ImportScreen />} />
+            <Route path="/" element={<ListScreen network={network} />} />
+            <Route path="import" element={<ImportScreen network={network} />} />
           </Routes>
         </BrowserRouter>
       </Container>

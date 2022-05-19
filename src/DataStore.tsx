@@ -17,9 +17,7 @@ export type Result = {
   message?: string;
 };
 
-export const useListFetcher = (
-  refresh: boolean
-): readonly { [key: string]: any }[] => {
+export const useListFetcher = (network: string, refresh: boolean): readonly { [key: string]: any }[] => {
   const [rows, setRows] = useState([]);
   useEffect(() => {
     fetch(full_url, {
@@ -27,6 +25,7 @@ export const useListFetcher = (
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Host: `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
     })
@@ -50,7 +49,8 @@ export const useListFetcher = (
 export const importKeystores = async function (
   keystores: File[],
   passwords: string[],
-  slashingProtection: File | undefined
+  slashingProtection: File | undefined,
+  network: string
 ): Promise<Response> {
   var data;
   if (slashingProtection) {
@@ -71,6 +71,7 @@ export const importKeystores = async function (
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Host: `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
       body: data,
@@ -88,9 +89,7 @@ export const importKeystores = async function (
   }
 };
 
-export const deleteKeystores = async function (
-  pubkeys: string[]
-): Promise<Response> {
+export const deleteKeystores = async function (pubkeys: string[], network: string): Promise<Response> {
   const data = JSON.stringify({
     pubkeys: pubkeys,
   });
@@ -100,6 +99,7 @@ export const deleteKeystores = async function (
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Host: `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
       body: data,
@@ -142,10 +142,7 @@ export const shortenPubkey = (key: string | undefined): string => {
   } else {
     end = 6;
   }
-  return `${prefix}${key.substring(0, end)}...${key.substring(
-    key.length - 4,
-    key.length
-  )}`;
+  return `${prefix}${key.substring(0, end)}...${key.substring(key.length - 4, key.length)}`;
 };
 
 export function getEmoji(status: string) {
