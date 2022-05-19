@@ -25,7 +25,7 @@ export const useListFetcher = (network: string, refresh: boolean): readonly { [k
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Host: `ui.web3signer-${network}.dappnode`,
+        Host: "ethereum" ? `ui.web3signer.dappnode` : `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
     })
@@ -71,7 +71,7 @@ export const importKeystores = async function (
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Host: `ui.web3signer-${network}.dappnode`,
+        Host: network === "ethereum" ? `ui.web3signer.dappnode` : `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
       body: data,
@@ -99,7 +99,7 @@ export const deleteKeystores = async function (pubkeys: string[], network: strin
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Host: `ui.web3signer-${network}.dappnode`,
+        Host: "ethereum" ? `ui.web3signer.dappnode` : `ui.web3signer-${network}.dappnode`,
         Authorization: `Bearer ${auth_token}`,
       },
       body: data,
