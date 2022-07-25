@@ -19,20 +19,11 @@ import { useState } from "react";
 import FileDrop from "./FileDrop";
 import BackupIcon from "@mui/icons-material/Backup";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  extractPubkey,
-  getEmoji,
-  importKeystores,
-  Response,
-  shortenPubkey,
-} from "./DataStore";
+import { extractPubkey, getEmoji, importKeystores, Response, shortenPubkey } from "./DataStore";
+import { KeystoreInfo } from "./types";
+import { Web3SignerApi } from "./web3signerApi";
 
-export type KeystoreInfo = {
-  file: File;
-  pubkey: string;
-};
-
-export default function ImportScreen() {
+export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3SignerApi }) {
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
@@ -56,10 +47,7 @@ export default function ImportScreen() {
   };
 
   const [passwords, setPasswords] = useState<string[]>([]);
-  const passwordEntered = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    index: number
-  ) => {
+  const passwordEntered = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, index: number) => {
     const p = event.target.value;
     const newList = Array.from(passwords);
     newList[index] = p;
@@ -69,11 +57,7 @@ export default function ImportScreen() {
   // FILE CARDS
   const files = acceptedFiles
     ? Array.from(acceptedFiles).map((fileInfo, index) => (
-        <Card
-          key={index}
-          raised
-          sx={{ padding: 2, marginTop: 4, width: "80%" }}
-        >
+        <Card key={index} raised sx={{ padding: 2, marginTop: 4, width: "80%" }}>
           <Box
             sx={{
               display: "flex",
@@ -85,14 +69,11 @@ export default function ImportScreen() {
               <b>✅ {fileInfo.file.name}</b> - {shortenPubkey(fileInfo.pubkey)}
             </Typography>
             <a
+              href="/#"
               onClick={() => {
                 var indexToRemove = acceptedFiles.indexOf(fileInfo);
-                setAcceptedFiles(
-                  acceptedFiles.filter((f, index) => index !== indexToRemove)
-                );
-                setPasswords(
-                  passwords.filter((f, index) => index !== indexToRemove)
-                );
+                setAcceptedFiles(acceptedFiles.filter((f, index) => index !== indexToRemove));
+                setPasswords(passwords.filter((f, index) => index !== indexToRemove));
               }}
             >
               <CloseIcon />
@@ -110,12 +91,8 @@ export default function ImportScreen() {
     : [];
 
   // SLASHING PROTECTION SWITCH
-  const [slashingProtectionIncluded, setSlashingProtectionIncluded] =
-    useState(true);
-  const onSlashingChecked = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => {
+  const [slashingProtectionIncluded, setSlashingProtectionIncluded] = useState(true);
+  const onSlashingChecked = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setSlashingProtectionIncluded(checked);
   };
 
@@ -144,9 +121,7 @@ export default function ImportScreen() {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {results ? "Import Completed" : "Importing..."}
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">{results ? "Import Completed" : "Importing..."}</DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -192,9 +167,7 @@ export default function ImportScreen() {
                   marginBottom: 4,
                 }}
               />
-              <DialogContentText id="alert-dialog-description">
-                Please wait
-              </DialogContentText>
+              <DialogContentText id="alert-dialog-description">Please wait</DialogContentText>
             </Box>
           )}
         </Box>
@@ -235,9 +208,8 @@ export default function ImportScreen() {
           <Typography>Upload any keystore JSON file(s).</Typography>
           <Typography variant="body2" sx={{ marginBottom: 4 }} color="GrayText">
             <i>
-              Keystores files are usually named keystore-xxxxxxxx.json and were
-              created in the Ethereum launchpad deposit CLI. Do not upload the
-              deposit_data.json file.
+              Keystores files are usually named keystore-xxxxxxxx.json and were created in the Ethereum launchpad
+              deposit CLI. Do not upload the deposit_data.json file.
               <br />
             </i>
           </Typography>
@@ -261,24 +233,13 @@ export default function ImportScreen() {
           </Box>
           {slashingProtectionIncluded ? (
             <div>
-              <Typography>
-                Upload your slashing protection file to protect your
-                keystore(s).
-              </Typography>
-              <Typography
-                variant="body2"
-                color="GrayText"
-                sx={{ marginBottom: 4 }}
-              >
+              <Typography>Upload your slashing protection file to protect your keystore(s).</Typography>
+              <Typography variant="body2" color="GrayText" sx={{ marginBottom: 4 }}>
                 <i>only for previously-used keystores</i>
               </Typography>
               <FileDrop callback={slashingFilesCallback} />
               {slashingFile ? (
-                <Card
-                  key={slashingFile.name}
-                  raised
-                  sx={{ padding: 2, marginTop: 4, width: "80%" }}
-                >
+                <Card key={slashingFile.name} raised sx={{ padding: 2, marginTop: 4, width: "80%" }}>
                   <Typography variant="h6">
                     <b>✅ {slashingFile.name}</b>
                     <br />
@@ -318,12 +279,7 @@ export default function ImportScreen() {
             Submit Keystores
           </Button>
           <Link to={{ pathname: "/", search: window.location.search }}>
-            <Button
-              variant="outlined"
-              size="large"
-              color="warning"
-              sx={{ marginRight: 4 }}
-            >
+            <Button variant="outlined" size="large" color="warning" sx={{ marginRight: 4 }}>
               Back to Accounts
             </Button>
           </Link>
