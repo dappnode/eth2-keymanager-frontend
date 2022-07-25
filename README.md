@@ -31,3 +31,7 @@ Then open [http://localhost:3000?signer_url=<SIGNER_URL>&auth_token=<AUTH_TOKEN>
 - `signer_url` - The url of the signer to send API requests to
 - `auth_token` - Optional auth token to pass in API requests
 
+## Environment variables
+
+- `REACT_APP_NETWORK=`: the network to be shown in the UI. This is an optional value and should be the same as the `--network` flag used to run the web3signer.
+- `REACT_APP_WEB3SIGNER_HEADER_HOST=`: the `Host` header to be used in the HTTP requests to fetch the web3signer API.
