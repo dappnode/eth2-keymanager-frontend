@@ -36,19 +36,12 @@ function toolbar({ network }: { network?: string }): JSX.Element {
 
 function App() {
   const [network, setNetwork] = React.useState("");
-  const [authToken, setAuthToken] = React.useState("");
-  const [host, setHost] = React.useState("");
-  const [baseUrl, setBaseUrl] = React.useState("");
   const [web3signerApi, setWeb3signerApi] = React.useState<Web3SignerApi | null>(null);
 
   useEffect(() => {
     const { network, authToken, host, baseUrl } = getUrlParams();
     setNetwork(network);
-    setAuthToken(authToken);
-    setHost(host);
-    setBaseUrl(baseUrl);
-
-    setWeb3signerApi(new Web3SignerApi(host, baseUrl, authToken));
+    if (baseUrl) setWeb3signerApi(new Web3SignerApi(baseUrl, authToken, host));
   }, []);
   return (
     <ThemeProvider theme={darkTheme}>
@@ -56,12 +49,19 @@ function App() {
         {toolbar({ network })}
       </AppBar>
       <Container component="main" maxWidth="lg">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<ListScreen web3signerApi={web3signerApi} />} />
-            <Route path="import" element={<ImportScreen web3signerApi={web3signerApi} />} />
-          </Routes>
-        </BrowserRouter>
+        {web3signerApi ? (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<ListScreen web3signerApi={web3signerApi} />} />
+              <Route path="import" element={<ImportScreen web3signerApi={web3signerApi} />} />
+            </Routes>
+          </BrowserRouter>
+        ) : (
+          // show a beautiful error message if the API is not available
+          <Typography variant="h5" color="error">
+            Error: API is not available
+          </Typography>
+        )}
       </Container>
     </ThemeProvider>
   );

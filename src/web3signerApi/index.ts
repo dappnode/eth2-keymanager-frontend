@@ -1,4 +1,10 @@
-import { Web3signerDeleteResponse, Web3signerGetResponse, Web3signerPostResponse } from "./types";
+import {
+  Web3signerDeleteResponse,
+  Web3signerGetResponse,
+  Web3signerPostResponse,
+  Web3signerPostRequest,
+  Web3signerDeleteRequest,
+} from "./types";
 
 export class Web3SignerApi {
   authToken: string | undefined;
@@ -14,25 +20,21 @@ export class Web3SignerApi {
 
   /**
    * Import remote keys for the validator client to request duties for.
-   * https://ethereum.github.io/keymanager-APIs/#/Remote%20Key%20Manager/ImportRemoteKeys
+   * https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ListKeys
    */
-  public async importKeystores(
-    keystores: File[],
-    passwords: string[],
-    slashingProtection: File | undefined
-  ): Promise<Web3signerPostResponse> {
+  public async importKeystores(postRequest: Web3signerPostRequest): Promise<Web3signerPostResponse> {
     try {
       var data;
-      if (slashingProtection) {
+      if (postRequest.slashingProtection) {
         data = {
-          keystores: await this.readText(keystores),
-          passwords: passwords,
-          slashing_protection: await slashingProtection?.text(),
+          keystores: await this.readText(postRequest.keystores),
+          passwords: postRequest.passwords,
+          slashing_protection: await postRequest.slashingProtection?.text(),
         };
       } else {
         data = {
-          keystores: await this.readText(keystores),
-          passwords: passwords,
+          keystores: await this.readText(postRequest.keystores),
+          passwords: postRequest.passwords,
         };
       }
       return (await this.request("POST", this.fullUrl, data)) as Web3signerPostResponse;
@@ -48,12 +50,12 @@ export class Web3SignerApi {
 
   /**
    * Must delete all keys from request.pubkeys that are known to the validator client and exist in its persistent storage.
-   * https://ethereum.github.io/keymanager-APIs/#/Remote%20Key%20Manager/DeleteRemoteKeys
+   * https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ImportKeystores
    */
-  public async deleteKeystores(pubkeys: string[]): Promise<Web3signerDeleteResponse> {
+  public async deleteKeystores(deleteRequest: Web3signerDeleteRequest): Promise<Web3signerDeleteResponse> {
     try {
       const data = JSON.stringify({
-        pubkeys: pubkeys,
+        pubkeys: deleteRequest.pubkeys,
       });
       return (await this.request("POST", this.fullUrl, data)) as Web3signerDeleteResponse;
     } catch (e) {

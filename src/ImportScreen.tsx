@@ -23,7 +23,7 @@ import { extractPubkey, getEmoji, importKeystores, Response, shortenPubkey } fro
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./web3signerApi";
 
-export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3SignerApi }) {
+export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3SignerApi | null }) {
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 const search = new URLSearchParams(window.location.search);
 export const base_url = search.get("signer_url");
 const endpoint = "/eth/v1/keystores";
@@ -15,36 +13,6 @@ export type Response = {
 export type Result = {
   status: string;
   message?: string;
-};
-
-export const useListFetcher = (
-  refresh: boolean
-): readonly { [key: string]: any }[] => {
-  const [rows, setRows] = useState([]);
-  useEffect(() => {
-    fetch(full_url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${auth_token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setRows(
-          data.data.map((item: any, index: number) => {
-            return {
-              id: `${index}`,
-              pubkey: item.validating_pubkey,
-              readonly: item.readonly,
-            };
-          })
-        );
-      })
-      .catch((error) => console.log(error));
-  }, [refresh]);
-  return rows;
 };
 
 export const importKeystores = async function (
@@ -88,9 +56,7 @@ export const importKeystores = async function (
   }
 };
 
-export const deleteKeystores = async function (
-  pubkeys: string[]
-): Promise<Response> {
+export const deleteKeystores = async function (pubkeys: string[]): Promise<Response> {
   const data = JSON.stringify({
     pubkeys: pubkeys,
   });
@@ -142,10 +108,7 @@ export const shortenPubkey = (key: string | undefined): string => {
   } else {
     end = 6;
   }
-  return `${prefix}${key.substring(0, end)}...${key.substring(
-    key.length - 4,
-    key.length
-  )}`;
+  return `${prefix}${key.substring(0, end)}...${key.substring(key.length - 4, key.length)}`;
 };
 
 export function getEmoji(status: string) {

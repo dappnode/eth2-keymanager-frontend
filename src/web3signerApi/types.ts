@@ -1,17 +1,16 @@
 export interface Web3signerGetResponse {
   data: {
-    pubkey: string;
-    url: string;
+    validating_pubkey: string;
+    derivation_path: string;
     readonly: boolean;
   }[];
   error?: { message: string };
 }
 
 export interface Web3signerPostRequest {
-  remote_keys: {
-    pubkey: string;
-    url: string;
-  }[];
+  keystores: File[];
+  passwords: string[];
+  slashingProtection: File | undefined;
 }
 
 export interface Web3signerPostResponse {
@@ -31,5 +30,6 @@ export interface Web3signerDeleteResponse {
     status: string;
     message: string;
   }[];
+  slashing_protection?: string;
   error?: { message: string };
 }
