@@ -10,7 +10,7 @@ import { Web3SignerApi } from "./web3signerApi";
 import { Web3signerGetResponse } from "./web3signerApi/types";
 import KeystoresDeleteDialog from "./KeystoresDeleteDialog";
 
-export default function ListScreen({ web3signerApi }: { web3signerApi: Web3SignerApi }) {
+export default function ListScreen({ web3signerApi, network }: { web3signerApi: Web3SignerApi; network: string }) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ export default function ListScreen({ web3signerApi }: { web3signerApi: Web3Signe
             </Typography>
           ) : keystoresGet?.data ? (
             <>
-              <KeystoreList rows={keystoresGet.data} setSelectedRows={setSelectedRows} />
+              <KeystoreList rows={keystoresGet.data} setSelectedRows={setSelectedRows} network={network} />
               <Box
                 sx={{
                   marginTop: 4,

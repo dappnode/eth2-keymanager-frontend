@@ -52,7 +52,7 @@ function App() {
         {web3signerApi ? (
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<ListScreen web3signerApi={web3signerApi} />} />
+              <Route path="/" element={<ListScreen web3signerApi={web3signerApi} network={network} />} />
               <Route path="import" element={<ImportScreen web3signerApi={web3signerApi} />} />
             </Routes>
           </BrowserRouter>

@@ -35,9 +35,11 @@ const columns: GridColDef[] = [
 export default function KeystoreList({
   rows,
   setSelectedRows,
+  network,
 }: {
   rows: Web3signerGetResponse["data"];
   setSelectedRows: (arg0: GridSelectionModel) => void;
+  network: string;
 }) {
   const selection = (selectionModel: GridSelectionModel, details: GridCallbackDetails) => {
     setSelectedRows(selectionModel);
@@ -50,8 +52,15 @@ export default function KeystoreList({
 
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey
-    validating_pubkey: row.validating_pubkey.substring(0, 20) + "...",
-    beaconcha_url: `https://beacon.gnosischain.com/validator/${row.validating_pubkey}`,
+    validating_pubkey: row.validating_pubkey,
+    beaconcha_url:
+      network === "mainnet"
+        ? `https://beaconcha.com/validator/${row.validating_pubkey}`
+        : network === "gnosis"
+        ? `https://beacon.gnosischain.com/validator/${row.validating_pubkey}`
+        : network === "prater"
+        ? `https://prater.beaconcha.com/validator/${row.validating_pubkey}`
+        : "-",
     id: index,
   }));
 
