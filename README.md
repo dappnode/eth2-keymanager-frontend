@@ -26,8 +26,16 @@ With the signer running at a given URL, in the project directory, run:
 
 `yarn start`
 
-Then open [http://localhost:3000?signer_url=<SIGNER_URL>&auth_token=<AUTH_TOKEN>](http://localhost:3000) to view it in the browser.
+Then open [http://localhost:3000?baseUrl=<BASEURL>&authToken=<AUTHTOKEN>&network=<NETWORK>](http://localhost:3000) to view it in the browser.
 
-- `signer_url` - The url of the signer to send API requests to
-- `auth_token` - Optional auth token to pass in API requests
+- `baseUrl` - The url of the signer to send API requests to
+- `authToken` - Optional auth token to pass in API requests
+- `host` - Optional host header to be used in web3signer requests
+- `network` - Optional network, possible values are: prater, mainnet and gnosis
 
+## Developing
+
+1. Install the dependencies: `yarn`
+2. Build with `yarn run build`
+3. Run the website with `yarn start`
+4. Go to http://localhost:3000

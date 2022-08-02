@@ -1,44 +1,47 @@
-import {
-  DataGrid,
-  GridCallbackDetails,
-  GridColDef,
-  GridSelectionModel,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCallbackDetails, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
 import "./App.css";
 import { useState } from "react";
+import { Web3signerGetResponse } from "./web3signerApi/types";
+import LinkIcon from "@mui/icons-material/Link";
 
 const columns: GridColDef[] = [
   {
-    field: "pubkey",
+    field: "validating_pubkey",
     headerName: "Validating Public Key",
+    description: "Validating Public Key (click to copy)",
+
     flex: 1,
     headerClassName: "tableHeader",
   },
   {
-    field: "readonly",
-    headerName: "Read Only",
-    width: 120,
-    align: "right",
+    field: "beaconcha_url",
+    headerName: "Beaconcha URL",
+    description: "Beaconcha URL to track the status of this validator",
+    disableReorder: true,
+    disableColumnMenu: true,
+    disableExport: true,
+    sortable: false,
+    align: "center",
     headerAlign: "right",
+    renderCell: (rowData) => (
+      <a style={{ color: "grey" }} href={rowData.row.beaconcha_url} target="_blank" rel="noopener noreferrer">
+        <LinkIcon />
+      </a>
+    ),
     headerClassName: "tableHeader",
   },
 ];
 
-interface Props {
-  rows: readonly { [key: string]: any }[];
-  selectedRows: GridSelectionModel;
-  setSelectedRows: (arg0: GridSelectionModel) => void;
-}
-
 export default function KeystoreList({
   rows,
-  selectedRows,
   setSelectedRows,
-}: Props) {
-  const selection = (
-    selectionModel: GridSelectionModel,
-    details: GridCallbackDetails
-  ) => {
+  network,
+}: {
+  rows: Web3signerGetResponse["data"];
+  setSelectedRows: (arg0: GridSelectionModel) => void;
+  network: string;
+}) {
+  const selection = (selectionModel: GridSelectionModel, details: GridCallbackDetails) => {
     setSelectedRows(selectionModel);
   };
 
@@ -47,15 +50,35 @@ export default function KeystoreList({
     setPageSize(pageSize);
   };
 
+  const customRows = rows.map((row, index) => ({
+    // only show first 12 chars from pubkey
+    validating_pubkey: row.validating_pubkey,
+    beaconcha_url:
+      network === "mainnet"
+        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
+        : network === "gnosis"
+        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
+        : network === "prater"
+        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
+        : "-",
+    id: index,
+  }));
+
   return (
     <div style={{ height: 400, width: "100%" }}>
       <DataGrid
-        rows={rows}
+        rows={customRows}
+        onCellClick={(params) => {
+          if (params.field === "validating_pubkey") {
+            navigator.clipboard.writeText(params.value);
+          }
+        }}
         columns={columns}
         pageSize={pageSize}
         rowsPerPageOptions={[10, 20, 50, 100]}
         onPageSizeChange={pageSizeChange}
         checkboxSelection
+        disableSelectionOnClick={true}
         onSelectionModelChange={selection}
       />
     </div>

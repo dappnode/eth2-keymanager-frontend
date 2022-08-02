@@ -1,176 +1,35 @@
 import "./App.css";
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
 import KeystoreList from "./KeystoreList";
 import { Link } from "react-router-dom";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {
-  deleteKeystores,
-  shortenPubkey,
-  useListFetcher,
-  Response,
-  getEmoji,
-  base_url,
-} from "./DataStore";
+import { Web3SignerApi } from "./web3signerApi";
+import { Web3signerGetResponse } from "./web3signerApi/types";
+import KeystoresDeleteDialog from "./KeystoresDeleteDialog";
 
-export default function ListScreen() {
+export default function ListScreen({ web3signerApi, network }: { web3signerApi: Web3SignerApi; network: string }) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   const [open, setOpen] = useState(false);
-  const [results, setResults] = useState<Response>();
-  const [requestInFlight, setRequestInFlight] = useState(false);
-  const rows = useListFetcher(!open);
+  const [loading, setLoading] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    setResults(undefined);
-    setRequestInFlight(false);
-  };
+  const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    async function getKeystores() {
+      setLoading(true);
+      const keystoresGet = await web3signerApi.getKeystores();
+      console.log(keystoresGet);
+      setLoading(false);
+      setKeystoresGet(keystoresGet);
+    }
+    if (!open) {
+      getKeystores();
+    }
+  }, [open, web3signerApi]);
 
-  const deleteSelectedKeystores = async () => {
-    setResults(undefined);
-    setRequestInFlight(true);
-    const deleteResults = await deleteKeystores(
-      selectedRows.map((row) => rows[parseInt(row.toString())].pubkey)
-    );
-    setRequestInFlight(false);
-    setResults(deleteResults);
-  };
-
-  const dialog = (
-    <Dialog
-      disableEscapeKeyDown={true}
-      open={open}
-      fullWidth={true}
-      onClose={(event, reason) => {
-        if (!reason) {
-          handleClose();
-        }
-      }}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {results ? "Done" : "Delete Keystores?"}
-      </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
-          {results?.error ? (
-            `Error: ${results.error.message}`
-          ) : results?.data ? (
-            <div>
-              {results.data.map((result, index) => (
-                <div style={{ marginBottom: "20px" }}>
-                  <Typography variant="h5" color="GrayText">
-                    {shortenPubkey(rows[index]?.pubkey)}
-                  </Typography>
-                  <Typography variant="h6">
-                    <b>Status:</b> {result.status} {getEmoji(result.status)}
-                  </Typography>
-                  {result.message ? (
-                    <Typography variant="h6">
-                      <b>Message:</b> {result.message}
-                    </Typography>
-                  ) : null}
-                </div>
-              ))}
-              {results.slashing_protection ? (
-                <div>
-                  <Button
-                    variant="contained"
-                    href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                      results.slashing_protection
-                    )}`}
-                    download="slashing_protection.json"
-                  >
-                    Download Slashing Protection Data
-                  </Button>
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <div>
-              {requestInFlight ? (
-                <Box
-                  sx={{
-                    margin: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircularProgress
-                    sx={{
-                      marginBottom: 4,
-                    }}
-                  />
-                  <DialogContentText id="alert-dialog-description">
-                    Please wait
-                  </DialogContentText>
-                </Box>
-              ) : (
-                <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to delete these keystores?
-                  <ul>
-                    {selectedRows.map((row) => (
-                      <li>
-                        {shortenPubkey(rows[parseInt(row.toString())].pubkey)}
-                      </li>
-                    ))}
-                  </ul>
-                  After deletion, these keystores won't be used for signing
-                  anymore and your slashing protection data will be downloaded.{" "}
-                  <br />
-                  <br />
-                  <b>
-                    Keep the slashing protection data for when you want to
-                    import these keystores to a new validator.
-                  </b>
-                </DialogContentText>
-              )}
-            </div>
-          )}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        {!results && !requestInFlight ? (
-          <Button
-            onClick={() => deleteSelectedKeystores()}
-            variant="contained"
-            sx={{ marginRight: 1 }}
-          >
-            Confirm
-          </Button>
-        ) : null}
-        <Button onClick={handleClose} variant="outlined">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
   return (
     <div>
       <Box
@@ -185,46 +44,62 @@ export default function ListScreen() {
           <Typography variant="h5">
             <b>Your Validator Accounts List</b>
           </Typography>
-          <Typography color="GrayText" sx={{ marginBottom: 4 }}>
-            {base_url
-              ? `Signer URL: ${base_url}`
-              : "⚠️ No value passed for signer_url"}
-          </Typography>
-          <KeystoreList
-            rows={rows}
-            selectedRows={selectedRows}
-            setSelectedRows={setSelectedRows}
-          />
-          <Box
-            sx={{
-              marginTop: 4,
-              display: "flex",
-              flexDirection: "row-reverse",
-              alignContent: "end",
-              alignItems: "end",
-              width: "100%",
-            }}
-          >
-            <Link to={{ pathname: "/import", search: window.location.search }}>
-              <Button variant="contained" size="large" endIcon={<BackupIcon />}>
-                Import Keystores
-              </Button>
-            </Link>
-            <Button
-              variant="contained"
-              size="large"
-              color="error"
-              disabled={selectedRows.length === 0}
-              sx={{ marginRight: 4 }}
-              endIcon={<DeleteForeverIcon />}
-              onClick={handleClickOpen}
-            >
-              Delete Keystores
-            </Button>
-          </Box>
+
+          {loading ? (
+            <CircularProgress
+              sx={{
+                marginBottom: 4,
+              }}
+            />
+          ) : keystoresGet?.error ? (
+            <Typography variant="h5" color="error">
+              Error: {keystoresGet.error.message}
+            </Typography>
+          ) : keystoresGet?.data ? (
+            <>
+              <KeystoreList rows={keystoresGet.data} setSelectedRows={setSelectedRows} network={network} />
+              <Box
+                sx={{
+                  marginTop: 4,
+                  display: "flex",
+                  flexDirection: "row-reverse",
+                  alignContent: "end",
+                  alignItems: "end",
+                  width: "100%",
+                }}
+              >
+                <Link to={{ pathname: "/import", search: window.location.search }}>
+                  <Button variant="contained" size="large" endIcon={<BackupIcon />}>
+                    Import Keystores
+                  </Button>
+                </Link>
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  disabled={selectedRows.length === 0}
+                  sx={{ marginRight: 4 }}
+                  endIcon={<DeleteForeverIcon />}
+                  onClick={() => setOpen(true)}
+                >
+                  Delete Keystores
+                </Button>
+              </Box>
+              {open && (
+                <KeystoresDeleteDialog
+                  web3signerApi={web3signerApi}
+                  rows={keystoresGet.data}
+                  selectedRows={selectedRows}
+                  open={open}
+                  setOpen={setOpen}
+                />
+              )}
+            </>
+          ) : (
+            <Typography>No keystores found</Typography>
+          )}
         </Card>
       </Box>
-      {dialog}
     </div>
   );
 }
