@@ -55,11 +55,11 @@ export default function KeystoreList({
     validating_pubkey: row.validating_pubkey,
     beaconcha_url:
       network === "mainnet"
-        ? `https://beaconcha.com/validator/${row.validating_pubkey}`
+        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
         : network === "gnosis"
-        ? `https://beacon.gnosischain.com/validator/${row.validating_pubkey}`
+        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
         : network === "prater"
-        ? `https://prater.beaconcha.com/validator/${row.validating_pubkey}`
+        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
         : "-",
     id: index,
   }));

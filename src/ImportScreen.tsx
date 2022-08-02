@@ -19,12 +19,17 @@ import { useState } from "react";
 import FileDrop from "./FileDrop";
 import BackupIcon from "@mui/icons-material/Backup";
 import CloseIcon from "@mui/icons-material/Close";
-import { extractPubkey, getEmoji, importKeystores, Response, shortenPubkey } from "./DataStore";
+import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./web3signerApi";
+import { Web3signerPostResponse } from "./web3signerApi/types";
 
-export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3SignerApi | null }) {
+export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3SignerApi }) {
+  const [keystoresPostResponse, setKeystoresPostResponse] = useState<Web3signerPostResponse>();
+  const [open, setOpen] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
+  const [passwords, setPasswords] = useState<string[]>([]);
+
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
     const passwordsToAdd: string[] = [];
@@ -46,7 +51,6 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
     setSlashingFile(files[0]);
   };
 
-  const [passwords, setPasswords] = useState<string[]>([]);
   const passwordEntered = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, index: number) => {
     const p = event.target.value;
     const newList = Array.from(passwords);
@@ -96,10 +100,6 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
     setSlashingProtectionIncluded(checked);
   };
 
-  // DIALOG
-  const [open, setOpen] = useState(false);
-  const [results, setResults] = useState<Response>();
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -121,7 +121,9 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{results ? "Import Completed" : "Importing..."}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {keystoresPostResponse?.data ? "Import Completed" : "Importing..."}
+      </DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -131,12 +133,12 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
             alignItems: "left",
           }}
         >
-          {results ? (
-            results.error ? (
-              `Error: ${results.error.message}`
+          {keystoresPostResponse ? (
+            keystoresPostResponse.error ? (
+              `Error: ${keystoresPostResponse.error.message}`
             ) : (
               <div>
-                {results.data.map((result, index) => (
+                {keystoresPostResponse.data.map((result, index) => (
                   <div style={{ marginBottom: "20px" }} key={index}>
                     <Typography variant="h5" color="GrayText">
                       {shortenPubkey(acceptedFiles[index]?.pubkey)}
@@ -172,7 +174,7 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
           )}
         </Box>
       </DialogContent>
-      {results ? (
+      {keystoresPostResponse ? (
         <DialogActions>
           <Button onClick={handleClose} variant="contained">
             Close
@@ -266,14 +268,14 @@ export default function ImportScreen({ web3signerApi }: { web3signerApi: Web3Sig
             endIcon={<BackupIcon />}
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
-              setResults(undefined);
+              setKeystoresPostResponse(undefined);
               handleClickOpen();
-              const results = await importKeystores(
-                acceptedFiles.map((f) => f.file),
+              const results = await web3signerApi.importKeystores({
+                keystores: acceptedFiles.map((f) => f.file),
                 passwords,
-                slashingFile
-              );
-              setResults(results);
+                slashingProtection: slashingFile,
+              });
+              setKeystoresPostResponse(results);
             }}
           >
             Submit Keystores

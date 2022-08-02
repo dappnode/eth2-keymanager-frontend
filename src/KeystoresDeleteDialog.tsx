@@ -119,8 +119,8 @@ export default function KeystoresDeleteDialog({
                 <DialogContentText id="alert-dialog-description">
                   Are you sure you want to delete these keystores?
                   <ul>
-                    {selectedRows.map((row) => (
-                      <li>{shortenPubkey(rows[parseInt(row.toString())].validating_pubkey)}</li>
+                    {selectedRows.map((row, i) => (
+                      <li key={i}>{shortenPubkey(rows[parseInt(row.toString())].validating_pubkey)}</li>
                     ))}
                   </ul>
                   After deletion, these keystores won't be used for signing anymore and your slashing protection data

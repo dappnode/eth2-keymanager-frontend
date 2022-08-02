@@ -37,7 +37,7 @@ export class Web3SignerApi {
           passwords: postRequest.passwords,
         };
       }
-      return (await this.request("POST", this.fullUrl, data)) as Web3signerPostResponse;
+      return (await this.request("POST", this.fullUrl, JSON.stringify(data))) as Web3signerPostResponse;
     } catch (e) {
       return {
         data: [],
@@ -57,7 +57,7 @@ export class Web3SignerApi {
       const data = JSON.stringify({
         pubkeys: deleteRequest.pubkeys,
       });
-      return (await this.request("POST", this.fullUrl, data)) as Web3signerDeleteResponse;
+      return (await this.request("DELETE", this.fullUrl, data)) as Web3signerDeleteResponse;
     } catch (e) {
       return {
         data: [],
@@ -100,7 +100,7 @@ export class Web3SignerApi {
     const response = await fetch(url, {
       method,
       headers,
-      body: body ? JSON.stringify(body) : undefined,
+      body: body ? body : undefined,
     });
     if (response.ok) return await response.json();
     throw new Error(response.statusText);
