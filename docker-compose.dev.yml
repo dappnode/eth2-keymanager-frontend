@@ -1,0 +1,31 @@
+verison: "3.9"
+services:
+  web3signer:
+    build:
+      context: .
+      dockerfile: Dockerfile.signer
+    args:
+      WEB3SIGNER_VERSION: v22.7.0
+    env:
+      NETWORK: "prater"
+      PGPASSWORD: "password"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "web3signer"
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    args:
+      WEB3SIGNER_VERSION: v22.7.0
+    env:
+      NETWORK: "prater"
+      PGPASSWORD: "password"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "web3signer"
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
