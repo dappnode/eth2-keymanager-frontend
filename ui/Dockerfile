@@ -1,7 +1,7 @@
 FROM node:14-alpine3.14 as build
-RUN npm install --globally react-scripts
 WORKDIR /app
-COPY package.json yarn.lock ./
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn install
 COPY . .
 RUN yarn build

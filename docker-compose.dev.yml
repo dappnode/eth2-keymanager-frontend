@@ -1,31 +1,43 @@
-verison: "3.9"
+version: "3.7"
 services:
   web3signer:
     build:
-      context: .
-      dockerfile: Dockerfile.signer
-    args:
-      WEB3SIGNER_VERSION: v22.7.0
-    env:
+      context: signer
+    environment:
       NETWORK: "prater"
       PGPASSWORD: "password"
       POSTGRES_PASSWORD: "password"
       POSTGRES_USER: "postgres"
       POSTGRES_DB: "web3signer"
-  db:
+    security_opt:
+      - "seccomp:unconfined"
+    depends_on:
+      - postgres
+    networks:
+      keymanager_frontend:
+        aliases:
+          - web3signer.web3signer-prater.dappnode
+  postgres:
     build:
-      context: .
-      dockerfile: Dockerfile.db
-    args:
-      WEB3SIGNER_VERSION: v22.7.0
-    env:
+      context: postgres
+    environment:
       NETWORK: "prater"
       PGPASSWORD: "password"
       POSTGRES_PASSWORD: "password"
       POSTGRES_USER: "postgres"
       POSTGRES_DB: "web3signer"
-
+    networks:
+      keymanager_frontend:
+        aliases:
+          - postgres.web3signer-prater.dappnode
   ui:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ui
+    networks:
+      keymanager_frontend:
+        aliases:
+          - ui.web3signer-prater.dappnode
+
+networks:
+  keymanager_frontend:
+    name: keymanager_frontend
