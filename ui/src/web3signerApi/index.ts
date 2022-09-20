@@ -22,7 +22,9 @@ export class Web3SignerApi {
    * Import remote keys for the validator client to request duties for.
    * https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ListKeys
    */
-  public async importKeystores(postRequest: Web3signerPostRequest): Promise<Web3signerPostResponse> {
+  public async importKeystores(
+    postRequest: Web3signerPostRequest
+  ): Promise<Web3signerPostResponse> {
     try {
       var data;
       if (postRequest.slashingProtection) {
@@ -37,7 +39,11 @@ export class Web3SignerApi {
           passwords: postRequest.passwords,
         };
       }
-      return (await this.request("POST", this.fullUrl, JSON.stringify(data))) as Web3signerPostResponse;
+      return (await this.request(
+        "POST",
+        this.fullUrl,
+        JSON.stringify(data)
+      )) as Web3signerPostResponse;
     } catch (e) {
       return {
         data: [],
@@ -52,12 +58,18 @@ export class Web3SignerApi {
    * Must delete all keys from request.pubkeys that are known to the validator client and exist in its persistent storage.
    * https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ImportKeystores
    */
-  public async deleteKeystores(deleteRequest: Web3signerDeleteRequest): Promise<Web3signerDeleteResponse> {
+  public async deleteKeystores(
+    deleteRequest: Web3signerDeleteRequest
+  ): Promise<Web3signerDeleteResponse> {
     try {
       const data = JSON.stringify({
         pubkeys: deleteRequest.pubkeys,
       });
-      return (await this.request("DELETE", this.fullUrl, data)) as Web3signerDeleteResponse;
+      return (await this.request(
+        "DELETE",
+        this.fullUrl,
+        data
+      )) as Web3signerDeleteResponse;
     } catch (e) {
       return {
         data: [],
@@ -92,7 +104,10 @@ export class Web3SignerApi {
     };
 
     if (this.authToken) {
-      headers = { ...headers, ...{ Authorization: `Bearer ${this.authToken}` } };
+      headers = {
+        ...headers,
+        ...{ Authorization: `Bearer ${this.authToken}` },
+      };
     }
     if (this.host) {
       headers = { ...headers, ...{ Host: this.host } };

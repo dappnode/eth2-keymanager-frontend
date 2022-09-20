@@ -1,34 +1,26 @@
 //External components
-import Typography from "@mui/material/Typography";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { Container } from "@mui/material";
 
 //Internal components
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
 import ListScreen from "./ListScreen";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
 //Styles
 import "./App.css";
 
-//Other libraries
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { useEffect } from "react";
+//Themes
+import { darkTheme } from "./Themes/darkTheme";
+
+//Logic
 import { getUrlParams } from "./getUrlParams";
 import { Web3SignerApi } from "./web3signerApi";
 
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    primary: {
-      main: "#4872b5",
-    },
-    background: {
-      default: "#0a0a0a",
-      paper: "#121212",
-    },
-  },
-});
+//Other libraries
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
 
 function App() {
   const [network, setNetwork] = React.useState("");
@@ -61,10 +53,9 @@ function App() {
             </Routes>
           </BrowserRouter>
         ) : (
-          // show a beautiful error message if the API is not available
-          <Typography variant="h5" color="error">
-            Error: API is not available
-          </Typography>
+          <>
+            <ErrorMessage message="The API is not available. Please, check the URL and try again." />
+          </>
         )}
       </Container>
     </ThemeProvider>
