@@ -8,6 +8,7 @@ export default function ToolBar({
 }): JSX.Element {
   return (
     <Toolbar>
+      <img src="/assets/dappnode_logo.png" alt="logo" height={50} />
       <ToolBarTypography
         text={`ETH2 Key Manager ${network ? `(${network})` : ""}`}
       />
