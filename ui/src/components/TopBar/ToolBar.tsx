@@ -1,5 +1,5 @@
 import Toolbar from "@mui/material/Toolbar";
-import ToolBarTypography from "../../Styles/TopBarStyle";
+import HeaderTypography from "../../Styles/Typographies";
 
 export default function ToolBar({
   network,
@@ -9,7 +9,7 @@ export default function ToolBar({
   return (
     <Toolbar>
       <img src="/assets/dappnode_logo.png" alt="logo" height={50} />
-      <ToolBarTypography
+      <HeaderTypography
         text={`ETH2 Key Manager ${network ? `(${network})` : ""}`}
       />
     </Toolbar>

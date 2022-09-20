@@ -1,16 +1,32 @@
-import "./App.css";
+//Internal components
+import Message from "../Messages/Message";
+import KeystoreList from "../../KeystoreList";
+import KeystoresDeleteDialog from "../../KeystoresDeleteDialog";
+
+//External components
 import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
-import KeystoreList from "./KeystoreList";
 import { Link } from "react-router-dom";
 import { GridSelectionModel } from "@mui/x-data-grid";
+
+//Logic
+import { Web3SignerApi } from "../../web3signerApi";
+import { Web3signerGetResponse } from "../../web3signerApi/types";
 import { useEffect, useState } from "react";
+
+//Icons
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { Web3SignerApi } from "./web3signerApi";
-import { Web3signerGetResponse } from "./web3signerApi/types";
-import KeystoresDeleteDialog from "./KeystoresDeleteDialog";
 
-export default function ListScreen({ web3signerApi, network }: { web3signerApi: Web3SignerApi; network: string }) {
+//Styles
+import { boxStyle } from "../../Styles/ListStyles";
+
+export default function ValidatorList({
+  web3signerApi,
+  network,
+}: {
+  web3signerApi: Web3SignerApi;
+  network: string;
+}) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +37,6 @@ export default function ListScreen({ web3signerApi, network }: { web3signerApi: 
     async function getKeystores() {
       setLoading(true);
       const keystoresGet = await web3signerApi.getKeystores();
-      console.log(keystoresGet);
       setLoading(false);
       setKeystoresGet(keystoresGet);
     }
@@ -32,17 +47,10 @@ export default function ListScreen({ web3signerApi, network }: { web3signerApi: 
 
   return (
     <div>
-      <Box
-        sx={{
-          margin: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
-        }}
-      >
+      <Box className="box" sx={boxStyle}>
         <Card sx={{ padding: 4 }}>
           <Typography variant="h5">
-            <b>Your Validator Accounts List</b>
+            <b>Your Validator Accounts</b>
           </Typography>
 
           {loading ? (
@@ -57,7 +65,11 @@ export default function ListScreen({ web3signerApi, network }: { web3signerApi: 
             </Typography>
           ) : keystoresGet?.data ? (
             <>
-              <KeystoreList rows={keystoresGet.data} setSelectedRows={setSelectedRows} network={network} />
+              <KeystoreList
+                rows={keystoresGet.data}
+                setSelectedRows={setSelectedRows}
+                network={network}
+              />
               <Box
                 sx={{
                   marginTop: 4,
@@ -68,8 +80,14 @@ export default function ListScreen({ web3signerApi, network }: { web3signerApi: 
                   width: "100%",
                 }}
               >
-                <Link to={{ pathname: "/import", search: window.location.search }}>
-                  <Button variant="contained" size="large" endIcon={<BackupIcon />}>
+                <Link
+                  to={{ pathname: "/import", search: window.location.search }}
+                >
+                  <Button
+                    variant="contained"
+                    size="large"
+                    endIcon={<BackupIcon />}
+                  >
                     Import Keystores
                   </Button>
                 </Link>
@@ -96,7 +114,7 @@ export default function ListScreen({ web3signerApi, network }: { web3signerApi: 
               )}
             </>
           ) : (
-            <Typography>No keystores found</Typography>
+            <Message severity="warning" message="No keystores found" />
           )}
         </Card>
       </Box>

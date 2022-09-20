@@ -5,14 +5,14 @@ import { Container } from "@mui/material";
 //Internal components
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
-import ListScreen from "./ListScreen";
-import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import ValidatorList from "./components/ValidatorList/ValidatorList";
+import Message from "./components/Messages/Message";
 
 //Styles
 import "./App.css";
 
 //Themes
-import { darkTheme } from "./Themes/darkTheme";
+import { darkTheme } from "./Themes/globalThemes";
 
 //Logic
 import { getUrlParams } from "./getUrlParams";
@@ -36,14 +36,17 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <TopBar network={network} />
-      <Container component="main" maxWidth="lg">
+      <Container component="main" maxWidth="xl">
         {web3signerApi ? (
           <BrowserRouter>
             <Routes>
               <Route
                 path="/"
                 element={
-                  <ListScreen web3signerApi={web3signerApi} network={network} />
+                  <ValidatorList
+                    web3signerApi={web3signerApi}
+                    network={network}
+                  />
                 }
               />
               <Route
@@ -54,7 +57,10 @@ function App() {
           </BrowserRouter>
         ) : (
           <>
-            <ErrorMessage message="The API is not available. Please, check the URL and try again." />
+            <Message
+              message="The API is not available. Please, check the URL and try again."
+              severity="error"
+            />
           </>
         )}
       </Container>

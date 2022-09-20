@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 
-export default function ToolBarTypography({
+export default function HeaderTypography({
   text,
 }: {
   text: string;
