@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  web3signer:
+    build:
+      context: signer
+    environment:
+      NETWORK: "prater"
+      PGPASSWORD: "password"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "web3signer"
+    security_opt:
+      - "seccomp:unconfined"
+    depends_on:
+      - postgres
+    networks:
+      keymanager_frontend:
+        aliases:
+          - web3signer.web3signer-prater.dappnode
+  postgres:
+    build:
+      context: postgres
+    environment:
+      NETWORK: "prater"
+      PGPASSWORD: "password"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "web3signer"
+    networks:
+      keymanager_frontend:
+        aliases:
+          - postgres.web3signer-prater.dappnode
+  ui:
+    build:
+      context: ui
+    networks:
+      keymanager_frontend:
+        aliases:
+          - ui.web3signer-prater.dappnode
+
+networks:
+  keymanager_frontend:
+    name: keymanager_frontend
