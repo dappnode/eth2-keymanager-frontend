@@ -12,8 +12,11 @@ import {
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { shortenPubkey, getEmoji } from "./DataStore";
-import { Web3SignerApi } from "./web3signerApi";
-import { Web3signerDeleteResponse, Web3signerGetResponse } from "./web3signerApi/types";
+import { Web3SignerApi } from "./logic/web3signerApi";
+import {
+  Web3signerDeleteResponse,
+  Web3signerGetResponse,
+} from "./logic/web3signerApi/types";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -28,14 +31,17 @@ export default function KeystoresDeleteDialog({
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const [keystoresDelete, setKeystoresDelete] = useState<Web3signerDeleteResponse>();
+  const [keystoresDelete, setKeystoresDelete] =
+    useState<Web3signerDeleteResponse>();
   const [requestInFlight, setRequestInFlight] = useState(false);
 
   async function deleteSelectedKeystores() {
     setKeystoresDelete(undefined);
     setRequestInFlight(true);
     const keystoresDelete = await web3signerApi.deleteKeystores({
-      pubkeys: selectedRows.map((row) => rows[parseInt(row.toString())].validating_pubkey),
+      pubkeys: selectedRows.map(
+        (row) => rows[parseInt(row.toString())].validating_pubkey
+      ),
     });
     setRequestInFlight(false);
     setKeystoresDelete(keystoresDelete);
@@ -56,7 +62,9 @@ export default function KeystoresDeleteDialog({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{keystoresDelete ? "Done" : "Delete Keystores?"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        {keystoresDelete ? "Done" : "Delete Keystores?"}
+      </DialogTitle>
       <DialogContent>
         <Box
           sx={{
@@ -89,7 +97,9 @@ export default function KeystoresDeleteDialog({
                 <div>
                   <Button
                     variant="contained"
-                    href={`data:text/json;charset=utf-8,${encodeURIComponent(keystoresDelete.slashing_protection)}`}
+                    href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                      keystoresDelete.slashing_protection
+                    )}`}
                     download="slashing_protection.json"
                   >
                     Download Slashing Protection Data
@@ -113,21 +123,29 @@ export default function KeystoresDeleteDialog({
                       marginBottom: 4,
                     }}
                   />
-                  <DialogContentText id="alert-dialog-description">Please wait</DialogContentText>
+                  <DialogContentText id="alert-dialog-description">
+                    Please wait
+                  </DialogContentText>
                 </Box>
               ) : (
                 <DialogContentText id="alert-dialog-description">
                   Are you sure you want to delete these keystores?
                   <ul>
                     {selectedRows.map((row, i) => (
-                      <li key={i}>{shortenPubkey(rows[parseInt(row.toString())].validating_pubkey)}</li>
+                      <li key={i}>
+                        {shortenPubkey(
+                          rows[parseInt(row.toString())].validating_pubkey
+                        )}
+                      </li>
                     ))}
                   </ul>
-                  After deletion, these keystores won't be used for signing anymore and your slashing protection data
-                  will be downloaded. <br />
+                  After deletion, these keystores won't be used for signing
+                  anymore and your slashing protection data will be downloaded.{" "}
+                  <br />
                   <br />
                   <b>
-                    Keep the slashing protection data for when you want to import these keystores to a new validator.
+                    Keep the slashing protection data for when you want to
+                    import these keystores to a new validator.
                   </b>
                 </DialogContentText>
               )}
@@ -137,7 +155,11 @@ export default function KeystoresDeleteDialog({
       </DialogContent>
       <DialogActions>
         {!keystoresDelete && !requestInFlight ? (
-          <Button onClick={() => deleteSelectedKeystores()} variant="contained" sx={{ marginRight: 1 }}>
+          <Button
+            onClick={() => deleteSelectedKeystores()}
+            variant="contained"
+            sx={{ marginRight: 1 }}
+          >
             Confirm
           </Button>
         ) : null}

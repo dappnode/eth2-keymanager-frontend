@@ -16,7 +16,7 @@ import { darkTheme } from "./Themes/globalThemes";
 
 //Logic
 import { getUrlParams } from "./getUrlParams";
-import { Web3SignerApi } from "./web3signerApi";
+import { Web3SignerApi } from "./logic/web3signerApi";
 
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
