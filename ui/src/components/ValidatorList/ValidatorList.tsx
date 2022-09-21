@@ -2,10 +2,10 @@
 import Message from "../Messages/Message";
 import KeystoreList from "../../KeystoreList";
 import KeystoresDeleteDialog from "../../KeystoresDeleteDialog";
+import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
-import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Box, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
@@ -13,12 +13,9 @@ import { Web3SignerApi } from "../../web3signerApi";
 import { Web3signerGetResponse } from "../../web3signerApi/types";
 import { useEffect, useState } from "react";
 
-//Icons
-import BackupIcon from "@mui/icons-material/Backup";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-
 //Styles
-import { boxStyle } from "../../Styles/ListStyles";
+import { boxStyle } from "../../Styles/listStyles";
+import HeaderTypography from "../../Styles/Typographies";
 
 export default function ValidatorList({
   web3signerApi,
@@ -49,9 +46,7 @@ export default function ValidatorList({
     <div>
       <Box className="box" sx={boxStyle}>
         <Card sx={{ padding: 4 }}>
-          <Typography variant="h5">
-            <b>Your Validator Accounts</b>
-          </Typography>
+          <HeaderTypography text="Your validator accounts" />
 
           {loading ? (
             <CircularProgress
@@ -60,9 +55,7 @@ export default function ValidatorList({
               }}
             />
           ) : keystoresGet?.error ? (
-            <Typography variant="h5" color="error">
-              Error: {keystoresGet.error.message}
-            </Typography>
+            <Message message={keystoresGet.error.message} severity="error" />
           ) : keystoresGet?.data ? (
             <>
               <KeystoreList
@@ -70,39 +63,10 @@ export default function ValidatorList({
                 setSelectedRows={setSelectedRows}
                 network={network}
               />
-              <Box
-                sx={{
-                  marginTop: 4,
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  alignContent: "end",
-                  alignItems: "end",
-                  width: "100%",
-                }}
-              >
-                <Link
-                  to={{ pathname: "/import", search: window.location.search }}
-                >
-                  <Button
-                    variant="contained"
-                    size="large"
-                    endIcon={<BackupIcon />}
-                  >
-                    Import Keystores
-                  </Button>
-                </Link>
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="error"
-                  disabled={selectedRows.length === 0}
-                  sx={{ marginRight: 4 }}
-                  endIcon={<DeleteForeverIcon />}
-                  onClick={() => setOpen(true)}
-                >
-                  Delete Keystores
-                </Button>
-              </Box>
+              <ButtonsBox
+                isTableEmpty={selectedRows.length === 0}
+                setOpen={setOpen}
+              />
               {open && (
                 <KeystoresDeleteDialog
                   web3signerApi={web3signerApi}
