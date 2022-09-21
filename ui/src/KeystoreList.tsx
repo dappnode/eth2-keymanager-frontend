@@ -1,14 +1,23 @@
-import { DataGrid, GridCallbackDetails, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
-import "./App.css";
+//External components
+import {
+  DataGrid,
+  GridCallbackDetails,
+  GridColDef,
+  GridSelectionModel,
+} from "@mui/x-data-grid";
+
+//Logic
 import { useState } from "react";
-import { Web3signerGetResponse } from "./web3signerApi/types";
+import { Web3signerGetResponse } from "./logic/web3signerApi/types";
+
+//Icons
 import LinkIcon from "@mui/icons-material/Link";
 
 const columns: GridColDef[] = [
   {
     field: "validating_pubkey",
     headerName: "Validating Public Key",
-    description: "Validating Public Key (click to copy)",
+    description: "Validating Public Key",
 
     flex: 1,
     headerClassName: "tableHeader",
@@ -24,7 +33,12 @@ const columns: GridColDef[] = [
     align: "center",
     headerAlign: "right",
     renderCell: (rowData) => (
-      <a style={{ color: "grey" }} href={rowData.row.beaconcha_url} target="_blank" rel="noopener noreferrer">
+      <a
+        style={{ color: "grey" }}
+        href={rowData.row.beaconcha_url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <LinkIcon />
       </a>
     ),
@@ -41,7 +55,10 @@ export default function KeystoreList({
   setSelectedRows: (arg0: GridSelectionModel) => void;
   network: string;
 }) {
-  const selection = (selectionModel: GridSelectionModel, details: GridCallbackDetails) => {
+  const selection = (
+    selectionModel: GridSelectionModel,
+    details: GridCallbackDetails
+  ) => {
     setSelectedRows(selectionModel);
   };
 
