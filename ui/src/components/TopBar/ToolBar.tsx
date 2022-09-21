@@ -10,7 +10,7 @@ export default function ToolBar({
     <Toolbar>
       <img src="/assets/dappnode_logo.png" alt="logo" height={50} />
       <HeaderTypography
-        text={`ETH2 Key Manager ${network ? `(${network})` : ""}`}
+        text={`ETH2 Key Manager ${network && `(${network})`}`}
       />
     </Toolbar>
   );
