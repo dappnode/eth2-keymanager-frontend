@@ -13,11 +13,33 @@ export class BeaconchaApi {
     this.fullUrl = this.baseUrl + this.endpoint;
   }
 
+  /*
+   * Fetch info for every validator PK
+   */
+  public async fetchAllValidatorsInfo({
+    beaconchaApi,
+    allValidatorPKs,
+  }: {
+    beaconchaApi: BeaconchaApi;
+    allValidatorPKs: string[];
+  }): Promise<BeaconchaGetResponse[]> {
+    const validatorsInfo = new Array<BeaconchaGetResponse>();
+
+    allValidatorPKs.forEach(async (pubkey) => {
+      let validatorInfo = await beaconchaApi.fetchValidatorInfo(pubkey);
+      validatorsInfo.push(validatorInfo);
+    });
+
+    return validatorsInfo;
+  }
+
   /**
-   * Get validator indexes for a list of public keys
+   * Get validator info for a list of public keys from beaconcha API
    * https://beaconcha.in/api/v1/docs/index.html#/Validator/get_api_v1_validator__indexOrPubkey_
    */
-  public async getValidatorInfo(pubkey: string): Promise<BeaconchaGetResponse> {
+  public async fetchValidatorInfo(
+    pubkey: string
+  ): Promise<BeaconchaGetResponse> {
     try {
       return (await this.request(
         "GET",
