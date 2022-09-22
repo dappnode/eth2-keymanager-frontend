@@ -18,7 +18,7 @@ import { boxStyle } from "../../Styles/listStyles";
 import HeaderTypography from "../../Styles/Typographies";
 import { BeaconchaGetResponse } from "../../logic/beaconchaApi/types";
 import { BeaconchaApi } from "../../logic/beaconchaApi";
-import getAllValidatorIndexes from "../../logic/beaconchaApi/getAllValidatorIndexes";
+import getAllValidatorInfo from "../../logic/beaconchaApi/getAllValidatorInfo";
 
 export default function ValidatorList({
   web3signerApi,
@@ -34,8 +34,7 @@ export default function ValidatorList({
   const [loading, setLoading] = useState(false);
 
   const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
-  const [validatorIndexes, setValidatorIndexes] =
-    useState<BeaconchaGetResponse>();
+  const [validatorInfo, setValidatorInfo] = useState<BeaconchaGetResponse>();
 
   useEffect(() => {
     async function getKeystores() {
@@ -48,14 +47,32 @@ export default function ValidatorList({
         "0x80000001677f23a227dfed6f61b132d114be83b8ad0aa5f3c5d1d77e6ee0bf5f73b0af750cc34e8f2dae73c21dc36f4a",
         "0x800006d4b1026b6149168b342e6883d48ede9539202cc414448b1b796394440a5401e8d6620e65d7c77654bf1db199b1",
       ]; //TODO Remove this
-      const validatorIndexes = await getAllValidatorIndexes({
+
+      const allValidatorInfo = await getAllValidatorInfo({
         beaconchaApi,
         allValidatorPKs,
       });
 
-      console.log("Validator indexes", validatorIndexes);
+      const validatorIndexes = allValidatorInfo.map(
+        (validatorInfoItem) => validatorInfoItem.data.validatorindex
+      );
 
-      //setKeystoresGet(keystoresGet);
+      const validatorsStatus = allValidatorInfo.map(
+        (validatorInfoItem) => validatorInfoItem.data["status"]
+      );
+
+      console.log("allValidatorInfo", allValidatorInfo);
+      console.log("validatorIndexes", validatorIndexes);
+      console.log("validatorsStatus", validatorsStatus);
+
+      /*const validatorIndexes = await getAllValidatorInfo({
+        beaconchaApi,
+        allValidatorPKs,
+      });*/
+
+      //console.log("Validator indexes", validatorIndexes);
+
+      //setKeystoresGet(keystoresGet); TODO uncomment this
       setLoading(false);
     }
     if (!open) {

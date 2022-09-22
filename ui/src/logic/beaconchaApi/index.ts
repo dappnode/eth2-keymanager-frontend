@@ -37,13 +37,6 @@ export class BeaconchaApi {
     }
   }
 
-  public async getValidatorIndex(pubkey: string): Promise<number> {
-    const response = await this.getValidatorInfo(pubkey);
-    const validatorIndex = response.data.validatorindex;
-
-    return validatorIndex ?? -1; //TODO: handle error
-  }
-
   private async request(method: string, url: string, body?: any): Promise<any> {
     let headers = {
       "Content-Type": "application/json",
