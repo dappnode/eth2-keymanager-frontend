@@ -9,8 +9,8 @@ import { Box, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
-import { Web3SignerApi } from "../../logic/web3signerApi";
-import { Web3signerGetResponse } from "../../logic/web3signerApi/types";
+import { Web3SignerApi } from "../../apis/web3signerApi";
+import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { useEffect, useState } from "react";
 
 //Styles

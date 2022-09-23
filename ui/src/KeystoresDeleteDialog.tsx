@@ -12,11 +12,11 @@ import {
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { shortenPubkey, getEmoji } from "./DataStore";
-import { Web3SignerApi } from "./logic/web3signerApi";
+import { Web3SignerApi } from "./apis/web3signerApi";
 import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
-} from "./logic/web3signerApi/types";
+} from "./apis/web3signerApi/types";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
