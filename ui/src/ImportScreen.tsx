@@ -21,8 +21,8 @@ import BackupIcon from "@mui/icons-material/Backup";
 import CloseIcon from "@mui/icons-material/Close";
 import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
-import { Web3SignerApi } from "./web3signerApi";
-import { Web3signerPostResponse } from "./web3signerApi/types";
+import { Web3SignerApi } from "./apis/web3signerApi";
+import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 
 export default function ImportScreen({
   web3signerApi,
