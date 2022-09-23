@@ -17,5 +17,6 @@
     "jsx": "react-jsx",
     "useUnknownInCatchVariables": false
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["./tests/", "./node_modules/", "./dist/"]
 }
