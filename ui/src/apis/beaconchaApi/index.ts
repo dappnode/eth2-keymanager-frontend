@@ -31,10 +31,10 @@ export class BeaconchaApi {
 
     console.log("allValidatorPKs", allValidatorPKs); //TODO Remove
 
-    allValidatorPKs.forEach(async (pubkey) => {
-      let validatorInfo = await beaconchaApi.fetchValidatorInfo(pubkey);
+    for await (const validatorPK of allValidatorPKs) {
+      const validatorInfo = await beaconchaApi.fetchValidatorInfo(validatorPK);
       validatorsInfo.push(validatorInfo);
-    });
+    }
 
     return validatorsInfo;
   }
