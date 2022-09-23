@@ -13,7 +13,10 @@ export const shortenPubkey = (key: string | undefined): string => {
   } else {
     end = 6;
   }
-  return `${prefix}${key.substring(0, end)}...${key.substring(key.length - 4, key.length)}`;
+  return `${prefix}${key.substring(0, end)}...${key.substring(
+    key.length - 4,
+    key.length
+  )}`;
 };
 
 export function getEmoji(status: string) {

@@ -17,7 +17,5 @@ export default function buildValidatorSummaryURL({
 
   summaryValidatorURL = summaryValidatorURL.slice(0, -1);
 
-  console.log(summaryValidatorURL); //TODO Remove
-
   return summaryValidatorURL;
 }

@@ -29,8 +29,6 @@ export class BeaconchaApi {
       (keystoreData) => keystoreData.validating_pubkey
     );
 
-    console.log("allValidatorPKs", allValidatorPKs); //TODO Remove
-
     for await (const validatorPK of allValidatorPKs) {
       const validatorInfo = await beaconchaApi.fetchValidatorInfo(validatorPK);
       validatorsInfo.push(validatorInfo);
@@ -40,7 +38,7 @@ export class BeaconchaApi {
   }
 
   /**
-   * Get validator info for a list of public keys from beaconcha API
+   * Get validator indexes for a list of public keys
    * https://beaconcha.in/api/v1/docs/index.html#/Validator/get_api_v1_validator__indexOrPubkey_
    */
   public async fetchValidatorInfo(
@@ -62,7 +60,7 @@ export class BeaconchaApi {
     }
   }
 
-  //TODO: Are fields host and authToken needed?
+  //TODO: Are fields host and authToken needed in any case?
   private async request(method: string, url: string, body?: any): Promise<any> {
     let headers = {
       "Content-Type": "application/json",
