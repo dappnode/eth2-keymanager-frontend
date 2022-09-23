@@ -1,5 +1,6 @@
 import { BeaconchaGetResponse } from "./types";
 import { ApiParams } from "../../types";
+import { Web3signerGetResponse } from "../web3signerApi/types";
 
 //TODO Use inheritance for both APIs?
 export class BeaconchaApi {
@@ -18,12 +19,17 @@ export class BeaconchaApi {
    */
   public async fetchAllValidatorsInfo({
     beaconchaApi,
-    allValidatorPKs,
+    keystoresGet,
   }: {
     beaconchaApi: BeaconchaApi;
-    allValidatorPKs: string[];
+    keystoresGet: Web3signerGetResponse;
   }): Promise<BeaconchaGetResponse[]> {
     const validatorsInfo = new Array<BeaconchaGetResponse>();
+    let allValidatorPKs = keystoresGet.data.map(
+      (keystoreData) => keystoreData.validating_pubkey
+    );
+
+    console.log("allValidatorPKs", allValidatorPKs); //TODO Remove
 
     allValidatorPKs.forEach(async (pubkey) => {
       let validatorInfo = await beaconchaApi.fetchValidatorInfo(pubkey);
