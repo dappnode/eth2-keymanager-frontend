@@ -8,9 +8,11 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 export default function ButtonsBox({
   isTableEmpty,
   setOpen,
+  validatorSummaryURL,
 }: {
   isTableEmpty: boolean;
   setOpen(open: boolean): void;
+  validatorSummaryURL: string;
 }): JSX.Element {
   return (
     <Box sx={buttonsBoxStyle}>
@@ -30,6 +32,18 @@ export default function ButtonsBox({
       >
         Delete Keystores
       </Button>
+
+      {validatorSummaryURL && (
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ marginRight: 4 }}
+          target="_blank"
+          href={validatorSummaryURL}
+        >
+          Go to summary dashboard
+        </Button>
+      )}
     </Box>
   );
 }
