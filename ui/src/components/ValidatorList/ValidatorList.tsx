@@ -52,11 +52,16 @@ export default function ValidatorList({
     if (hasError) {
       setValidatorSummaryURL("");
     } else {
-      const validatorSummaryURL = buildValidatorSummaryURL({
-        allValidatorsInfo,
-        network,
-      });
-      setValidatorSummaryURL(validatorSummaryURL);
+      try {
+        const validatorSummaryURL = buildValidatorSummaryURL({
+          allValidatorsInfo,
+          network,
+        });
+        setValidatorSummaryURL(validatorSummaryURL);
+      } catch (e) {
+        setValidatorSummaryURL("");
+        console.log(e);
+      }
     }
   }
 
