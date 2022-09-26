@@ -1,3 +1,8 @@
+//Internal components
+import FileDrop from "./FileDrop";
+import { SecondaryInfoTypography } from "./Styles/Typographies";
+
+//External components
 import {
   Box,
   Button,
@@ -14,17 +19,25 @@ import {
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
+
+//React
 import { Link } from "react-router-dom";
 import { DropEvent } from "react-dropzone";
 import { useState } from "react";
-import FileDrop from "./FileDrop";
+
+//Icons
 import BackupIcon from "@mui/icons-material/Backup";
 import CloseIcon from "@mui/icons-material/Close";
+
+//Logic
+import {
+  passwordEntered,
+  uniquePasswordEntered,
+} from "./logic/ImportScreen/PasswordManager";
 import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
-import { SecondaryInfoTypography } from "./Styles/Typographies";
 
 export default function ImportScreen({
   web3signerApi,
@@ -56,25 +69,6 @@ export default function ImportScreen({
   const [slashingFile, setSlashingFile] = useState<File>();
   const slashingFilesCallback = (files: File[], event: DropEvent) => {
     setSlashingFile(files[0]);
-  };
-
-  const passwordEntered = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    index: number
-  ) => {
-    const pass = event.target.value;
-    const newList = Array.from(passwords);
-    newList[index] = pass;
-    setPasswords(newList);
-  };
-
-  const uniquePasswordEntered = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    const pass = event.target.value;
-    const newList = Array.from(passwords);
-    newList.fill(pass);
-    setPasswords(newList);
   };
 
   //USE SAME PASSWORD SWITCH
@@ -128,7 +122,9 @@ export default function ImportScreen({
               id={`outlined-password-input-${index}`}
               label="Keystore Password"
               type="password"
-              onChange={(event) => passwordEntered(event, index)}
+              onChange={(event) =>
+                passwordEntered(event, index, passwords, setPasswords)
+              }
               sx={{ marginTop: 2, width: "60%" }}
             />
           )}
@@ -287,7 +283,9 @@ export default function ImportScreen({
                   id="outlined-password-input"
                   label="Keystores Password"
                   type="password"
-                  onChange={(event) => uniquePasswordEntered(event)}
+                  onChange={(event) =>
+                    uniquePasswordEntered(event, passwords, setPasswords)
+                  }
                   sx={{ marginTop: 2, width: "60%" }}
                 />
               )}
