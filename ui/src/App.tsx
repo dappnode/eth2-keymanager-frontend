@@ -8,9 +8,6 @@ import ImportScreen from "./ImportScreen";
 import ValidatorList from "./components/ValidatorList/ValidatorList";
 import Message from "./components/Messages/Message";
 
-//Styles
-import "./App.css";
-
 //Themes
 import { darkTheme } from "./Themes/globalThemes";
 

@@ -1,4 +1,3 @@
-import "./App.css";
 import { DropEvent, useDropzone } from "react-dropzone";
 import { useMemo } from "react";
 

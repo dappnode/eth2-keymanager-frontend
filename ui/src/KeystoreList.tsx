@@ -4,7 +4,6 @@ import {
   GridColDef,
   GridSelectionModel,
 } from "@mui/x-data-grid";
-import "./App.css";
 import { useState } from "react";
 import { Web3signerGetResponse } from "./apis/web3signerApi/types";
 import LinkIcon from "@mui/icons-material/Link";
