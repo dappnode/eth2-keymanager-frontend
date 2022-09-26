@@ -84,6 +84,9 @@ export default function ImportScreen({
     checked: boolean
   ) => {
     setUseSamePassword(checked);
+    const emptyPasswords = Array.from(passwords);
+    emptyPasswords.fill("");
+    setPasswords(emptyPasswords);
   };
 
   // FILE CARDS
