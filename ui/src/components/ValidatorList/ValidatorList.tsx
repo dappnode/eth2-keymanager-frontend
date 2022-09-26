@@ -18,7 +18,7 @@ import { availableNetworks, beaconchaApiParamsMap } from "../../params";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
-import HeaderTypography from "../../Styles/Typographies";
+import { HeaderTypography } from "../../Styles/Typographies";
 
 export default function ValidatorList({
   web3signerApi,

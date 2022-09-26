@@ -1,5 +1,5 @@
 import Toolbar from "@mui/material/Toolbar";
-import HeaderTypography from "../../Styles/Typographies";
+import { HeaderTypography } from "../../Styles/Typographies";
 
 export default function ToolBar({
   network,

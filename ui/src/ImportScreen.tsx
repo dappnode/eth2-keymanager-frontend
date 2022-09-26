@@ -25,6 +25,7 @@ import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
+import { SecondaryInfoTypography } from "./Styles/Typographies";
 
 export default function ImportScreen({
   web3signerApi,
@@ -256,20 +257,25 @@ export default function ImportScreen({
             <b>Import Validator Keystore(s)</b>
           </Typography>
           <Typography>Upload any keystore JSON file(s).</Typography>
-          <Typography variant="body2" sx={{ marginBottom: 4 }} color="GrayText">
-            <i>
-              Keystores files are usually named keystore-xxxxxxxx.json and were
-              created in the Ethereum launchpad deposit CLI. Do not upload the
-              deposit_data.json file.
-              <br />
-            </i>
-          </Typography>
+
+          <SecondaryInfoTypography
+            sx={{ marginBottom: 4 }}
+            text="Keystores files are usually named keystore-xxxxxxxx.json and were
+                created in the Ethereum launchpad deposit CLI. Do not upload the
+                deposit_data.json file."
+          />
           <FileDrop callback={keystoreFilesCallback} />
 
           {files}
 
           {acceptedFiles.length > 0 && (
             <>
+              <SecondaryInfoTypography
+                sx={{ marginBottom: 2, marginTop: 4 }}
+                text="Remember you need to introduce the password you set during
+                creation of the keystore files."
+              />
+
               <FormGroup sx={{ marginTop: "6px" }}>
                 <FormControlLabel
                   control={<Switch onChange={handleUseSamePasswordSwitch} />}
@@ -309,13 +315,11 @@ export default function ImportScreen({
                 Upload your slashing protection file to protect your
                 keystore(s).
               </Typography>
-              <Typography
-                variant="body2"
-                color="GrayText"
+
+              <SecondaryInfoTypography
                 sx={{ marginBottom: 4 }}
-              >
-                <i>only for previously-used keystores</i>
-              </Typography>
+                text="Only for previously-used keystores"
+              />
               <FileDrop callback={slashingFilesCallback} />
               {slashingFile ? (
                 <Card
