@@ -107,8 +107,8 @@ export default function ImportScreen({
             <Typography variant="h6" sx={{ flex: 1 }}>
               <b>✅ {fileInfo.file.name}</b> - {shortenPubkey(fileInfo.pubkey)}
             </Typography>
-            <a
-              href="/#"
+            <button
+              style={{ border: "none", background: "none", cursor: "pointer" }}
               onClick={() => {
                 var indexToRemove = acceptedFiles.indexOf(fileInfo);
                 setAcceptedFiles(
@@ -119,8 +119,8 @@ export default function ImportScreen({
                 );
               }}
             >
-              <CloseIcon />
-            </a>
+              <CloseIcon color="action" />
+            </button>
           </Box>
 
           {!useSamePassword && (
