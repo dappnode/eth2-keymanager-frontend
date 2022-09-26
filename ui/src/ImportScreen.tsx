@@ -27,17 +27,14 @@ import { useState } from "react";
 
 //Icons
 import BackupIcon from "@mui/icons-material/Backup";
-import CloseIcon from "@mui/icons-material/Close";
 
 //Logic
-import {
-  passwordEntered,
-  uniquePasswordEntered,
-} from "./logic/ImportScreen/PasswordManager";
+import { uniquePasswordEntered } from "./logic/ImportScreen/PasswordManager";
 import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
+import FileCardList from "./components/FileCards/FileCardList";
 
 export default function ImportScreen({
   web3signerApi,
@@ -84,7 +81,7 @@ export default function ImportScreen({
   };
 
   // FILE CARDS
-  const files = acceptedFiles
+  /*const files = acceptedFiles
     ? Array.from(acceptedFiles).map((fileInfo, index) => (
         <Card
           key={index}
@@ -130,7 +127,7 @@ export default function ImportScreen({
           )}
         </Card>
       ))
-    : [];
+    : [];*/
 
   // SLASHING PROTECTION SWITCH
   const [slashingProtectionIncluded, setSlashingProtectionIncluded] =
@@ -261,7 +258,13 @@ export default function ImportScreen({
           />
           <FileDrop callback={keystoreFilesCallback} />
 
-          {files}
+          {FileCardList(
+            acceptedFiles,
+            setAcceptedFiles,
+            passwords,
+            setPasswords,
+            useSamePassword
+          )}
 
           {acceptedFiles.length > 0 && (
             <>
