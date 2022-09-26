@@ -12,6 +12,8 @@ import {
   Switch,
   TextField,
   Typography,
+  FormGroup,
+  FormControlLabel,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { DropEvent } from "react-dropzone";
@@ -60,10 +62,31 @@ export default function ImportScreen({
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     index: number
   ) => {
-    const p = event.target.value;
+    const pass = event.target.value;
     const newList = Array.from(passwords);
-    newList[index] = p;
+    newList[index] = pass;
     setPasswords(newList);
+  };
+
+  const uniquePasswordEntered = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const pass = event.target.value;
+    const newList = Array.from(passwords);
+    newList.fill(pass);
+    setPasswords(newList);
+  };
+
+  //USE SAME PASSWORD SWITCH
+  const [useSamePassword, setUseSamePassword] = useState(false); //Same password for all keystores
+  const handleUseSamePasswordSwitch = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    setUseSamePassword(checked);
+    const emptyPasswords = Array.from(passwords);
+    emptyPasswords.fill("");
+    setPasswords(emptyPasswords);
   };
 
   // FILE CARDS
@@ -99,13 +122,16 @@ export default function ImportScreen({
               <CloseIcon />
             </a>
           </Box>
-          <TextField
-            id={`outlined-password-input-${index}`}
-            label="Keystore Password"
-            type="password"
-            onChange={(event) => passwordEntered(event, index)}
-            sx={{ marginTop: 2, width: "60%" }}
-          />
+
+          {!useSamePassword && (
+            <TextField
+              id={`outlined-password-input-${index}`}
+              label="Keystore Password"
+              type="password"
+              onChange={(event) => passwordEntered(event, index)}
+              sx={{ marginTop: 2, width: "60%" }}
+            />
+          )}
         </Card>
       ))
     : [];
@@ -241,6 +267,27 @@ export default function ImportScreen({
           <FileDrop callback={keystoreFilesCallback} />
 
           {files}
+
+          {acceptedFiles.length > 0 && (
+            <>
+              <FormGroup sx={{ marginTop: "6px" }}>
+                <FormControlLabel
+                  control={<Switch onChange={handleUseSamePasswordSwitch} />}
+                  label="Use same password for every file"
+                />
+              </FormGroup>
+
+              {useSamePassword && (
+                <TextField
+                  id="outlined-password-input"
+                  label="Keystores Password"
+                  type="password"
+                  onChange={(event) => uniquePasswordEntered(event)}
+                  sx={{ marginTop: 2, width: "60%" }}
+                />
+              )}
+            </>
+          )}
 
           <Box
             sx={{
