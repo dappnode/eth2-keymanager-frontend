@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   Button,
-  CircularProgress,
   DialogContentText,
   DialogActions,
 } from "@mui/material";
@@ -17,6 +16,8 @@ import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
 } from "./apis/web3signerApi/types";
+import { importDialogBoxStyle } from "./Styles/dialogStyles";
+import WaitBox from "./components/WaitBox/WaitBox";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -69,14 +70,7 @@ export default function KeystoresDeleteDialog({
         {keystoresDelete ? "Done" : "Delete Keystores?"}
       </DialogTitle>
       <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
+        <Box sx={importDialogBoxStyle}>
           {keystoresDelete?.error ? (
             `Error: ${keystoresDelete.error.message}`
           ) : keystoresDelete?.data ? (
@@ -113,23 +107,7 @@ export default function KeystoresDeleteDialog({
           ) : (
             <div>
               {requestInFlight ? (
-                <Box
-                  sx={{
-                    margin: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircularProgress
-                    sx={{
-                      marginBottom: 4,
-                    }}
-                  />
-                  <DialogContentText id="alert-dialog-description">
-                    Please wait
-                  </DialogContentText>
-                </Box>
+                <WaitBox />
               ) : (
                 <DialogContentText id="alert-dialog-description">
                   Are you sure you want to delete these keystores?

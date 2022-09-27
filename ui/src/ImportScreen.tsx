@@ -34,7 +34,7 @@ import {
   importButtonBoxStyle,
   mainImportBoxStyle,
   slashingProtectionBoxStyle,
-} from "./Styles/importStyles";
+} from "./Styles/dialogStyles";
 
 export default function ImportScreen({
   web3signerApi,
