@@ -1,5 +1,5 @@
 //Internal components
-import FileDrop from "./FileDrop";
+import FileDrop from "./components/FileDrop/FileDrop";
 import { SecondaryInfoTypography } from "./Styles/Typographies";
 
 //External components

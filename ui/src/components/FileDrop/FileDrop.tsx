@@ -5,7 +5,7 @@ import {
   acceptStyle,
   activeStyle,
   rejectStyle,
-} from "./Styles/fileDropStyles";
+} from "../../Styles/fileDropStyles";
 
 interface Props {
   callback: <T extends File>(files: T[], event: DropEvent) => void;
