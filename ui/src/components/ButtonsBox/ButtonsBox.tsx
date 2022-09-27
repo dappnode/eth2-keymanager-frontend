@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { buttonsBoxStyle } from "../../Styles/buttonsBoxStyles";
 //Icons
@@ -33,7 +33,7 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {validatorSummaryURL && (
+      {validatorSummaryURL ? (
         <Button
           variant="contained"
           size="large"
@@ -43,6 +43,18 @@ export default function ButtonsBox({
         >
           Go to summary dashboard
         </Button>
+      ) : (
+        <>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginRight: 4 }}
+            disabled={true}
+          >
+            Loading summary dashboard...
+            <CircularProgress size={24} sx={{ marginLeft: 2 }} />
+          </Button>
+        </>
       )}
     </Box>
   );
