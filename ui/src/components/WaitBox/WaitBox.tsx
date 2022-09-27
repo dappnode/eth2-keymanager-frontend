@@ -1,5 +1,5 @@
 import { Box, CircularProgress, DialogContentText } from "@mui/material";
-import { waitDialogBoxStyle } from "../../Styles/importStyles";
+import { waitDialogBoxStyle } from "../../Styles/dialogStyles";
 
 export default function WaitBox() {
   return (

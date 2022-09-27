@@ -6,17 +6,19 @@ import {
   Box,
   Typography,
   Button,
-  CircularProgress,
   DialogContentText,
   DialogActions,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import { shortenPubkey, getEmoji } from "./logic/Utils/dataUtils";
-import { Web3SignerApi } from "./apis/web3signerApi";
+import { shortenPubkey, getEmoji } from "../../logic/Utils/dataUtils";
+import { Web3SignerApi } from "../../apis/web3signerApi";
 import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
-} from "./apis/web3signerApi/types";
+} from "../../apis/web3signerApi/types";
+import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import WaitBox from "../WaitBox/WaitBox";
+import DeletionWarning from "./DeletionWarning";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -69,14 +71,7 @@ export default function KeystoresDeleteDialog({
         {keystoresDelete ? "Done" : "Delete Keystores?"}
       </DialogTitle>
       <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
+        <Box sx={importDialogBoxStyle}>
           {keystoresDelete?.error ? (
             `Error: ${keystoresDelete.error.message}`
           ) : keystoresDelete?.data ? (
@@ -113,43 +108,10 @@ export default function KeystoresDeleteDialog({
           ) : (
             <div>
               {requestInFlight ? (
-                <Box
-                  sx={{
-                    margin: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircularProgress
-                    sx={{
-                      marginBottom: 4,
-                    }}
-                  />
-                  <DialogContentText id="alert-dialog-description">
-                    Please wait
-                  </DialogContentText>
-                </Box>
+                <WaitBox />
               ) : (
                 <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to delete these keystores?
-                  <ul>
-                    {selectedRows.map((row, i) => (
-                      <li key={i}>
-                        {shortenPubkey(
-                          rows[parseInt(row.toString())].validating_pubkey
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                  After deletion, these keystores won't be used for signing
-                  anymore and your slashing protection data will be downloaded.{" "}
-                  <br />
-                  <br />
-                  <b>
-                    Keep the slashing protection data for when you want to
-                    import these keystores to a new validator.
-                  </b>
+                  <DeletionWarning rows={rows} selectedRows={selectedRows} />
                 </DialogContentText>
               )}
             </div>

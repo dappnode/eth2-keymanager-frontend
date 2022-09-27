@@ -1,7 +1,7 @@
 //Internal components
 import Message from "../Messages/Message";
 import KeystoreList from "../../KeystoreList";
-import KeystoresDeleteDialog from "../../KeystoresDeleteDialog";
+import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
