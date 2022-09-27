@@ -7,12 +7,6 @@ import {
   Box,
   Button,
   Card,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Switch,
   TextField,
   Typography,
@@ -30,11 +24,12 @@ import BackupIcon from "@mui/icons-material/Backup";
 
 //Logic
 import { uniquePasswordEntered } from "./logic/ImportScreen/PasswordManager";
-import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
+import { extractPubkey } from "./DataStore";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 import FileCardList from "./components/FileCards/FileCardList";
+import ImportDialog from "./components/ImportDialog/ImportDialog";
 
 export default function ImportScreen({
   web3signerApi,
@@ -43,7 +38,7 @@ export default function ImportScreen({
 }) {
   const [keystoresPostResponse, setKeystoresPostResponse] =
     useState<Web3signerPostResponse>();
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const [passwords, setPasswords] = useState<string[]>([]);
 
@@ -80,55 +75,6 @@ export default function ImportScreen({
     setPasswords(emptyPasswords);
   };
 
-  // FILE CARDS
-  /*const files = acceptedFiles
-    ? Array.from(acceptedFiles).map((fileInfo, index) => (
-        <Card
-          key={index}
-          raised
-          sx={{ padding: 2, marginTop: 4, width: "80%" }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "left",
-            }}
-          >
-            <Typography variant="h6" sx={{ flex: 1 }}>
-              <b>✅ {fileInfo.file.name}</b> - {shortenPubkey(fileInfo.pubkey)}
-            </Typography>
-            <button
-              style={{ border: "none", background: "none", cursor: "pointer" }}
-              onClick={() => {
-                var indexToRemove = acceptedFiles.indexOf(fileInfo);
-                setAcceptedFiles(
-                  acceptedFiles.filter((f, index) => index !== indexToRemove)
-                );
-                setPasswords(
-                  passwords.filter((f, index) => index !== indexToRemove)
-                );
-              }}
-            >
-              <CloseIcon color="action" />
-            </button>
-          </Box>
-
-          {!useSamePassword && (
-            <TextField
-              id={`outlined-password-input-${index}`}
-              label="Keystore Password"
-              type="password"
-              onChange={(event) =>
-                passwordEntered(event, index, passwords, setPasswords)
-              }
-              sx={{ marginTop: 2, width: "60%" }}
-            />
-          )}
-        </Card>
-      ))
-    : [];*/
-
   // SLASHING PROTECTION SWITCH
   const [slashingProtectionIncluded, setSlashingProtectionIncluded] =
     useState(true);
@@ -139,91 +85,9 @@ export default function ImportScreen({
     setSlashingProtectionIncluded(checked);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
   };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const dialog = (
-    <Dialog
-      disableEscapeKeyDown={true}
-      open={open}
-      fullWidth={true}
-      onClose={(event, reason) => {
-        if (!reason) {
-          handleClose();
-        }
-      }}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {keystoresPostResponse?.data ? "Import Completed" : "Importing..."}
-      </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
-          {keystoresPostResponse ? (
-            keystoresPostResponse.error ? (
-              `Error: ${keystoresPostResponse.error.message}`
-            ) : (
-              <div>
-                {keystoresPostResponse.data.map((result, index) => (
-                  <div style={{ marginBottom: "20px" }} key={index}>
-                    <Typography variant="h5" color="GrayText">
-                      {shortenPubkey(acceptedFiles[index]?.pubkey)}
-                    </Typography>
-                    <Typography variant="h6">
-                      <b>Status:</b> {result.status} {getEmoji(result.status)}
-                    </Typography>
-                    {result.message ? (
-                      <Typography variant="h6">
-                        <b>Message:</b> {result.message}
-                      </Typography>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            )
-          ) : (
-            <Box
-              sx={{
-                margin: 8,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress
-                sx={{
-                  marginBottom: 4,
-                }}
-              />
-              <DialogContentText id="alert-dialog-description">
-                Please wait
-              </DialogContentText>
-            </Box>
-          )}
-        </Box>
-      </DialogContent>
-      {keystoresPostResponse ? (
-        <DialogActions>
-          <Button onClick={handleClose} variant="contained">
-            Close
-          </Button>
-        </DialogActions>
-      ) : null}
-    </Dialog>
-  );
 
   return (
     <div>
@@ -354,7 +218,7 @@ export default function ImportScreen({
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
               setKeystoresPostResponse(undefined);
-              handleClickOpen();
+              handleClickOpenDialog();
               const results = await web3signerApi.importKeystores({
                 keystores: acceptedFiles.map((f) => f.file),
                 passwords,
@@ -377,7 +241,12 @@ export default function ImportScreen({
           </Link>
         </Box>
       </Box>
-      {dialog}
+      <ImportDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        keystoresPostResponse={keystoresPostResponse}
+        acceptedFiles={acceptedFiles}
+      />
     </div>
   );
 }
