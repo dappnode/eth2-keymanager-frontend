@@ -4,7 +4,6 @@ import {
   GridColDef,
   GridSelectionModel,
 } from "@mui/x-data-grid";
-import "./App.css";
 import { useState } from "react";
 import { Web3signerGetResponse } from "./apis/web3signerApi/types";
 import LinkIcon from "@mui/icons-material/Link";
@@ -20,14 +19,14 @@ const columns: GridColDef[] = [
   },
   {
     field: "beaconcha_url",
-    headerName: "Beaconcha URL",
+    headerName: "URL",
     description: "Beaconcha URL to track the status of this validator",
     disableReorder: true,
     disableColumnMenu: true,
     disableExport: true,
     sortable: false,
     align: "center",
-    headerAlign: "right",
+    headerAlign: "center",
     renderCell: (rowData) => (
       <a
         style={{ color: "grey" }}
