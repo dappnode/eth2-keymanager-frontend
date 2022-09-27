@@ -12,7 +12,7 @@ import Message from "./components/Messages/Message";
 import { darkTheme } from "./Themes/globalThemes";
 
 //Logic
-import { getUrlParams } from "./getUrlParams";
+import { getUrlParams } from "./logic/Utils/getUrlParams";
 import { Web3SignerApi } from "./apis/web3signerApi";
 
 //Other libraries
