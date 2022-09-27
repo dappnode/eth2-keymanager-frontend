@@ -10,14 +10,14 @@ import {
   DialogActions,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import { shortenPubkey, getEmoji } from "./logic/Utils/dataUtils";
-import { Web3SignerApi } from "./apis/web3signerApi";
+import { shortenPubkey, getEmoji } from "../../logic/Utils/dataUtils";
+import { Web3SignerApi } from "../../apis/web3signerApi";
 import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
-} from "./apis/web3signerApi/types";
-import { importDialogBoxStyle } from "./Styles/dialogStyles";
-import WaitBox from "./components/WaitBox/WaitBox";
+} from "../../apis/web3signerApi/types";
+import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import WaitBox from "../WaitBox/WaitBox";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,

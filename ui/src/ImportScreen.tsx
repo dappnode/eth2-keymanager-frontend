@@ -29,7 +29,7 @@ import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 import FileCardList from "./components/FileCards/FileCardList";
-import ImportDialog from "./components/ImportDialog/ImportDialog";
+import ImportDialog from "./components/Dialogs/ImportDialog";
 import {
   importButtonBoxStyle,
   mainImportBoxStyle,
