@@ -22,12 +22,14 @@ export default function KeystoresDeleteDialog({
   web3signerApi,
   rows,
   selectedRows,
+  setSelectedRows,
   open,
   setOpen,
 }: {
   web3signerApi: Web3SignerApi;
   rows: Web3signerGetResponse["data"];
   selectedRows: GridSelectionModel;
+  setSelectedRows: (selectedRows: GridSelectionModel) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -45,6 +47,7 @@ export default function KeystoresDeleteDialog({
     });
     setRequestInFlight(false);
     setKeystoresDelete(keystoresDelete);
+    setSelectedRows([]);
   }
   const handleClose = () => {
     setOpen(false);

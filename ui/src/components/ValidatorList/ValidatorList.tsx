@@ -118,6 +118,7 @@ export default function ValidatorList({
                   web3signerApi={web3signerApi}
                   rows={keystoresGet.data}
                   selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
                   open={open}
                   setOpen={setOpen}
                 />
