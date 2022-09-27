@@ -91,7 +91,10 @@ export default function ValidatorList({
     <div>
       <Box className="box" sx={boxStyle}>
         <Card sx={{ padding: 4 }}>
-          <HeaderTypography text="Your validator accounts" />
+          <HeaderTypography
+            sx={{ flexGrow: 1, fontWeight: "bold", marginBottom: 2 }}
+            text="Your validator accounts"
+          />
 
           {loading ? (
             <CircularProgress
