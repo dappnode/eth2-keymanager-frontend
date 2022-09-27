@@ -24,7 +24,7 @@ import BackupIcon from "@mui/icons-material/Backup";
 
 //Logic
 import { uniquePasswordEntered } from "./logic/ImportScreen/PasswordManager";
-import { extractPubkey } from "./DataStore";
+import { extractPubkey } from "./logic/Utils/dataUtils";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";

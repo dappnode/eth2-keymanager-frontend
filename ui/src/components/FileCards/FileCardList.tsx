@@ -7,7 +7,7 @@ import { KeystoreInfo } from "../../types";
 //Logic
 import CloseIcon from "@mui/icons-material/Close";
 import { passwordEntered } from "../../logic/ImportScreen/PasswordManager";
-import { shortenPubkey } from "../../DataStore";
+import { shortenPubkey } from "../../logic/Utils/dataUtils";
 
 //Style
 import "./FileCardList.css";

@@ -11,7 +11,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import { shortenPubkey, getEmoji } from "./DataStore";
+import { shortenPubkey, getEmoji } from "./logic/Utils/dataUtils";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import {
   Web3signerDeleteResponse,

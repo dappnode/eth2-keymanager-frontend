@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 
 import { Web3signerPostResponse } from "../../apis/web3signerApi/types";
-import { getEmoji, shortenPubkey } from "../../DataStore";
+import { getEmoji, shortenPubkey } from "../../logic/Utils/dataUtils";
 import { importDialogBoxStyle } from "../../Styles/importStyles";
 import { KeystoreInfo } from "../../types";
 import WaitBox from "../WaitBox/WaitBox";
