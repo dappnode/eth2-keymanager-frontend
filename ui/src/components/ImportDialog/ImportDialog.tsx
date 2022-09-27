@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 import { Web3signerPostResponse } from "../../apis/web3signerApi/types";
 import { getEmoji, shortenPubkey } from "../../DataStore";
-import { importDialogBox } from "../../Styles/importDialogStyles";
+import { importDialogBoxStyle } from "../../Styles/importStyles";
 import { KeystoreInfo } from "../../types";
 import WaitBox from "../WaitBox/WaitBox";
 
@@ -47,7 +47,7 @@ export default function ImportDialog({
         {keystoresPostResponse?.data ? "Import Completed" : "Importing..."}
       </DialogTitle>
       <DialogContent>
-        <Box sx={importDialogBox}>
+        <Box sx={importDialogBoxStyle}>
           {keystoresPostResponse ? (
             keystoresPostResponse.error ? (
               `Error: ${keystoresPostResponse.error.message}`

@@ -30,6 +30,11 @@ import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 import FileCardList from "./components/FileCards/FileCardList";
 import ImportDialog from "./components/ImportDialog/ImportDialog";
+import {
+  importButtonBoxStyle,
+  mainImportBoxStyle,
+  slashingProtectionBoxStyle,
+} from "./Styles/importStyles";
 
 export default function ImportScreen({
   web3signerApi,
@@ -91,14 +96,7 @@ export default function ImportScreen({
 
   return (
     <div>
-      <Box
-        sx={{
-          margin: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
-        }}
-      >
+      <Box sx={mainImportBoxStyle}>
         <Card
           sx={{
             padding: 4,
@@ -159,15 +157,7 @@ export default function ImportScreen({
             </>
           )}
 
-          <Box
-            sx={{
-              marginTop: 8,
-              marginBottom: 2,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "left",
-            }}
-          >
+          <Box sx={slashingProtectionBoxStyle}>
             <Typography variant="h5" sx={{ marginRight: 2 }}>
               <b>Import slashing protection data? (recommended)</b>
             </Typography>
@@ -201,16 +191,7 @@ export default function ImportScreen({
           ) : null}
         </Card>
 
-        <Box
-          sx={{
-            marginTop: 4,
-            display: "flex",
-            flexDirection: "row-reverse",
-            alignContent: "end",
-            alignItems: "end",
-            width: "100%",
-          }}
-        >
+        <Box sx={importButtonBoxStyle}>
           <Button
             variant="contained"
             size="large"

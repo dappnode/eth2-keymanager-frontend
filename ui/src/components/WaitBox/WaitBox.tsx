@@ -1,9 +1,9 @@
 import { Box, CircularProgress, DialogContentText } from "@mui/material";
-import { waitDialogBox } from "../../Styles/importDialogStyles";
+import { waitDialogBoxStyle } from "../../Styles/importStyles";
 
 export default function WaitBox() {
   return (
-    <Box sx={waitDialogBox}>
+    <Box sx={waitDialogBoxStyle}>
       <CircularProgress
         sx={{
           marginBottom: 4,
