@@ -9,6 +9,7 @@ import {
   Button,
   DialogActions,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 import { Web3signerPostResponse } from "../../apis/web3signerApi/types";
 import { getEmoji, shortenPubkey } from "../../DataStore";
@@ -99,9 +100,11 @@ export default function ImportDialog({
       </DialogContent>
       {keystoresPostResponse ? (
         <DialogActions>
-          <Button onClick={handleClose} variant="contained">
-            Close
-          </Button>
+          <Link to={{ pathname: "/", search: window.location.search }}>
+            <Button onClick={handleClose} variant="contained">
+              Close
+            </Button>
+          </Link>
         </DialogActions>
       ) : null}
     </Dialog>
