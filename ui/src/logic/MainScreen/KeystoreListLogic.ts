@@ -1,6 +1,9 @@
 export function handleSettingsClick(
   event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  keystorePubkey: string
+  keystorePubkey: string,
+  isDialogOpen: boolean,
+  setIsDialogOpen: (value: boolean) => void
 ) {
-  console.log("Clicked settings for keystore: " + keystorePubkey);
+  //TODO
+  setIsDialogOpen(true);
 }
