@@ -1,0 +1,50 @@
+#TODO How to differenciate networks? (prater, gnosis and mainnet)
+name: Deploy Web3Signer
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+    - "README.md"
+
+  # TODO remove?
+  workflow_dispatch:
+
+jobs:
+  push-to-ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v3
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push KeyManager UI
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ui #TODO is this "."?
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/dappnode/web3signer-ui:latest #TODO is this name correct?
+
+#      - name: Build and push KeyManager Postgres
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: ./postgres #TODO is this "."?
+#          file: ./Dockerfile
+#          push: true
+#          tags: ghcr.io/dappnode/web3signer-postgres:latest #TODO is this name correct?
+#
+#      - name: Build and push KeyManager Signer
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: ./signer #TODO is this "."?
+#          file: ./Dockerfile
+#          push: true
+#          tags: ghcr.io/dappnode/web3signer-signer:latest #TODO is this name correct?
+          
