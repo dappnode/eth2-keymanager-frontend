@@ -14,6 +14,8 @@ import {
 import { SlideTransition } from "./Transitions";
 import CurrencyExchangeOutlinedIcon from "@mui/icons-material/CurrencyExchangeOutlined";
 import { blue } from "@mui/material/colors";
+import { useState } from "react";
+import FeeRecipientDialog from "./FeeRecipientDialog";
 
 export default function SettingsDialog({
   isDialogOpen,
@@ -24,11 +26,12 @@ export default function SettingsDialog({
   setIsDialogOpen: (open: boolean) => void;
   selectedPubkey: string;
 }): JSX.Element {
-  const handleClose = () => {
+  const closeSettingsDialog = () => {
     setIsDialogOpen(false);
   };
 
   const availableSettings = ["Change validator fee recipient"];
+  const [isFeeDialogOpen, setIsFeeDialogOpen] = useState(false);
 
   return (
     <Dialog
@@ -37,21 +40,37 @@ export default function SettingsDialog({
       fullWidth={true}
       onClose={(event, reason) => {
         if (!reason) {
-          handleClose();
+          closeSettingsDialog();
         }
       }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       TransitionComponent={SlideTransition}
     >
-      <DialogTitle id="alert-dialog-title" sx={{ fontWeight: 700 }}>
-        <Settings sx={{ marginRight: 2 }} />
-        Validator Settings
+      <DialogTitle
+        id="alert-dialog-title"
+        sx={{ fontWeight: 700, fontSize: 24 }}
+      >
+        <div>
+          <Settings sx={{ marginRight: 2 }} />
+          Validator Settings
+        </div>
       </DialogTitle>
       <DialogContent>
+        <FeeRecipientDialog
+          open={isFeeDialogOpen}
+          setOpen={setIsFeeDialogOpen}
+          selectedValidatorPubkey={selectedPubkey}
+          newFeeRecipient={"TODO"}
+        />
+
         <List sx={{ pt: 0 }}>
           {availableSettings.map((setting) => (
-            <ListItemButton onClick={() => console.log("test")} key={setting}>
+            <ListItemButton
+              onClick={() => setIsFeeDialogOpen(true)}
+              key={setting}
+              sx={{ borderRadius: 3 }}
+            >
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
                   <CurrencyExchangeOutlinedIcon />
@@ -64,7 +83,11 @@ export default function SettingsDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} variant="contained" sx={{ margin: 2 }}>
+        <Button
+          onClick={closeSettingsDialog}
+          variant="contained"
+          sx={{ marginRight: 2, marginBottom: 2 }}
+        >
           Close
         </Button>
       </DialogActions>

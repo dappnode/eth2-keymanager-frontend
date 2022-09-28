@@ -118,7 +118,7 @@ export default function KeystoreList({
       <SettingsDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
-        selectedPubkey={"test"}
+        selectedPubkey={"TODO: Send pubkey"}
       />
       <DataGrid
         rows={customRows}
