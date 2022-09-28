@@ -3,17 +3,19 @@ import {
   GridCallbackDetails,
   GridColDef,
   GridSelectionModel,
+  GridToolbar,
 } from "@mui/x-data-grid";
 import { useState } from "react";
-import { Web3signerGetResponse } from "./apis/web3signerApi/types";
+import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import LinkIcon from "@mui/icons-material/Link";
+import { Settings } from "@mui/icons-material";
 
 const columns: GridColDef[] = [
   {
     field: "validating_pubkey",
     headerName: "Validating Public Key",
-    description: "Validating Public Key (click to copy)",
-
+    description: "Validating Public Key",
+    disableColumnMenu: true,
     flex: 1,
     headerClassName: "tableHeader",
   },
@@ -35,6 +37,28 @@ const columns: GridColDef[] = [
         rel="noopener noreferrer"
       >
         <LinkIcon />
+      </a>
+    ),
+    headerClassName: "tableHeader",
+  },
+  {
+    field: "validator_settings",
+    headerName: "Settings",
+    description: "Settings for this validator",
+    disableReorder: true,
+    disableColumnMenu: true,
+    disableExport: true,
+    sortable: false,
+    align: "center",
+    headerAlign: "center",
+    renderCell: (rowData) => (
+      <a
+        style={{ color: "grey" }}
+        href={rowData.row.beaconcha_url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Settings />
       </a>
     ),
     headerClassName: "tableHeader",
@@ -92,6 +116,7 @@ export default function KeystoreList({
         checkboxSelection
         disableSelectionOnClick={true}
         onSelectionModelChange={selection}
+        components={{ Toolbar: GridToolbar }}
       />
     </div>
   );
