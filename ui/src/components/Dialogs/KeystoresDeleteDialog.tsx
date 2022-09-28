@@ -19,6 +19,7 @@ import {
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
 import WaitBox from "../WaitBox/WaitBox";
 import DeletionWarning from "./DeletionWarning";
+import { SlideTransition } from "./Transitions";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -66,6 +67,7 @@ export default function KeystoresDeleteDialog({
       }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      TransitionComponent={SlideTransition}
     >
       <DialogTitle id="alert-dialog-title">
         {keystoresDelete ? "Done" : "Delete Keystores?"}
