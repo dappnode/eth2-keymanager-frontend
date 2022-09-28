@@ -9,15 +9,18 @@ import { useState } from "react";
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import LinkIcon from "@mui/icons-material/Link";
 import { Settings } from "@mui/icons-material";
+import "./KeystoreList.css";
+import { handleSettingsClick } from "../../logic/MainScreen/KeystoreListLogic";
 
 const columns: GridColDef[] = [
   {
     field: "validating_pubkey",
-    headerName: "Validating Public Key",
+    headerName: "Validating Pubkey",
     description: "Validating Public Key",
     disableColumnMenu: true,
     flex: 1,
     headerClassName: "tableHeader",
+    cellClassName: "tableCell",
   },
   {
     field: "beaconcha_url",
@@ -40,6 +43,7 @@ const columns: GridColDef[] = [
       </a>
     ),
     headerClassName: "tableHeader",
+    cellClassName: "tableCell",
   },
   {
     field: "validator_settings",
@@ -52,16 +56,17 @@ const columns: GridColDef[] = [
     align: "center",
     headerAlign: "center",
     renderCell: (rowData) => (
-      <a
+      <button
         style={{ color: "grey" }}
-        href={rowData.row.beaconcha_url}
-        target="_blank"
-        rel="noopener noreferrer"
+        onClick={(event) =>
+          handleSettingsClick(event, rowData.row.validating_pubkey)
+        }
       >
         <Settings />
-      </a>
+      </button>
     ),
     headerClassName: "tableHeader",
+    cellClassName: "tableCell",
   },
 ];
 
