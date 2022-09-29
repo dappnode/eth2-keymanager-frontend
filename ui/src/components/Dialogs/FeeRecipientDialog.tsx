@@ -58,7 +58,11 @@ export default function FeeRecipientDialog({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} variant="contained" sx={{ margin: 2 }}>
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          sx={{ margin: 2, borderRadius: 3 }}
+        >
           Close
         </Button>
       </DialogActions>

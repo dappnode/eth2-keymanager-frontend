@@ -90,7 +90,7 @@ export default function ValidatorList({
   return (
     <div>
       <Box className="box" sx={boxStyle}>
-        <Card sx={{ padding: 4 }}>
+        <Card sx={{ padding: 4, borderRadius: 5 }}>
           <HeaderTypography
             sx={{ flexGrow: 1, fontWeight: "bold", marginBottom: 2 }}
             text="Your validator accounts"

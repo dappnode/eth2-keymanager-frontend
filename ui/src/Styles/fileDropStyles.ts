@@ -5,7 +5,7 @@ export const baseStyle = {
   alignItems: "center",
   padding: "20px",
   borderWidth: 2,
-  borderRadius: 2,
+  borderRadius: 3,
   borderColor: "#424242",
   borderStyle: "dashed",
   backgroundColor: "#121212",

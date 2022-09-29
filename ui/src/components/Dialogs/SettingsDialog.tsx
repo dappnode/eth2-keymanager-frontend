@@ -86,7 +86,7 @@ export default function SettingsDialog({
         <Button
           onClick={closeSettingsDialog}
           variant="contained"
-          sx={{ marginRight: 2, marginBottom: 2 }}
+          sx={{ marginRight: 2, marginBottom: 2, borderRadius: 3 }}
         >
           Close
         </Button>

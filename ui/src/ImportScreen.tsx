@@ -100,6 +100,7 @@ export default function ImportScreen({
         <Card
           sx={{
             padding: 4,
+            borderRadius: 3,
           }}
         >
           <Typography
@@ -179,7 +180,12 @@ export default function ImportScreen({
                 <Card
                   key={slashingFile.name}
                   raised
-                  sx={{ padding: 2, marginTop: 4, width: "80%" }}
+                  sx={{
+                    padding: 2,
+                    marginTop: 4,
+                    width: "80%",
+                    borderRadius: 3,
+                  }}
                 >
                   <Typography variant="h6">
                     <b>✅ {slashingFile.name}</b>
@@ -207,6 +213,7 @@ export default function ImportScreen({
               });
               setKeystoresPostResponse(results);
             }}
+            sx={{ borderRadius: 3 }}
           >
             Submit Keystores
           </Button>
@@ -215,7 +222,7 @@ export default function ImportScreen({
               variant="outlined"
               size="large"
               color="warning"
-              sx={{ marginRight: 4 }}
+              sx={{ marginRight: 4, borderRadius: 3 }}
             >
               Back to Accounts
             </Button>

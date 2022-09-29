@@ -32,7 +32,11 @@ export default function FileCardList(
   useSamePassword: boolean
 ): JSX.Element[] {
   return Array.from(fileInfos).map((fileInfo, index) => (
-    <Card key={index} raised sx={{ padding: 2, marginTop: 4, width: "80%" }}>
+    <Card
+      key={index}
+      raised
+      sx={{ padding: 2, marginTop: 4, width: "80%", borderRadius: 3 }}
+    >
       <Box
         sx={{
           display: "flex",

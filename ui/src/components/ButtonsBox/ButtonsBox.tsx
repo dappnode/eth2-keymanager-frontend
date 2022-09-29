@@ -17,7 +17,12 @@ export default function ButtonsBox({
   return (
     <Box sx={buttonsBoxStyle}>
       <Link to={{ pathname: "/import", search: window.location.search }}>
-        <Button variant="contained" size="large" endIcon={<BackupIcon />}>
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ borderRadius: 3 }}
+          endIcon={<BackupIcon />}
+        >
           Import Keystores
         </Button>
       </Link>
@@ -26,7 +31,7 @@ export default function ButtonsBox({
         size="large"
         color="error"
         disabled={isTableEmpty}
-        sx={{ marginRight: 4 }}
+        sx={{ marginRight: 4, borderRadius: 3 }}
         endIcon={<DeleteForeverIcon />}
         onClick={() => setOpen(true)}
       >
@@ -37,7 +42,7 @@ export default function ButtonsBox({
         <Button
           variant="contained"
           size="large"
-          sx={{ marginRight: 4 }}
+          sx={{ marginRight: 4, borderRadius: 3 }}
           target="_blank"
           href={validatorSummaryURL}
         >
@@ -48,7 +53,7 @@ export default function ButtonsBox({
           <Button
             variant="contained"
             size="large"
-            sx={{ marginRight: 4 }}
+            sx={{ marginRight: 4, borderRadius: 3 }}
             disabled={true}
           >
             Loading summary dashboard...

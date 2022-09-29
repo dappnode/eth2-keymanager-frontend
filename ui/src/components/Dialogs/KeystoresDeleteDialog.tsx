@@ -101,6 +101,7 @@ export default function KeystoresDeleteDialog({
                       keystoresDelete.slashing_protection
                     )}`}
                     download="slashing_protection.json"
+                    sx={{ borderRadius: 3 }}
                   >
                     Download Slashing Protection Data
                   </Button>
@@ -125,12 +126,16 @@ export default function KeystoresDeleteDialog({
           <Button
             onClick={() => deleteSelectedKeystores()}
             variant="contained"
-            sx={{ marginRight: 1 }}
+            sx={{ marginRight: 1, borderRadius: 3 }}
           >
             Confirm
           </Button>
         ) : null}
-        <Button onClick={handleClose} variant="outlined">
+        <Button
+          onClick={handleClose}
+          variant="outlined"
+          sx={{ borderRadius: 3 }}
+        >
           Close
         </Button>
       </DialogActions>
