@@ -1,19 +1,8 @@
 import { BeaconchaGetResponse } from "./types";
-import { ApiParams } from "../../types";
 import { Web3signerGetResponse } from "../web3signerApi/types";
+import { StandardApi } from "../standardApi";
 
-//TODO Use inheritance for both APIs?
-export class BeaconchaApi {
-  baseUrl: string;
-  endpoint: string;
-  fullUrl: string;
-
-  constructor(apiParams: ApiParams) {
-    this.endpoint = apiParams.apiPath;
-    this.baseUrl = apiParams.baseUrl;
-    this.fullUrl = this.baseUrl + this.endpoint;
-  }
-
+export class BeaconchaApi extends StandardApi {
   /*
    * Fetch info for every validator PK
    */
@@ -47,7 +36,7 @@ export class BeaconchaApi {
     try {
       return (await this.request(
         "GET",
-        this.fullUrl + "validator/" + pubkey
+        this.baseUrl + this.endpoint + "validator/" + pubkey
       )) as BeaconchaGetResponse;
     } catch (e) {
       return {
@@ -58,21 +47,5 @@ export class BeaconchaApi {
         },
       };
     }
-  }
-
-  //TODO: Are fields host and authToken needed in any case?
-  private async request(method: string, url: string, body?: any): Promise<any> {
-    let headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
-
-    const response = await fetch(url, {
-      method,
-      headers,
-      body: body ? body : undefined,
-    });
-    if (response.ok) return await response.json();
-    throw new Error(response.statusText);
   }
 }

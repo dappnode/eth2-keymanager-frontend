@@ -18,6 +18,7 @@ import { Web3SignerApi } from "./apis/web3signerApi";
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
+import { ApiParams } from "./types";
 
 function App() {
   const [network, setNetwork] = React.useState("");
@@ -27,7 +28,14 @@ function App() {
   useEffect(() => {
     const { network, authToken, host, baseUrl } = getUrlParams();
     setNetwork(network);
-    if (baseUrl) setWeb3signerApi(new Web3SignerApi(baseUrl, authToken, host));
+    if (baseUrl)
+      setWeb3signerApi(
+        new Web3SignerApi({
+          baseUrl: baseUrl,
+          authToken: authToken,
+          host: host,
+        } as ApiParams)
+      );
   }, []);
 
   return (

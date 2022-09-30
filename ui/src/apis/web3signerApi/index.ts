@@ -1,3 +1,4 @@
+import { StandardApi } from "../standardApi";
 import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
@@ -6,17 +7,8 @@ import {
   Web3signerDeleteRequest,
 } from "./types";
 
-export class Web3SignerApi {
-  authToken: string | undefined;
-  host: string | undefined;
-  fullUrl: string;
+export class Web3SignerApi extends StandardApi {
   endpoint = "/eth/v1/keystores";
-
-  constructor(baseUrl: string, authToken?: string, host?: string) {
-    this.fullUrl = baseUrl + this.endpoint;
-    this.authToken = authToken;
-    this.host = host;
-  }
 
   /**
    * Import remote keys for the validator client to request duties for.
@@ -41,7 +33,7 @@ export class Web3SignerApi {
       }
       return (await this.request(
         "POST",
-        this.fullUrl,
+        this.baseUrl + this.endpoint,
         JSON.stringify(data)
       )) as Web3signerPostResponse;
     } catch (e) {
@@ -67,7 +59,7 @@ export class Web3SignerApi {
       });
       return (await this.request(
         "DELETE",
-        this.fullUrl,
+        this.baseUrl + this.endpoint,
         data
       )) as Web3signerDeleteResponse;
     } catch (e) {
@@ -86,7 +78,10 @@ export class Web3SignerApi {
    */
   public async getKeystores(): Promise<Web3signerGetResponse> {
     try {
-      return (await this.request("GET", this.fullUrl)) as Web3signerGetResponse;
+      return (await this.request(
+        "GET",
+        this.baseUrl + this.endpoint
+      )) as Web3signerGetResponse;
     } catch (e) {
       return {
         data: [],
@@ -95,38 +90,5 @@ export class Web3SignerApi {
         },
       };
     }
-  }
-
-  private async request(method: string, url: string, body?: any): Promise<any> {
-    let headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
-
-    if (this.authToken) {
-      headers = {
-        ...headers,
-        ...{ Authorization: `Bearer ${this.authToken}` },
-      };
-    }
-    if (this.host) {
-      headers = { ...headers, ...{ Host: this.host } };
-    }
-    const response = await fetch(url, {
-      method,
-      headers,
-      body: body ? body : undefined,
-    });
-    if (response.ok) return await response.json();
-    throw new Error(response.statusText);
-  }
-
-  private async readText(files: File[]): Promise<string[]> {
-    var data: string[] = [];
-    for (var file of files) {
-      const text = await file.text();
-      data.push(text);
-    }
-    return data;
   }
 }
