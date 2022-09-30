@@ -7,3 +7,6 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
 ]);
 
 export const availableNetworks = ["mainnet", "prater", "gnosis"];
+
+export const dappnodeValidatorApiAuthToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MxwOozSH-TLbW_XKepjyYDHm2IT8Ki0tD3AHuajfNMg";
