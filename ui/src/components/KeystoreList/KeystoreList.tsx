@@ -8,7 +8,6 @@ import {
 import { useState } from "react";
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import LinkIcon from "@mui/icons-material/Link";
-import { Settings } from "@mui/icons-material";
 
 const columns: GridColDef[] = [
   {
@@ -37,28 +36,6 @@ const columns: GridColDef[] = [
         rel="noopener noreferrer"
       >
         <LinkIcon />
-      </a>
-    ),
-    headerClassName: "tableHeader",
-  },
-  {
-    field: "validator_settings",
-    headerName: "Settings",
-    description: "Settings for this validator",
-    disableReorder: true,
-    disableColumnMenu: true,
-    disableExport: true,
-    sortable: false,
-    align: "center",
-    headerAlign: "center",
-    renderCell: (rowData) => (
-      <a
-        style={{ color: "grey" }}
-        href={rowData.row.beaconcha_url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Settings />
       </a>
     ),
     headerClassName: "tableHeader",
