@@ -14,6 +14,7 @@ import { darkTheme } from "./Themes/globalThemes";
 //Logic
 import { getUrlParams } from "./logic/Utils/getUrlParams";
 import { Web3SignerApi } from "./apis/web3signerApi";
+import { ApiParams } from "./types";
 
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -27,7 +28,15 @@ function App() {
   useEffect(() => {
     const { network, authToken, host, baseUrl } = getUrlParams();
     setNetwork(network);
-    if (baseUrl) setWeb3signerApi(new Web3SignerApi(baseUrl, authToken, host));
+    if (baseUrl) {
+      setWeb3signerApi(
+        new Web3SignerApi({
+          baseUrl: baseUrl,
+          authToken: authToken,
+          host: host,
+        } as ApiParams)
+      );
+    }
   }, []);
 
   return (
