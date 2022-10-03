@@ -5,7 +5,7 @@ import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
-import { Box, Card, CircularProgress } from "@mui/material";
+import { Box, Button, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
@@ -14,11 +14,27 @@ import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { useEffect, useState } from "react";
 import { BeaconchaApi } from "../../apis/beaconchaApi";
 import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSummaryURL";
-import { availableNetworks, beaconchaApiParamsMap } from "../../params";
+import {
+  availableNetworks,
+  beaconchaApiParamsMap,
+  validatorClientApiMap,
+} from "../../params";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
 import { HeaderTypography } from "../../Styles/Typographies";
+import { ValidatorApi } from "../../apis/validatorApi";
+
+async function tmp() {
+  const validatorApi = new ValidatorApi(
+    validatorClientApiMap.get("lighthouse-prater")!
+  );
+  console.log(
+    await validatorApi.getFeeRecipient(
+      "0x902cdec4b92680c16b555a279cd20e3871186e28ab2270e7e8b27d99cd6c338f025b1cae4881b231a87654844e5c9e0f"
+    )
+  );
+}
 
 export default function ValidatorList({
   web3signerApi,
@@ -95,6 +111,8 @@ export default function ValidatorList({
             sx={{ flexGrow: 1, fontWeight: "bold", marginBottom: 2 }}
             text="Your validator accounts"
           />
+
+          <Button onClick={() => tmp()}>Get fee recipient</Button>
 
           {loading ? (
             <CircularProgress
