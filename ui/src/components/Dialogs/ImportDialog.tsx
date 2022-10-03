@@ -78,7 +78,11 @@ export default function ImportDialog({
       {keystoresPostResponse ? (
         <DialogActions>
           <Link to={{ pathname: "/", search: window.location.search }}>
-            <Button onClick={handleClose} variant="contained">
+            <Button
+              onClick={handleClose}
+              variant="contained"
+              sx={{ borderRadius: 3 }}
+            >
               Close
             </Button>
           </Link>

@@ -94,6 +94,7 @@ export default function KeystoreList({
         disableSelectionOnClick={true}
         onSelectionModelChange={selection}
         components={{ Toolbar: GridToolbar }}
+        sx={{ borderRadius: 3 }}
       />
     </div>
   );
