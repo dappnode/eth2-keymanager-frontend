@@ -8,5 +8,40 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
 
 export const availableNetworks = ["mainnet", "prater", "gnosis"];
 
-export const dappnodeValidatorApiAuthToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MxwOozSH-TLbW_XKepjyYDHm2IT8Ki0tD3AHuajfNMg";
+export const validatorClientApiMap = new Map<string, ApiParams>([
+  [
+    "lighthouse-prater",
+    {
+      baseUrl: "http://validator.lighthouse-prater.dappnode:3500",
+      apiPath: "/eth/v1/",
+      authToken:
+        "api-token-0x0200e6ce18e26fd38caca7ae1bfb9e2bba7efb20ed2746ad17f2f6dda44603152d",
+    },
+  ],
+  [
+    "prysm-prater",
+    {
+      baseUrl: "http://validator.prysm-prater.dappnode:3500",
+      apiPath: "/eth/v1/",
+      authToken:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MxwOozSH-TLbW_XKepjyYDHm2IT8Ki0tD3AHuajfNMg",
+    },
+  ],
+  [
+    "teku-prater",
+    {
+      baseUrl: "https://validator.teku-prater.dappnode:3500",
+      apiPath: "/eth/v1/",
+      authToken: "cd4892ca35d2f5d3e2301a65fc7aa660",
+    },
+  ],
+  [
+    "nimbus-prater",
+    {
+      baseUrl: "http://beacon-validator.nimbus-prater.dappnode:3500",
+      apiPath: "/eth/v1/",
+      authToken:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.MxwOozSH-TLbW_XKepjyYDHm2IT8Ki0tD3AHuajfNMg",
+    },
+  ],
+]);
