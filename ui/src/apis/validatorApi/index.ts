@@ -1,4 +1,4 @@
-import { ValidatorGetResponse } from "./types";
+import { ValidatorGetResponse, ValidatorPostResponse } from "./types";
 import { StandardApi } from "../standardApi";
 
 export class ValidatorApi extends StandardApi {
@@ -17,6 +17,30 @@ export class ValidatorApi extends StandardApi {
     } catch (e) {
       return {
         message: { message: e.message },
+      };
+    }
+  }
+
+  /**
+   * Sets the validator client fee recipient mapping which will then update the beacon node..
+   * https://ethereum.github.io/keymanager-APIs/#/Fee%20Recipient/setFeeRecipient
+   */
+  //TODO Test this function
+  public async setFeeRecipient(
+    newFeeRecipient: string,
+    publicKey: string
+  ): Promise<ValidatorPostResponse> {
+    try {
+      return (await this.request(
+        "POST",
+        this.baseUrl + "/eth/v1/validator/" + publicKey + "/feerecipient",
+        JSON.stringify({ ethaddress: newFeeRecipient })
+      )) as ValidatorPostResponse;
+    } catch (e) {
+      return {
+        message: {
+          message: e.message,
+        },
       };
     }
   }

@@ -5,3 +5,11 @@ export interface ValidatorGetResponse {
   };
   message?: { message: string };
 }
+
+export interface ValidatorPostRequest {
+  ethaddress: string;
+}
+
+export interface ValidatorPostResponse {
+  message?: { message: string };
+}
