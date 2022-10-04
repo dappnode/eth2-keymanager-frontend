@@ -8,4 +8,5 @@ export interface ApiParams {
   apiPath: string;
   authToken?: string;
   host?: string;
+  certFilePath?: string;
 }

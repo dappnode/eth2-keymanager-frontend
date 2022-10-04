@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { ValidatorApi } from "../../apis/validatorApi";
 import { validatorClientApiMap } from "../../params";
-//import isomorphicFetch from "isomorphic-fetch";
 require("isomorphic-fetch");
 
 describe("Test for checking /feerecipient endpoint of every consensus client", () => {

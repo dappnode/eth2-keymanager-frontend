@@ -33,6 +33,7 @@ export const validatorClientApiMap = new Map<string, ApiParams>([
       baseUrl: "https://validator.teku-prater.dappnode:3500",
       apiPath: "/eth/v1/",
       authToken: "cd4892ca35d2f5d3e2301a65fc7aa660",
+      certFilePath: "/security/teku_client_keystore.p12",
     },
   ],
   [
