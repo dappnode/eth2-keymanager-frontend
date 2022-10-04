@@ -27,11 +27,18 @@ import { ValidatorApi } from "../../apis/validatorApi";
 
 async function tmp() {
   const validatorApi = new ValidatorApi(
-    validatorClientApiMap.get("lighthouse-prater")!
+    validatorClientApiMap.get("prysm-prater")!,
+    "http://localhost:3001"
   );
+
+  await validatorApi.setFeeRecipient(
+    "0x0000000000000000000000000000000000000002",
+    "0x85abea8fb2f90371875e8ff4dadac8b5308662c2d40533d8d74c13544a2f315183e404181f4cfa65ce7b3a435b709d2f"
+  );
+
   console.log(
     await validatorApi.getFeeRecipient(
-      "0x902cdec4b92680c16b555a279cd20e3871186e28ab2270e7e8b27d99cd6c338f025b1cae4881b231a87654844e5c9e0f"
+      "0x85abea8fb2f90371875e8ff4dadac8b5308662c2d40533d8d74c13544a2f315183e404181f4cfa65ce7b3a435b709d2f"
     )
   );
 }

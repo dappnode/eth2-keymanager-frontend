@@ -12,6 +12,7 @@ export const validatorClientApiMap = new Map<string, ApiParams>([
   [
     "lighthouse-prater",
     {
+      consensusClient: "lighthouse-prater",
       baseUrl: "http://validator.lighthouse-prater.dappnode:3500",
       apiPath: "/eth/v1/",
       authToken:
@@ -21,6 +22,7 @@ export const validatorClientApiMap = new Map<string, ApiParams>([
   [
     "prysm-prater",
     {
+      consensusClient: "prysm-prater",
       baseUrl: "http://validator.prysm-prater.dappnode:3500",
       apiPath: "/eth/v1/",
       authToken:
@@ -30,6 +32,7 @@ export const validatorClientApiMap = new Map<string, ApiParams>([
   [
     "teku-prater",
     {
+      consensusClient: "teku-prater",
       baseUrl: "https://validator.teku-prater.dappnode:3500",
       apiPath: "/eth/v1/",
       authToken: "cd4892ca35d2f5d3e2301a65fc7aa660",
@@ -39,6 +42,7 @@ export const validatorClientApiMap = new Map<string, ApiParams>([
   [
     "nimbus-prater",
     {
+      consensusClient: "nimbus-prater",
       baseUrl: "http://beacon-validator.nimbus-prater.dappnode:3500",
       apiPath: "/eth/v1/",
       authToken:

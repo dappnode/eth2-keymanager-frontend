@@ -19,6 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/feerecipient", async (req, res) => {
+  console.log("GET /feerecipient");
+
   //TODO: Handle params not existing
 
   const client = req.query.client as string;
@@ -46,6 +48,8 @@ app.get("/feerecipient", async (req, res) => {
 });
 
 app.post("/feerecipient", async (req, res) => {
+  console.log("POST /feerecipient");
+
   //TODO: Handle params not existing
 
   const client = req.query.client as string;
