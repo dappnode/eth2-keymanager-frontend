@@ -25,7 +25,6 @@ export default class ValidatorClientRequester extends StandardRequester {
    * Sets the validator client fee recipient mapping which will then update the beacon node..
    * https://ethereum.github.io/keymanager-APIs/#/Fee%20Recipient/setFeeRecipient
    */
-  //TODO Test this function
   public async setFeeRecipient(
     newFeeRecipient: string,
     publicKey: string
