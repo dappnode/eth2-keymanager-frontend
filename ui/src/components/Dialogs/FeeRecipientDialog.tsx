@@ -17,6 +17,7 @@ import { validatorApiProxyUrl, validatorClientApiMap } from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import Message from "../Messages/Message";
 import { SlideTransition } from "./Transitions";
 
 export default function FeeRecipientDialog({
@@ -30,6 +31,7 @@ export default function FeeRecipientDialog({
 }): JSX.Element {
   const [currentFeeRecipient, setCurrentFeeRecipient] = useState("");
   const [newFeeRecipient, setNewFeeRecipient] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleClose = () => {
     setOpen(false);
@@ -39,38 +41,47 @@ export default function FeeRecipientDialog({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setNewFeeRecipient(event.target.value);
+    setErrorMessage("");
   };
 
   const validatorApi = new ValidatorApi(
-    validatorClientApiMap.get("prysm-prater")!, //TODO - get client and network from somewhere
+    validatorClientApiMap.get("teku-prater")!, //TODO - get client and network from somewhere
     validatorApiProxyUrl
   );
 
   const updateFeeRecipient = async () => {
     if (isEthAddress(newFeeRecipient)) {
-      await validatorApi.setFeeRecipient(
-        newFeeRecipient,
-        selectedValidatorPubkey
-      ); //TODO - Catch errors
+      try {
+        await validatorApi.setFeeRecipient(
+          newFeeRecipient,
+          selectedValidatorPubkey
+        );
 
-      setCurrentFeeRecipient(newFeeRecipient);
+        setCurrentFeeRecipient(newFeeRecipient);
+      } catch (error) {
+        setErrorMessage("Error updating fee recipient");
+      }
     } else {
-      //TODO Show error
+      setErrorMessage("Invalid address");
     }
   };
 
   useEffect(() => {
     const getCurrentFeeRecipient = async () => {
-      const currentFeeRecipient = await validatorApi.getFeeRecipient(
-        selectedValidatorPubkey
-      );
+      try {
+        const currentFeeRecipient = await validatorApi.getFeeRecipient(
+          selectedValidatorPubkey
+        );
 
-      setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
+        setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
+      } catch (error) {
+        setErrorMessage("Error getting current fee recipient");
+      }
     };
 
     getCurrentFeeRecipient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newFeeRecipient, selectedValidatorPubkey]);
+  }, [currentFeeRecipient, selectedValidatorPubkey]);
 
   return (
     <Dialog
@@ -92,37 +103,68 @@ export default function FeeRecipientDialog({
       >
         Changing validator fee recipient...
       </DialogTitle>
-      <DialogContent>
-        <Box sx={importDialogBoxStyle}>
-          <TextField
-            label="Current Fee Recipient"
-            disabled={true}
-            value={currentFeeRecipient}
+
+      {validatorApi ? (
+        <>
+          <DialogContent>
+            <Box sx={importDialogBoxStyle}>
+              <TextField
+                label="Current Fee Recipient"
+                disabled={true}
+                value={currentFeeRecipient}
+              />
+              <TextField
+                onChange={handleNewFeeRecipientChange}
+                sx={{ marginTop: 2 }}
+                label="New Fee Recipient"
+                defaultValue="New Fee Recipient"
+              />
+            </Box>
+          </DialogContent>
+          {errorMessage && (
+            <Message
+              message={errorMessage}
+              severity="error"
+              sx={{ marginLeft: 4, marginRight: 4 }}
+            />
+          )}
+          <DialogActions>
+            {!errorMessage && (
+              <Button
+                onClick={updateFeeRecipient}
+                variant="contained"
+                sx={{ margin: 2, borderRadius: 3 }}
+              >
+                Apply changes
+              </Button>
+            )}
+            <Button
+              onClick={handleClose}
+              variant="outlined"
+              sx={{ margin: 2, borderRadius: 3 }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </>
+      ) : (
+        <>
+          <Message
+            message="No consensus client selected"
+            severity="error"
+            sx={{ marginLeft: 4, marginRight: 4 }}
           />
-          <TextField
-            onChange={handleNewFeeRecipientChange}
-            sx={{ marginTop: 2 }}
-            label="New Fee Recipient"
-            defaultValue="New Fee Recipient"
-          />
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={updateFeeRecipient}
-          variant="contained"
-          sx={{ margin: 2, borderRadius: 3 }}
-        >
-          Apply changes
-        </Button>
-        <Button
-          onClick={handleClose}
-          variant="outlined"
-          sx={{ margin: 2, borderRadius: 3 }}
-        >
-          Close
-        </Button>
-      </DialogActions>
+          <DialogActions>
+            <Button
+              onClick={handleClose}
+              variant="outlined"
+              sx={{ margin: 2, borderRadius: 3 }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </>
+      )}
     </Dialog>
   );
 }
