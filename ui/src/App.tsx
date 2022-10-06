@@ -65,6 +65,7 @@ function App() {
             <Message
               message="The API is not available. Please, check the URL and try again."
               severity="error"
+              sx={{ marginTop: "2em" }}
             />
           </>
         )}
