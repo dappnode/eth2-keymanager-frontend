@@ -1,3 +1,4 @@
+//External components
 import {
   Box,
   Button,
@@ -7,9 +8,14 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+
+//Logic
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
+import { isEthAddress } from "../../logic/Utils/dataUtils";
 import { validatorApiProxyUrl, validatorClientApiMap } from "../../params";
+
+//Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
 import { SlideTransition } from "./Transitions";
 
@@ -23,44 +29,48 @@ export default function FeeRecipientDialog({
   selectedValidatorPubkey: string;
 }): JSX.Element {
   const [currentFeeRecipient, setCurrentFeeRecipient] = useState("");
-  //const [newFeeRecipient, setNewCurrentFeeRecipient] = useState("");
-
-  var newFeeRecipient = "";
+  const [newFeeRecipient, setNewFeeRecipient] = useState("");
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const handleNewFeeRecipientChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewFeeRecipient(event.target.value);
+  };
+
   const validatorApi = new ValidatorApi(
-    validatorClientApiMap.get("prysm-prater")!, //TODO - get network from somewhere
+    validatorClientApiMap.get("prysm-prater")!, //TODO - get client and network from somewhere
     validatorApiProxyUrl
   );
 
-  const getCurrentFeeRecipient = async () => {
-    const currentFeeRecipient = await validatorApi.getFeeRecipient(
-      selectedValidatorPubkey
-    );
-
-    setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
-  };
-
-  const setNewFeeRecipient = async () => {
-    /*if (newFeeRecipient !== "") {
-      //TODO - validate newFeeRecipient
-
+  const updateFeeRecipient = async () => {
+    if (isEthAddress(newFeeRecipient)) {
       await validatorApi.setFeeRecipient(
         newFeeRecipient,
         selectedValidatorPubkey
-      );
+      ); //TODO - Catch errors
+
+      setCurrentFeeRecipient(newFeeRecipient);
     } else {
-      //TODO - show error message
-    }*/
+      //TODO Show error
+    }
   };
 
   useEffect(() => {
+    const getCurrentFeeRecipient = async () => {
+      const currentFeeRecipient = await validatorApi.getFeeRecipient(
+        selectedValidatorPubkey
+      );
+
+      setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
+    };
+
     getCurrentFeeRecipient();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValidatorPubkey]);
+  }, [newFeeRecipient, selectedValidatorPubkey]);
 
   return (
     <Dialog
@@ -90,6 +100,7 @@ export default function FeeRecipientDialog({
             value={currentFeeRecipient}
           />
           <TextField
+            onChange={handleNewFeeRecipientChange}
             sx={{ marginTop: 2 }}
             label="New Fee Recipient"
             defaultValue="New Fee Recipient"
@@ -98,14 +109,14 @@ export default function FeeRecipientDialog({
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={handleClose}
+          onClick={updateFeeRecipient}
           variant="contained"
           sx={{ margin: 2, borderRadius: 3 }}
         >
           Apply changes
         </Button>
         <Button
-          onClick={setNewFeeRecipient}
+          onClick={handleClose}
           variant="outlined"
           sx={{ margin: 2, borderRadius: 3 }}
         >

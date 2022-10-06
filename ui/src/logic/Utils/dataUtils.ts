@@ -31,3 +31,8 @@ export function getEmoji(status: string) {
       return "⚠️";
   }
 }
+
+export const isEthAddress = (address: string): boolean => {
+  const reg = new RegExp("^0x[a-fA-F0-9]{40}$");
+  return reg.test(address);
+};
