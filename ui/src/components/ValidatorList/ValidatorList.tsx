@@ -5,7 +5,7 @@ import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
-import { Box, Button, Card, CircularProgress } from "@mui/material";
+import { Box, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
@@ -14,35 +14,11 @@ import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { useEffect, useState } from "react";
 import { BeaconchaApi } from "../../apis/beaconchaApi";
 import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSummaryURL";
-import {
-  availableNetworks,
-  beaconchaApiParamsMap,
-  validatorApiProxyUrl,
-  validatorClientApiMap,
-} from "../../params";
+import { availableNetworks, beaconchaApiParamsMap } from "../../params";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
 import { HeaderTypography } from "../../Styles/Typographies";
-import { ValidatorApi } from "../../apis/validatorApi";
-
-async function tmp() {
-  const validatorApi = new ValidatorApi(
-    validatorClientApiMap.get("prysm-prater")!,
-    validatorApiProxyUrl
-  );
-
-  await validatorApi.setFeeRecipient(
-    "0x0000000000000000000000000000000000000002",
-    "0x85abea8fb2f90371875e8ff4dadac8b5308662c2d40533d8d74c13544a2f315183e404181f4cfa65ce7b3a435b709d2f"
-  );
-
-  console.log(
-    await validatorApi.getFeeRecipient(
-      "0x85abea8fb2f90371875e8ff4dadac8b5308662c2d40533d8d74c13544a2f315183e404181f4cfa65ce7b3a435b709d2f"
-    )
-  );
-}
 
 export default function ValidatorList({
   web3signerApi,
@@ -119,9 +95,6 @@ export default function ValidatorList({
             sx={{ flexGrow: 1, fontWeight: "bold", marginBottom: 2 }}
             text="Your validator accounts"
           />
-
-          <Button onClick={() => tmp()}>Get fee recipient</Button>
-
           {loading ? (
             <CircularProgress
               sx={{
