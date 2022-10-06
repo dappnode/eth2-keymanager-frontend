@@ -17,6 +17,7 @@ import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSumm
 import {
   availableNetworks,
   beaconchaApiParamsMap,
+  validatorApiProxyUrl,
   validatorClientApiMap,
 } from "../../params";
 
@@ -28,7 +29,7 @@ import { ValidatorApi } from "../../apis/validatorApi";
 async function tmp() {
   const validatorApi = new ValidatorApi(
     validatorClientApiMap.get("prysm-prater")!,
-    "http://localhost:3001"
+    validatorApiProxyUrl
   );
 
   await validatorApi.setFeeRecipient(

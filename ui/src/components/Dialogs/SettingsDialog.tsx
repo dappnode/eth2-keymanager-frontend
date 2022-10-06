@@ -61,7 +61,6 @@ export default function SettingsDialog({
           open={isFeeDialogOpen}
           setOpen={setIsFeeDialogOpen}
           selectedValidatorPubkey={selectedPubkey}
-          newFeeRecipient={"TODO"}
         />
 
         <List sx={{ pt: 0 }}>
@@ -85,7 +84,7 @@ export default function SettingsDialog({
       <DialogActions>
         <Button
           onClick={closeSettingsDialog}
-          variant="contained"
+          variant="outlined"
           sx={{ marginRight: 2, marginBottom: 2, borderRadius: 3 }}
         >
           Close

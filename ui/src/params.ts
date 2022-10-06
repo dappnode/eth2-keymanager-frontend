@@ -8,6 +8,8 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
 
 export const availableNetworks = ["mainnet", "prater", "gnosis"];
 
+export const validatorApiProxyUrl = "http://localhost:3001";
+
 export const validatorClientApiMap = new Map<string, ApiParams>([
   [
     "lighthouse-prater",

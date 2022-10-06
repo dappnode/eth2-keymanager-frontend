@@ -7,6 +7,9 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { useEffect, useState } from "react";
+import { ValidatorApi } from "../../apis/validatorApi";
+import { validatorApiProxyUrl, validatorClientApiMap } from "../../params";
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
 import { SlideTransition } from "./Transitions";
 
@@ -14,16 +17,50 @@ export default function FeeRecipientDialog({
   open,
   setOpen,
   selectedValidatorPubkey,
-  newFeeRecipient,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   selectedValidatorPubkey: string;
-  newFeeRecipient: string;
 }): JSX.Element {
+  const [currentFeeRecipient, setCurrentFeeRecipient] = useState("");
+  //const [newFeeRecipient, setNewCurrentFeeRecipient] = useState("");
+
+  var newFeeRecipient = "";
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  const validatorApi = new ValidatorApi(
+    validatorClientApiMap.get("prysm-prater")!, //TODO - get network from somewhere
+    validatorApiProxyUrl
+  );
+
+  const getCurrentFeeRecipient = async () => {
+    const currentFeeRecipient = await validatorApi.getFeeRecipient(
+      selectedValidatorPubkey
+    );
+
+    setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
+  };
+
+  const setNewFeeRecipient = async () => {
+    /*if (newFeeRecipient !== "") {
+      //TODO - validate newFeeRecipient
+
+      await validatorApi.setFeeRecipient(
+        newFeeRecipient,
+        selectedValidatorPubkey
+      );
+    } else {
+      //TODO - show error message
+    }*/
+  };
+
+  useEffect(() => {
+    getCurrentFeeRecipient();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValidatorPubkey]);
 
   return (
     <Dialog
@@ -39,16 +76,18 @@ export default function FeeRecipientDialog({
       aria-describedby="alert-dialog-description"
       TransitionComponent={SlideTransition}
     >
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle
+        id="alert-dialog-title"
+        sx={{ fontWeight: 700, fontSize: 24 }}
+      >
         Changing validator fee recipient...
       </DialogTitle>
       <DialogContent>
         <Box sx={importDialogBoxStyle}>
           <TextField
             label="Current Fee Recipient"
-            defaultValue="Current Fee Recipient"
             disabled={true}
-            value={selectedValidatorPubkey}
+            value={currentFeeRecipient}
           />
           <TextField
             sx={{ marginTop: 2 }}
@@ -61,6 +100,13 @@ export default function FeeRecipientDialog({
         <Button
           onClick={handleClose}
           variant="contained"
+          sx={{ margin: 2, borderRadius: 3 }}
+        >
+          Apply changes
+        </Button>
+        <Button
+          onClick={setNewFeeRecipient}
+          variant="outlined"
           sx={{ margin: 2, borderRadius: 3 }}
         >
           Close
