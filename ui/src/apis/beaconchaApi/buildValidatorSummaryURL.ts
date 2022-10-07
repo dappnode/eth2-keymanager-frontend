@@ -12,8 +12,11 @@ export default function buildValidatorSummaryURL({
     throw new Error(`Invalid network: ${network}`);
   }
 
-  let summaryValidatorURL =
-    beaconchaApiParamsMap.get(network)!.baseUrl + "/dashboard?validators="; //TODO Be careful with the !
+  const baseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
+
+  if (baseUrl == null) return "";
+
+  let summaryValidatorURL = baseUrl + "/dashboard?validators=";
 
   allValidatorsInfo.forEach((validatorInfo) => {
     if (validatorInfo.data != null) {

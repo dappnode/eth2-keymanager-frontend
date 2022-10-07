@@ -42,9 +42,14 @@ export default function ValidatorList({
   }
 
   async function getValidatorSummaryURL(beaconchaApi: BeaconchaApi) {
+    if (!keystoresGet) {
+      setValidatorSummaryURL("");
+      return;
+    }
+
     const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
       beaconchaApi: beaconchaApi,
-      keystoresGet: keystoresGet!,
+      keystoresGet: keystoresGet,
     });
 
     const hasError = allValidatorsInfo.some((item) => item.status === "error");
@@ -78,14 +83,15 @@ export default function ValidatorList({
       network != null &&
       availableNetworks.includes(network)
     ) {
-      const beaconchaApi = new BeaconchaApi(
-        beaconchaApiParamsMap.get(network)! //TODO Be careful with this !
-      );
+      const beaconchaParams = beaconchaApiParamsMap.get(network);
 
-      getValidatorSummaryURL(beaconchaApi);
+      if (beaconchaParams) {
+        const beaconchaApi = new BeaconchaApi(beaconchaParams);
+        getValidatorSummaryURL(beaconchaApi);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keystoresGet]);
+  }, []);
 
   return (
     <div>
