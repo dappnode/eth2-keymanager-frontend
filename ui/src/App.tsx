@@ -24,6 +24,7 @@ function App() {
   const [network, setNetwork] = React.useState("");
   const [web3signerApi, setWeb3signerApi] =
     React.useState<Web3SignerApi | null>(null);
+  const [signerStatus, setSignerStatus] = React.useState("loading");
 
   useEffect(() => {
     const { network, authToken, host, baseUrl } = getUrlParams();
@@ -39,9 +40,21 @@ function App() {
     }
   }, []);
 
+  //Status check for web3signer
+  const getSignerStatus = async () => {
+    setSignerStatus(
+      (await (await web3signerApi?.getStatus())?.status) || "loading..."
+    );
+  };
+
+  useEffect(() => {
+    getSignerStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [web3signerApi]);
+
   return (
     <ThemeProvider theme={darkTheme}>
-      <TopBar network={network} />
+      <TopBar network={network} signerStatus={signerStatus} />
       <Container component="main" maxWidth="xl">
         {web3signerApi ? (
           <BrowserRouter>
