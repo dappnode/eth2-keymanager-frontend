@@ -91,7 +91,7 @@ export default function ValidatorList({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [keystoresGet]);
 
   return (
     <div>
