@@ -16,6 +16,7 @@ import { useState } from "react";
 
 //Styles
 import "./KeystoreList.css";
+import FeeRecipientDialog from "../Dialogs/FeeRecipientDialog";
 
 export default function KeystoreList({
   rows,
@@ -36,7 +37,7 @@ export default function KeystoreList({
     setSelectedRows(selectionModel);
   };
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFeeDialogOpen, setIsFeeDialogOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const pageSizeChange = (pageSize: number, details: GridCallbackDetails) => {
     setPageSize(pageSize);
@@ -58,10 +59,10 @@ export default function KeystoreList({
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      <SettingsDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedPubkey={selectedValidatorPK}
+      <FeeRecipientDialog
+        open={isFeeDialogOpen}
+        setOpen={setIsFeeDialogOpen}
+        selectedValidatorPubkey={selectedValidatorPK}
       />
       <DataGrid
         rows={customRows}
@@ -70,7 +71,7 @@ export default function KeystoreList({
             navigator.clipboard.writeText(params.value);
           }
         }}
-        columns={KeystoreColumns(setSeletectedValidatorPK, setIsDialogOpen)}
+        columns={KeystoreColumns(setSeletectedValidatorPK, setIsFeeDialogOpen)}
         pageSize={pageSize}
         rowsPerPageOptions={[10, 20, 50, 100]}
         onPageSizeChange={pageSizeChange}

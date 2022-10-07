@@ -1,11 +1,11 @@
 //External components
 import { GridColDef } from "@mui/x-data-grid";
-import { Settings } from "@mui/icons-material";
+import { CurrencyExchangeOutlined } from "@mui/icons-material";
 import LinkIcon from "@mui/icons-material/Link";
 
 export default function KeystoreColumns(
   setSeletectedValidatorPK: (arg0: string) => void,
-  setIsDialogOpen: (arg0: boolean) => void
+  setIsFeeDialogOpen: (arg0: boolean) => void
 ): GridColDef[] {
   return [
     {
@@ -41,9 +41,9 @@ export default function KeystoreColumns(
       cellClassName: "tableCell",
     },
     {
-      field: "validator_settings",
-      headerName: "Settings",
-      description: "Settings for this validator",
+      field: "validator_feerecipient",
+      headerName: "Fees",
+      description: "Edit the fee recipient for this validator",
       disableReorder: true,
       disableColumnMenu: true,
       disableExport: true,
@@ -55,10 +55,10 @@ export default function KeystoreColumns(
           style={{ color: "grey" }}
           onClick={(event) => {
             setSeletectedValidatorPK(rowData.row.validating_pubkey);
-            setIsDialogOpen(true);
+            setIsFeeDialogOpen(true);
           }}
         >
-          <Settings />
+          <CurrencyExchangeOutlined />
         </button>
       ),
       headerClassName: "tableHeader",
