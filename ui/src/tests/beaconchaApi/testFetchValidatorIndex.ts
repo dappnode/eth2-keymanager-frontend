@@ -33,14 +33,13 @@ describe("Test for fetching validator indexes in every available network", () =>
       );
 
       const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
-        beaconchaApi,
         keystoresGet,
       });
 
-      expect(allValidatorsInfo[0].data.validatorindex).to.equal(
+      expect(allValidatorsInfo[0].data[0].validatorindex).to.equal(
         networkTestMap.get(network)!.indexes[0]
       );
-      expect(allValidatorsInfo[1].data.validatorindex).to.equal(
+      expect(allValidatorsInfo[0].data[1].validatorindex).to.equal(
         networkTestMap.get(network)!.indexes[1]
       );
     }
