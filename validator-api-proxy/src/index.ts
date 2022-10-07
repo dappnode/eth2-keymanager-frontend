@@ -34,15 +34,19 @@ app.get("/feerecipient", async (req, res) => {
   } else if (!isValidatorPK(validatorPublicKey)) {
     res.status(400).send("Bad Request. Invalid validator public key.");
   } else {
-    const validatorApi = new ValidatorClientRequester(
-      validatorClientApiMap.get(client)!
-    );
+    const clientApiParams = validatorClientApiMap.get(client);
 
-    const feeRecipientGetOld = await validatorApi.getFeeRecipient(
-      validatorPublicKey
-    );
+    if (clientApiParams === undefined) {
+      res.status(500).send("Internal Server Error.");
+    } else {
+      const validatorApi = new ValidatorClientRequester(clientApiParams);
 
-    res.send(feeRecipientGetOld);
+      const feeRecipientGet = await validatorApi.getFeeRecipient(
+        validatorPublicKey
+      );
+
+      res.send(feeRecipientGet);
+    }
   }
 });
 
@@ -70,19 +74,23 @@ app.post("/feerecipient", async (req, res) => {
   } else if (!isEthAddress(newFeeRecipient)) {
     res.status(400).send("Bad Request. Invalid new fee recipient address.");
   } else {
-    const validatorApi = new ValidatorClientRequester(
-      validatorClientApiMap.get(client)!
-    );
+    const clientApiParams = validatorClientApiMap.get(client);
 
-    await validatorApi
-      .setFeeRecipient(newFeeRecipient, validatorPublicKey)
-      .catch((error) => {
-        res.status(500).send(error);
-      });
+    if (clientApiParams === undefined) {
+      res.status(500).send("Internal Server Error.");
+    } else {
+      const validatorApi = new ValidatorClientRequester(clientApiParams);
 
-    //TODO: Perform GET to check if address has been set?
+      await validatorApi
+        .setFeeRecipient(newFeeRecipient, validatorPublicKey)
+        .catch((error) => {
+          res.status(500).send(error);
+        });
 
-    res.send("Fee recipient set successfully.");
+      //TODO: Perform GET to check if address has been set?
+
+      res.send("Fee recipient set successfully.");
+    }
   }
 });
 

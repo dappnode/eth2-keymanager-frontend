@@ -45,7 +45,7 @@ export default function FeeRecipientDialog({
   };
 
   const validatorApi = new ValidatorApi(
-    validatorClientApiMap.get("teku-prater")!, //TODO - get client and network from somewhere
+    validatorClientApiMap.get("prysm-prater")!, //TODO - get client and network from somewhere
     validatorApiProxyUrl
   );
 
@@ -57,7 +57,9 @@ export default function FeeRecipientDialog({
           selectedValidatorPubkey
         );
 
-        setCurrentFeeRecipient(newFeeRecipient);
+        //TODO Show Alert if error
+
+        setCurrentFeeRecipient(newFeeRecipient); //Be careful with this, it might not be the new fee recipient
       } catch (error) {
         setErrorMessage("Error updating fee recipient");
       }
@@ -72,6 +74,8 @@ export default function FeeRecipientDialog({
         const currentFeeRecipient = await validatorApi.getFeeRecipient(
           selectedValidatorPubkey
         );
+
+        //TODO Show Alert if error
 
         setCurrentFeeRecipient(currentFeeRecipient.data?.ethaddress || ""); //TODO is this correct?
       } catch (error) {
