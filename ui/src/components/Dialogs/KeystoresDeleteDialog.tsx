@@ -117,7 +117,10 @@ export default function KeystoresDeleteDialog({
               {requestInFlight ? (
                 <WaitBox />
               ) : (
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText
+                  id="alert-dialog-description"
+                  component={"span"}
+                >
                   <DeletionWarning rows={rows} selectedRows={selectedRows} />
                 </DialogContentText>
               )}
