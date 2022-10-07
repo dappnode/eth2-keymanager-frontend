@@ -121,29 +121,20 @@ export default function ImportScreen({
           />
           <FileDrop callback={keystoreFilesCallback} />
 
-          {FileCardList(
-            acceptedFiles,
-            setAcceptedFiles,
-            passwords,
-            setPasswords,
-            useSamePassword
-          )}
+          <SecondaryInfoTypography
+            sx={{ marginBottom: 2, marginTop: 4 }}
+            text="Remember you need to introduce the password you set during
+                creation of the keystore files."
+          />
 
           {acceptedFiles.length > 0 && (
             <>
-              <SecondaryInfoTypography
-                sx={{ marginBottom: 2, marginTop: 4 }}
-                text="Remember you need to introduce the password you set during
-                creation of the keystore files."
-              />
-
               <FormGroup sx={{ marginTop: "6px" }}>
                 <FormControlLabel
                   control={<Switch onChange={handleUseSamePasswordSwitch} />}
                   label="Use same password for every file"
                 />
               </FormGroup>
-
               {useSamePassword && (
                 <TextField
                   id="outlined-password-input"
@@ -156,6 +147,14 @@ export default function ImportScreen({
                 />
               )}
             </>
+          )}
+
+          {FileCardList(
+            acceptedFiles,
+            setAcceptedFiles,
+            passwords,
+            setPasswords,
+            useSamePassword
           )}
 
           <Box sx={slashingProtectionBoxStyle}>
