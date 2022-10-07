@@ -18,14 +18,12 @@ export default function buildValidatorSummaryURL({
 
   let summaryValidatorURL = baseUrl + "/dashboard?validators=";
 
-  allValidatorsInfo.forEach((validatorInfo) => {
-    if (validatorInfo.data != null) {
-      //Could be null if the validator is not in the beaconcha database
-      summaryValidatorURL += validatorInfo.data.validatorindex + ",";
-    }
+  allValidatorsInfo.forEach((validatorChunk) => {
+    const chunkIndexes = validatorChunk.data.map(
+      (validator) => validator.validatorindex
+    );
+    summaryValidatorURL += chunkIndexes.join(",");
   });
-
-  summaryValidatorURL = summaryValidatorURL.slice(0, -1);
 
   return summaryValidatorURL;
 }

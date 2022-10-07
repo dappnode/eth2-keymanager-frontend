@@ -14,7 +14,7 @@ export interface BeaconchaGetResponse {
     validatorindex?: number;
     withdrawableepoch?: number;
     withdrawalcredentials?: string;
-  };
+  }[];
   error?: { message: string };
 }
 

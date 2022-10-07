@@ -31,7 +31,7 @@ export default function ValidatorList({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
-
+  const [hasBeaconchaError, setHasBeaconchaError] = useState(false);
   const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
 
   async function getKeystores() {
@@ -48,25 +48,28 @@ export default function ValidatorList({
     }
 
     const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
-      beaconchaApi: beaconchaApi,
       keystoresGet: keystoresGet,
     });
 
-    const hasError = allValidatorsInfo.some((item) => item.status === "error");
-
+    const hasError = allValidatorsInfo.some(
+      (validatorInfo) => validatorInfo.status === "error"
+    );
     if (hasError) {
+      setHasBeaconchaError(true);
       setValidatorSummaryURL("");
-    } else {
-      try {
-        const validatorSummaryURL = buildValidatorSummaryURL({
-          allValidatorsInfo,
-          network,
-        });
-        setValidatorSummaryURL(validatorSummaryURL);
-      } catch (e) {
-        setValidatorSummaryURL("");
-        console.log(e);
-      }
+      return;
+    }
+
+    try {
+      const validatorSummaryURL = buildValidatorSummaryURL({
+        allValidatorsInfo,
+        network,
+      });
+      setValidatorSummaryURL(validatorSummaryURL);
+      setHasBeaconchaError(false);
+    } catch (e) {
+      setValidatorSummaryURL("");
+      console.log(e);
     }
   }
 
@@ -126,6 +129,14 @@ export default function ValidatorList({
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
               />
+              {hasBeaconchaError && (
+                <Message
+                  message="There was an error loading the dashboard. You might have exceeded the number of API calls allowed by the explorer. Please try again later."
+                  severity="warning"
+                  sx={{ marginTop: 2 }}
+                />
+              )}
+
               {open && (
                 <KeystoresDeleteDialog
                   web3signerApi={web3signerApi}
