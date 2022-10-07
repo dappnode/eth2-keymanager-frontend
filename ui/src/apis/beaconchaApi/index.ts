@@ -36,7 +36,7 @@ export class BeaconchaApi extends StandardApi {
     try {
       return (await this.request(
         "GET",
-        this.baseUrl + this.endpoint + "validator/" + pubkey
+        this.baseUrl + this.keymanagerEndpoint + "validator/" + pubkey
       )) as BeaconchaGetResponse;
     } catch (e) {
       return {

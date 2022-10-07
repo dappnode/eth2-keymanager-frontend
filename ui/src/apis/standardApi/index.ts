@@ -4,13 +4,13 @@ export class StandardApi {
   baseUrl: string;
   authToken?: string;
   host?: string;
-  endpoint?: string;
+  keymanagerEndpoint?: string;
 
   constructor(apiParams: ApiParams) {
     this.authToken = apiParams.authToken;
     this.host = apiParams.host;
     this.baseUrl = apiParams.baseUrl;
-    this.endpoint = apiParams.apiPath;
+    this.keymanagerEndpoint = apiParams.apiPath;
   }
 
   protected async request(

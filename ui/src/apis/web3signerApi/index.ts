@@ -5,10 +5,12 @@ import {
   Web3signerPostResponse,
   Web3signerPostRequest,
   Web3signerDeleteRequest,
+  Web3signerHealthcheckResponse,
 } from "./types";
 
 export class Web3SignerApi extends StandardApi {
-  endpoint = "/eth/v1/keystores";
+  keymanagerEndpoint = "/eth/v1/keystores";
+  serverStatusEndpoint = "/healthcheck";
 
   /**
    * Import remote keys for the validator client to request duties for.
@@ -33,7 +35,7 @@ export class Web3SignerApi extends StandardApi {
       }
       return (await this.request(
         "POST",
-        this.baseUrl + this.endpoint,
+        this.baseUrl + this.keymanagerEndpoint,
         JSON.stringify(data)
       )) as Web3signerPostResponse;
     } catch (e) {
@@ -59,7 +61,7 @@ export class Web3SignerApi extends StandardApi {
       });
       return (await this.request(
         "DELETE",
-        this.baseUrl + this.endpoint,
+        this.baseUrl + this.keymanagerEndpoint,
         data
       )) as Web3signerDeleteResponse;
     } catch (e) {
@@ -80,7 +82,7 @@ export class Web3SignerApi extends StandardApi {
     try {
       return (await this.request(
         "GET",
-        this.baseUrl + this.endpoint
+        this.baseUrl + this.keymanagerEndpoint
       )) as Web3signerGetResponse;
     } catch (e) {
       return {
@@ -88,6 +90,25 @@ export class Web3SignerApi extends StandardApi {
         error: {
           message: e.message,
         },
+      };
+    }
+  }
+
+  /**
+   * Checks the Web3Signer server status. Confirms if Web3Signer is connected and running.
+   * https://consensys.github.io/web3signer/web3signer-eth2.html#tag/Reload-Signer-Keys/operation/UPCHECK
+   */
+  public async getStatus(): Promise<Web3signerHealthcheckResponse> {
+    try {
+      return (await this.request(
+        "GET",
+        this.baseUrl + this.serverStatusEndpoint
+      )) as Web3signerHealthcheckResponse;
+    } catch (e) {
+      return {
+        status: "Error",
+        checks: [],
+        outcome: "Error",
       };
     }
   }
