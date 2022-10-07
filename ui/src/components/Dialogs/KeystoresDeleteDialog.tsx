@@ -19,6 +19,7 @@ import {
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
 import WaitBox from "../WaitBox/WaitBox";
 import DeletionWarning from "./DeletionWarning";
+import Message from "../Messages/Message";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -93,6 +94,11 @@ export default function KeystoresDeleteDialog({
               ))}
               {keystoresDelete.slashing_protection ? (
                 <div>
+                  <Message
+                    message="It is strongly recommended to stop the validator and watch at least 3 missed attestations in the explorer before uploading the keys to other machine"
+                    severity="warning"
+                    sx={{ marginTop: 2, marginBottom: 2 }}
+                  />
                   <Button
                     variant="contained"
                     href={`data:text/json;charset=utf-8,${encodeURIComponent(

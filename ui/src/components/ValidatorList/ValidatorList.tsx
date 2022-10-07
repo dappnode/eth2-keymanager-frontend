@@ -109,7 +109,11 @@ export default function ValidatorList({
               }}
             />
           ) : keystoresGet?.error ? (
-            <Message message={keystoresGet.error.message} severity="error" />
+            <Message
+              message={keystoresGet.error.message}
+              severity="error"
+              sx={{ marginTop: 2 }}
+            />
           ) : keystoresGet?.data ? (
             <>
               <KeystoreList
@@ -134,7 +138,11 @@ export default function ValidatorList({
               )}
             </>
           ) : (
-            <Message severity="warning" message="No keystores found" />
+            <Message
+              severity="warning"
+              message="No keystores found"
+              sx={{ marginTop: 2 }}
+            />
           )}
         </Card>
       </Box>
