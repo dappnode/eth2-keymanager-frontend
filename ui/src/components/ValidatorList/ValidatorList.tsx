@@ -125,6 +125,7 @@ export default function ValidatorList({
                 isTableEmpty={selectedRows.length === 0}
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
+                hasBeaconchaError={hasBeaconchaError}
               />
               {hasBeaconchaError && (
                 <Alert
@@ -132,9 +133,9 @@ export default function ValidatorList({
                   sx={{ marginTop: 2 }}
                   variant="filled"
                 >
-                  There was an error loading the dashboard. You might have
-                  exceeded the number of API calls allowed by the explorer.
-                  Please try again later.
+                  There was an error loading the dashboard. The number of API
+                  calls allowed by the explorer might have been exceeded. Please
+                  wait for a minute and refresh the page.
                 </Alert>
               )}
 

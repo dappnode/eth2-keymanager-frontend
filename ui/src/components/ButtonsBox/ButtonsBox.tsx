@@ -9,10 +9,12 @@ export default function ButtonsBox({
   isTableEmpty,
   setOpen,
   validatorSummaryURL,
+  hasBeaconchaError,
 }: {
   isTableEmpty: boolean;
   setOpen(open: boolean): void;
   validatorSummaryURL: string;
+  hasBeaconchaError: boolean;
 }): JSX.Element {
   return (
     <Box sx={buttonsBoxStyle}>
@@ -38,29 +40,30 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {validatorSummaryURL ? (
-        <Button
-          variant="contained"
-          size="large"
-          sx={{ marginRight: 4, borderRadius: 3 }}
-          target="_blank"
-          href={validatorSummaryURL}
-        >
-          Go to summary dashboard
-        </Button>
-      ) : (
-        <>
+      {!hasBeaconchaError &&
+        (validatorSummaryURL ? (
           <Button
             variant="contained"
             size="large"
             sx={{ marginRight: 4, borderRadius: 3 }}
-            disabled={true}
+            target="_blank"
+            href={validatorSummaryURL}
           >
-            Loading summary dashboard...
-            <CircularProgress size={24} sx={{ marginLeft: 2 }} />
+            Go to summary dashboard
           </Button>
-        </>
-      )}
+        ) : (
+          <>
+            <Button
+              variant="contained"
+              size="large"
+              sx={{ marginRight: 4, borderRadius: 3 }}
+              disabled={true}
+            >
+              Loading summary dashboard...
+              <CircularProgress size={24} sx={{ marginLeft: 2 }} />
+            </Button>
+          </>
+        ))}
     </Box>
   );
 }
