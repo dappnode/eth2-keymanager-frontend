@@ -1,21 +1,18 @@
 import { expect } from "chai";
 import { ValidatorApi } from "../../apis/validatorApi";
-import { validatorClientApiMap } from "../../params";
+import { validatorClientApiNetworkMap } from "../../params";
 require("isomorphic-fetch");
 
 describe("Test for checking /feerecipient endpoint of every consensus client", () => {
   it("should post a fee recipient address and get that same address", async () => {
-    const clients = [
-      "nimbus-prater",
-      "lighthouse-prater",
-      "prysm-prater",
-      "teku-prater",
-    ];
+    const clients = ["nimbus", "lighthouse", "prysm", "teku"];
 
     for (const client of clients) {
       console.log("CLIENT: ", client);
 
-      const validatorApi = new ValidatorApi(validatorClientApiMap.get(client)!);
+      const validatorApi = new ValidatorApi(
+        validatorClientApiNetworkMap.get("prater")!.get(client)!
+      );
 
       const testValidatorAddress =
         "0x85abea8fb2f90371875e8ff4dadac8b5308662c2d40533d8d74c13544a2f315183e404181f4cfa65ce7b3a435b709d2f";

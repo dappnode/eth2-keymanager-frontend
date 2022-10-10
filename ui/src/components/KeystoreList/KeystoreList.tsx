@@ -62,6 +62,7 @@ export default function KeystoreList({
         open={isFeeDialogOpen}
         setOpen={setIsFeeDialogOpen}
         selectedValidatorPubkey={selectedValidatorPK}
+        network={network}
       />
       <DataGrid
         rows={customRows}

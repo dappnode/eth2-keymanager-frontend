@@ -17,7 +17,7 @@ import { isEthAddress } from "../../logic/Utils/dataUtils";
 import {
   burnAddress,
   validatorApiProxyUrl,
-  validatorClientApiMap,
+  validatorClientApiNetworkMap,
 } from "../../params";
 
 //Styles
@@ -28,10 +28,12 @@ export default function FeeRecipientDialog({
   open,
   setOpen,
   selectedValidatorPubkey,
+  network,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   selectedValidatorPubkey: string;
+  network: string;
 }): JSX.Element {
   const [currentFeeRecipient, setCurrentFeeRecipient] = useState("");
   const [newFeeRecipient, setNewFeeRecipient] = useState("");
@@ -60,9 +62,13 @@ export default function FeeRecipientDialog({
     };
   }, [errorMessage, successMessage]);
 
-  const consensusClient = "teku-prater"; //TODO: get consensus client from env
+  const consensusClient = "teku"; //TODO: get consensus client from env
 
-  const validatorApiParams = validatorClientApiMap.get(consensusClient);
+  //const networkClientsMap = validatorClientApiNetworkMap[network];
+
+  const validatorApiParams = validatorClientApiNetworkMap
+    .get(network)
+    ?.get(consensusClient);
 
   const validatorApi = validatorApiParams
     ? new ValidatorApi(validatorApiParams, validatorApiProxyUrl)
