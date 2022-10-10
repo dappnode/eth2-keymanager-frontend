@@ -22,7 +22,6 @@ export class BeaconchaApi extends StandardApi {
     for (let i = 0; i < allValidatorPKs.length; i += chunkSize) {
       const chunk = allValidatorPKs.slice(i, i + chunkSize);
       const chunkResponse = await this.fetchValidatorsInfo(chunk);
-      //TODO Check last chunk length
       validatorsInfo.push(chunkResponse);
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +8,7 @@ import {
   Button,
   DialogContentText,
   DialogActions,
+  Alert,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { shortenPubkey, getEmoji } from "../../logic/Utils/dataUtils";
@@ -19,7 +20,6 @@ import {
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
 import WaitBox from "../WaitBox/WaitBox";
 import DeletionWarning from "./DeletionWarning";
-import Message from "../Messages/Message";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
@@ -94,11 +94,16 @@ export default function KeystoresDeleteDialog({
               ))}
               {keystoresDelete.slashing_protection ? (
                 <div>
-                  <Message
-                    message="It is strongly recommended to stop the validator and watch at least 3 missed attestations in the explorer before uploading the keys to other machine"
+                  <Alert
                     severity="warning"
                     sx={{ marginTop: 2, marginBottom: 2 }}
-                  />
+                    variant="filled"
+                  >
+                    It is strongly recommended to stop the validator and watch
+                    at least 3 missed attestations in the explorer before
+                    uploading the keys to another machine.
+                  </Alert>
+
                   <Button
                     variant="contained"
                     href={`data:text/json;charset=utf-8,${encodeURIComponent(

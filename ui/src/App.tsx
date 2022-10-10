@@ -1,12 +1,11 @@
 //External components
 import { ThemeProvider } from "@mui/material/styles";
-import { Container } from "@mui/material";
+import { Container, Alert } from "@mui/material";
 
 //Internal components
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
 import ValidatorList from "./components/ValidatorList/ValidatorList";
-import Message from "./components/Messages/Message";
 
 //Themes
 import { darkTheme } from "./Themes/globalThemes";
@@ -76,11 +75,9 @@ function App() {
           </BrowserRouter>
         ) : (
           <>
-            <Message
-              message="The API is not available. Please, check the URL and try again."
-              severity="error"
-              sx={{ marginTop: 2 }}
-            />
+            <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+              The API is not available. Please, check the URL and try again.
+            </Alert>
           </>
         )}
       </Container>

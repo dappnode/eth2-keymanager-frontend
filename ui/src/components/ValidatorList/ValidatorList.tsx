@@ -1,11 +1,10 @@
 //Internal components
-import Message from "../Messages/Message";
 import KeystoreList from "../KeystoreList/KeystoreList";
 import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
-import { Box, Card, CircularProgress } from "@mui/material";
+import { Alert, Box, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
@@ -112,11 +111,9 @@ export default function ValidatorList({
               }}
             />
           ) : keystoresGet?.error ? (
-            <Message
-              message={keystoresGet.error.message}
-              severity="error"
-              sx={{ marginTop: 2 }}
-            />
+            <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+              {keystoresGet.error?.message}
+            </Alert>
           ) : keystoresGet?.data ? (
             <>
               <KeystoreList
@@ -130,11 +127,15 @@ export default function ValidatorList({
                 validatorSummaryURL={validatorSummaryURL}
               />
               {hasBeaconchaError && (
-                <Message
-                  message="There was an error loading the dashboard. You might have exceeded the number of API calls allowed by the explorer. Please try again later."
+                <Alert
                   severity="warning"
                   sx={{ marginTop: 2 }}
-                />
+                  variant="filled"
+                >
+                  There was an error loading the dashboard. You might have
+                  exceeded the number of API calls allowed by the explorer.
+                  Please try again later.
+                </Alert>
               )}
 
               {open && (
@@ -149,11 +150,9 @@ export default function ValidatorList({
               )}
             </>
           ) : (
-            <Message
-              severity="warning"
-              message="No keystores found"
-              sx={{ marginTop: 2 }}
-            />
+            <Alert severity="warning" sx={{ marginTop: 2 }} variant="filled">
+              There are no keystores to display.
+            </Alert>
           )}
         </Card>
       </Box>
