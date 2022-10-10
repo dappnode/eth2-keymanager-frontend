@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ValidatorApi } from "../../apis/validatorApi";
-import { validatorClientApiNetworkMap } from "../../params";
+import { validatorProxyApiParams } from "../../params";
 require("isomorphic-fetch");
 
 describe("Test for checking /feerecipient endpoint of every consensus client", () => {
@@ -11,7 +11,9 @@ describe("Test for checking /feerecipient endpoint of every consensus client", (
       console.log("CLIENT: ", client);
 
       const validatorApi = new ValidatorApi(
-        validatorClientApiNetworkMap.get("prater")!.get(client)!
+        validatorProxyApiParams,
+        "prater", //TODO Test other networks
+        client
       );
 
       const testValidatorAddress =

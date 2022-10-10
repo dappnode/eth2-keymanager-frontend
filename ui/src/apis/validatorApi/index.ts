@@ -1,7 +1,17 @@
 import { ValidatorGetResponse, ValidatorPostResponse } from "./types";
 import { StandardApi } from "../standardApi";
+import { ApiParams } from "../../types";
 
 export class ValidatorApi extends StandardApi {
+  network?: string;
+  consensusClient?: string;
+
+  constructor(apiParams: ApiParams, network: string, consensusClient: string) {
+    super(apiParams);
+    this.network = network;
+    this.consensusClient = consensusClient;
+  }
+
   /**
    * Request the proxy to list the validator public key to eth address mapping for fee recipient feature on a specific public key.
    * https://ethereum.github.io/keymanager-APIs/#/Fee%20Recipient/listFeeRecipient
@@ -11,16 +21,14 @@ export class ValidatorApi extends StandardApi {
   ): Promise<ValidatorGetResponse> {
     try {
       return (await this.request(
-        /*"GET",
-        this.baseUrl + "/eth/v1/validator/" + publicKey + "/feerecipient"*/
         "GET",
-        this.proxyUrl
-          ? this.proxyUrl +
-              "/feerecipient/?client=" +
-              this.consensusClient +
-              "&validatorPublicKey=" +
-              publicKey
-          : this.baseUrl + "/eth/v1/validator/" + publicKey + "/feerecipient"
+        this.baseUrl +
+          "/feerecipient/?client=" +
+          this.consensusClient +
+          "&validatorPublicKey=" +
+          publicKey +
+          "&network=" +
+          this.network
       )) as ValidatorGetResponse;
     } catch (e) {
       return {
@@ -39,17 +47,14 @@ export class ValidatorApi extends StandardApi {
   ): Promise<ValidatorPostResponse> {
     try {
       return (await this.request(
-        /*"POST",
-        this.baseUrl + "/eth/v1/validator/" + publicKey + "/feerecipient",
-        JSON.stringify({ ethaddress: newFeeRecipient })*/
         "POST",
-        this.proxyUrl
-          ? this.proxyUrl +
-              "/feerecipient/?client=" +
-              this.consensusClient +
-              "&validatorPublicKey=" +
-              publicKey
-          : this.baseUrl + "/eth/v1/validator/" + publicKey + "/feerecipient",
+        this.baseUrl +
+          "/feerecipient/?client=" +
+          this.consensusClient +
+          "&validatorPublicKey=" +
+          publicKey +
+          "&network=" +
+          this.network,
         JSON.stringify({ ethaddress: newFeeRecipient })
       )) as ValidatorPostResponse;
     } catch (e) {

@@ -6,17 +6,13 @@ export class StandardApi {
   host?: string;
   endpoint?: string;
   certFilePath?: string;
-  proxyUrl?: string;
-  consensusClient?: string;
 
-  constructor(apiParams: ApiParams, proxyUrl?: string) {
+  constructor(apiParams: ApiParams) {
     this.authToken = apiParams.authToken;
     this.host = apiParams.host;
     this.baseUrl = apiParams.baseUrl;
     this.endpoint = apiParams.apiPath;
     this.certFilePath = apiParams.certFilePath;
-    this.consensusClient = apiParams.consensusClient;
-    this.proxyUrl = proxyUrl;
   }
 
   protected async request(

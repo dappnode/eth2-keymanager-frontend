@@ -14,11 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
-import {
-  burnAddress,
-  validatorApiProxyUrl,
-  validatorClientApiNetworkMap,
-} from "../../params";
+import { burnAddress, validatorProxyApiParams } from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
@@ -64,15 +60,11 @@ export default function FeeRecipientDialog({
 
   const consensusClient = "teku"; //TODO: get consensus client from env
 
-  //const networkClientsMap = validatorClientApiNetworkMap[network];
-
-  const validatorApiParams = validatorClientApiNetworkMap
-    .get(network)
-    ?.get(consensusClient);
-
-  const validatorApi = validatorApiParams
-    ? new ValidatorApi(validatorApiParams, validatorApiProxyUrl)
-    : null;
+  const validatorApi = new ValidatorApi(
+    validatorProxyApiParams,
+    network,
+    consensusClient
+  );
 
   const fetchCurrentFeeRecipient = async (): Promise<string> => {
     if (!validatorApi) return "";
