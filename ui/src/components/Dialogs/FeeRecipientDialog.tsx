@@ -14,7 +14,11 @@ import {
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
-import { validatorApiProxyUrl, validatorClientApiMap } from "../../params";
+import {
+  burnAddress,
+  validatorApiProxyUrl,
+  validatorClientApiMap,
+} from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
@@ -48,14 +52,17 @@ export default function FeeRecipientDialog({
   useEffect(() => {
     const timeId = setTimeout(() => {
       setSuccessMessage("");
-    }, 5000);
+      setErrorMessage("");
+    }, 3000);
 
     return () => {
       clearTimeout(timeId);
     };
   }, [errorMessage, successMessage]);
 
-  const validatorApiParams = validatorClientApiMap.get("prysm-prater"); //TODO: Change this to a dynamic value
+  const consensusClient = "teku-prater"; //TODO: get consensus client from env
+
+  const validatorApiParams = validatorClientApiMap.get(consensusClient);
 
   const validatorApi = validatorApiParams
     ? new ValidatorApi(validatorApiParams, validatorApiProxyUrl)
@@ -74,7 +81,7 @@ export default function FeeRecipientDialog({
 
       if (feeRecipient) {
         setCurrentFeeRecipient(feeRecipient);
-        setSuccessMessage("Fee recipient fetched successfully");
+        console.log("Fee recipient fetched successfully");
       } else {
         setCurrentFeeRecipient("");
         setErrorMessage("Fee recipient not found");
@@ -91,6 +98,13 @@ export default function FeeRecipientDialog({
 
     if (newFeeRecipient === currentFeeRecipient) {
       setSuccessMessage("Fee recipient updated successfully");
+    } else if (
+      consensusClient.includes("teku") &&
+      newFeeRecipient === burnAddress
+    ) {
+      setErrorMessage(
+        "Teku does not allow to set fee recipient to burn address"
+      );
     } else {
       if (isEthAddress(newFeeRecipient)) {
         try {
@@ -180,6 +194,7 @@ export default function FeeRecipientDialog({
                 onClick={() => updateFeeRecipient(newFeeRecipient)}
                 variant="contained"
                 sx={{ margin: 2, borderRadius: 3 }}
+                disabled={!isEthAddress(newFeeRecipient)}
               >
                 Apply changes
               </Button>

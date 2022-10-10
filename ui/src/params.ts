@@ -1,5 +1,7 @@
 import { ApiParams } from "./types";
 
+export const burnAddress = "0x0000000000000000000000000000000000000000";
+
 export const beaconchaApiParamsMap = new Map<string, ApiParams>([
   ["mainnet", { baseUrl: "https://beaconcha.in", apiPath: "/api/v1/" }],
   ["prater", { baseUrl: "https://prater.beaconcha.in", apiPath: "/api/v1/" }],
