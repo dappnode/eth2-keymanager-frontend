@@ -6,3 +6,8 @@ export interface ApiParams {
   host?: string;
   certFilePath?: string;
 }
+
+export enum AllowedRequestTypes {
+  GET,
+  POST,
+}

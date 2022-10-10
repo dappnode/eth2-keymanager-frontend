@@ -79,11 +79,11 @@ export default function FeeRecipientDialog({
 
     let feeRecipient: string | undefined = "";
     try {
-      const currentFeeRecipient = await validatorApi.getFeeRecipient(
+      const feeRecipientResponse = await validatorApi.getFeeRecipient(
         selectedValidatorPubkey
       );
 
-      feeRecipient = currentFeeRecipient.data?.ethaddress;
+      feeRecipient = feeRecipientResponse.data?.ethaddress;
 
       if (feeRecipient) {
         setCurrentFeeRecipient(feeRecipient);
@@ -91,7 +91,7 @@ export default function FeeRecipientDialog({
       } else {
         setCurrentFeeRecipient("");
         setErrorMessage("Fee recipient not found");
-        console.error(currentFeeRecipient.message?.message);
+        console.error(feeRecipientResponse.message?.message);
       }
     } catch (error) {
       setErrorMessage("Error getting current fee recipient");
@@ -119,9 +119,9 @@ export default function FeeRecipientDialog({
             selectedValidatorPubkey
           );
 
-          const feeRecipient = await fetchCurrentFeeRecipient();
+          const feeRecipientResponse = await fetchCurrentFeeRecipient();
 
-          if (feeRecipient === newFeeRecipient) {
+          if (feeRecipientResponse === newFeeRecipient) {
             setSuccessMessage("Fee recipient updated successfully");
           } else {
             setErrorMessage("Error updating fee recipient");
