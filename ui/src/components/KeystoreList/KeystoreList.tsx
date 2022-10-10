@@ -8,7 +8,6 @@ import {
 
 //Internal components
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
-import SettingsDialog from "../Dialogs/SettingsDialog";
 import KeystoreColumns from "./KeystoreColumns";
 
 //Logic
