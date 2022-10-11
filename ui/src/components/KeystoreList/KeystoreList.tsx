@@ -6,6 +6,7 @@ import {
 } from "@mui/x-data-grid";
 import { useState } from "react";
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
+import { beaconchaBaseUrls } from "../../params";
 import KeystoreColumns from "./KeystoreColumns";
 
 export default function KeystoreList({
@@ -29,17 +30,14 @@ export default function KeystoreList({
     setPageSize(pageSize);
   };
 
+  const beaconchaBaseUrl = beaconchaBaseUrls.get(network);
+
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey
     validating_pubkey: row.validating_pubkey,
-    beaconcha_url:
-      network === "mainnet"
-        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
-        : network === "gnosis"
-        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
-        : network === "prater"
-        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
-        : "-",
+    beaconcha_url: beaconchaBaseUrl
+      ? beaconchaBaseUrl + "/validator/" + row.validating_pubkey
+      : "",
     id: index,
   }));
 

@@ -9,4 +9,10 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
   ],
 ]);
 
+export const beaconchaBaseUrls = new Map<string, string>([
+  ["mainnet", "https://beaconcha.in"],
+  ["prater", "https://prater.beaconcha.in"],
+  ["gnosis", "https://beacon.gnosischain.com"],
+]);
+
 export const availableNetworks = ["mainnet", "prater", "gnosis"];
