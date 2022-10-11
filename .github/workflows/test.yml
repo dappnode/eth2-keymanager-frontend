@@ -1,4 +1,4 @@
-name: Run integration tests
+name: Run integration tests for UI
 
 on: [push, pull_request]
 
@@ -18,4 +18,4 @@ jobs:
         with:
           node-version: ${{matrix.node}}
 
-      - run: yarn test
+      - run: cd ui && yarn test
