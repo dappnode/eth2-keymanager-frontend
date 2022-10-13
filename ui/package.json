@@ -27,7 +27,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-ui": "react-scripts start",
+    "start": "yarn run build && (cd server && yarn start)",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/tests/*/*.ts' --timeout 10000"

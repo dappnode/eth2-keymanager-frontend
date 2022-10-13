@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
-require("isomorphic-fetch");
+import path from "path";
 
 import ValidatorClientRequester from "./services/ValidatorClientRequester";
 import { validatorClientApiNetworkMap, keyManagerUiUrl } from "./params";
 import RequestChecker from "./RequestChecker";
 import { AllowedRequestTypes } from "./types";
+
+require("isomorphic-fetch");
 
 const app = express();
 const port = 3001;
@@ -19,6 +21,9 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, "../../", "build")));
+app.use(express.static("public"));
 
 app.get("/feerecipient", async (req, res) => {
   console.log("GET /feerecipient");
@@ -84,8 +89,12 @@ app.post("/feerecipient", async (req, res) => {
   res.send("Fee recipient set successfully.");
 });
 
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "../../", "build", "index.html"));
+});
+
 app.listen(port, () => {
   return console.log(
-    `Validator proxy server is listening at http://localhost:${port}`
+    `KeyManager UI is being served at http://localhost:${port}`
   );
 });

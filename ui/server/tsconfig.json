@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "target": "es5",
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "dist"
   },
