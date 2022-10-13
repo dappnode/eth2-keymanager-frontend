@@ -18,7 +18,6 @@ import { ApiParams } from "./types";
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
-import { ApiParams } from "./types";
 
 function App() {
   const [network, setNetwork] = React.useState("");

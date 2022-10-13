@@ -137,7 +137,7 @@ export default function FeeRecipientDialog({
       fetchCurrentFeeRecipient();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFeeRecipient, selectedValidatorPubkey]);
+  }, [currentFeeRecipient, selectedValidatorPubkey, open]);
 
   return (
     <Dialog
