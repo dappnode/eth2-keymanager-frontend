@@ -9,10 +9,13 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { GridSelectionModel } from "@mui/x-data-grid";
+import React from "react";
 
 //Logic
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
+import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
 import {
   burnAddress,
@@ -22,26 +25,36 @@ import {
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import WaitBox from "../WaitBox/WaitBox";
 import { SlideTransition } from "./Transitions";
 
 export default function FeeRecipientDialog({
   open,
   setOpen,
-  selectedValidatorPubkey,
+  rows,
+  selectedRows,
+  setSelectedRows,
   network,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  selectedValidatorPubkey: string;
+  rows: Web3signerGetResponse["data"];
+
+  selectedRows: GridSelectionModel;
+  setSelectedRows: (selectedRows: GridSelectionModel) => void;
   network: string;
 }): JSX.Element {
-  const [currentFeeRecipient, setCurrentFeeRecipient] = useState("");
   const [newFeeRecipient, setNewFeeRecipient] = useState("");
+  const [wrongPostPubkeys, setWrongPostPubkeys] = useState(new Array<string>());
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
+    setErrorMessage("");
+    setSuccessMessage("");
+    setWrongPostPubkeys(new Array<string>());
   };
 
   const handleNewFeeRecipientChange = (
@@ -60,7 +73,7 @@ export default function FeeRecipientDialog({
     return () => {
       clearTimeout(timeId);
     };
-  }, [errorMessage, successMessage]);
+  }, [successMessage]);
 
   const consensusClient = defaultConsensusClient; //TODO: get consensus client from env
 
@@ -70,74 +83,65 @@ export default function FeeRecipientDialog({
     consensusClient
   );
 
-  const fetchCurrentFeeRecipient = async (): Promise<string> => {
+  const fetchCurrentFeeRecipient = async (pubkey: string): Promise<string> => {
     if (!validatorApi) return "";
 
     let feeRecipient: string | undefined = "";
     try {
-      const feeRecipientResponse = await validatorApi.getFeeRecipient(
-        selectedValidatorPubkey
-      );
+      const feeRecipientResponse = await validatorApi.getFeeRecipient(pubkey);
 
       feeRecipient = feeRecipientResponse.data?.ethaddress;
-
-      if (feeRecipient) {
-        setCurrentFeeRecipient(feeRecipient);
-        console.log("Fee recipient fetched successfully");
-      } else {
-        setCurrentFeeRecipient("");
-        setErrorMessage("Fee recipient not found");
-        console.error(feeRecipientResponse.message?.message);
-      }
     } catch (error) {
-      setErrorMessage("Error getting current fee recipient");
+      console.log("Error getting current fee recipient");
+    } finally {
+      return feeRecipient || "";
     }
-    return feeRecipient ?? "";
   };
 
-  const updateFeeRecipient = async (newFeeRecipient: string) => {
+  const updateFeeRecipients = async (newFeeRecipient: string) => {
     if (!validatorApi) return;
 
-    if (newFeeRecipient === currentFeeRecipient) {
-      setSuccessMessage("Fee recipient updated successfully");
-    } else if (
-      consensusClient.includes("teku") &&
-      newFeeRecipient === burnAddress
-    ) {
+    if (consensusClient.includes("teku") && newFeeRecipient === burnAddress) {
       setErrorMessage(
         "Teku does not allow to set fee recipient to burn address"
       );
     } else {
       if (isEthAddress(newFeeRecipient)) {
-        try {
-          await validatorApi.setFeeRecipient(
-            newFeeRecipient,
-            selectedValidatorPubkey
-          );
+        let error = false;
 
-          const feeRecipientResponse = await fetchCurrentFeeRecipient();
+        const validatorPubkeys = selectedRows.map(
+          (row) => rows[parseInt(row.toString())].validating_pubkey
+        );
 
-          if (feeRecipientResponse === newFeeRecipient) {
-            setSuccessMessage("Fee recipient updated successfully");
-          } else {
-            setErrorMessage("Error updating fee recipient");
+        setLoading(true);
+
+        for (const pubkey of validatorPubkeys) {
+          try {
+            await validatorApi.setFeeRecipient(newFeeRecipient, pubkey);
+          } catch (err) {
+            setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+            error = true;
+            continue;
           }
-        } catch (error) {
-          setErrorMessage("Error updating fee recipient");
+
+          const feeRecipientGet = await fetchCurrentFeeRecipient(pubkey);
+
+          if (feeRecipientGet !== newFeeRecipient) {
+            setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+            error = true;
+          }
+        }
+
+        setLoading(false);
+
+        if (!error) {
+          setSuccessMessage("Fee recipients updated successfully");
         }
       } else {
         setErrorMessage("Invalid address");
       }
     }
   };
-
-  useEffect(() => {
-    setErrorMessage("");
-    if (selectedValidatorPubkey) {
-      fetchCurrentFeeRecipient();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentFeeRecipient, selectedValidatorPubkey]);
 
   return (
     <Dialog
@@ -157,18 +161,13 @@ export default function FeeRecipientDialog({
         id="alert-dialog-title"
         sx={{ fontWeight: 700, fontSize: 24 }}
       >
-        Changing validator fee recipient
+        Edit Fee Recipient For Selected Validators
       </DialogTitle>
 
       {validatorApi ? (
         <>
           <DialogContent>
             <Box sx={importDialogBoxStyle}>
-              <TextField
-                label="Current Fee Recipient"
-                disabled={true}
-                value={currentFeeRecipient}
-              />
               <TextField
                 onChange={handleNewFeeRecipientChange}
                 sx={{ marginTop: 2 }}
@@ -188,27 +187,37 @@ export default function FeeRecipientDialog({
                   {errorMessage}
                 </Alert>
               )}
+              {wrongPostPubkeys.length > 0 && (
+                <Alert severity="error" variant="filled" sx={{ marginTop: 2 }}>
+                  There was an error updating fee recipient for the following
+                  validators: {wrongPostPubkeys.join(", ")}
+                </Alert>
+              )}
             </Box>
           </DialogContent>
-          <DialogActions>
-            {!errorMessage && (
+          {!loading ? (
+            <DialogActions>
+              {!errorMessage && (
+                <Button
+                  onClick={() => updateFeeRecipients(newFeeRecipient)}
+                  variant="contained"
+                  sx={{ margin: 2, borderRadius: 3 }}
+                  disabled={!isEthAddress(newFeeRecipient)}
+                >
+                  Apply changes
+                </Button>
+              )}
               <Button
-                onClick={() => updateFeeRecipient(newFeeRecipient)}
-                variant="contained"
+                onClick={handleClose}
+                variant="outlined"
                 sx={{ margin: 2, borderRadius: 3 }}
-                disabled={!isEthAddress(newFeeRecipient)}
               >
-                Apply changes
+                Close
               </Button>
-            )}
-            <Button
-              onClick={handleClose}
-              variant="outlined"
-              sx={{ margin: 2, borderRadius: 3 }}
-            >
-              Close
-            </Button>
-          </DialogActions>
+            </DialogActions>
+          ) : (
+            <WaitBox />
+          )}
         </>
       ) : (
         <>

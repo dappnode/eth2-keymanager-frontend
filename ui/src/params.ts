@@ -12,6 +12,10 @@ export const availableNetworks = ["mainnet", "prater", "gnosis"]; //TODO chiado?
 
 export const validatorApiProxyUrl = "http://localhost:3001";
 
+export const defaultNetwork = "prater";
+
+export const defaultConsensusClient = "prysm";
+
 export const validatorProxyApiParams = {
   baseUrl: "http://localhost:3001", //TODO: Have URL for validator proxy?
   apiPath: "/",
