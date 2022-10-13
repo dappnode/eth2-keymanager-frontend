@@ -1,18 +1,22 @@
 import { Box, Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { buttonsBoxStyle } from "../../Styles/buttonsBoxStyles";
+
 //Icons
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function ButtonsBox({
   isTableEmpty,
-  setOpen,
+  setDeleteOpen,
+  setOpenEditFees,
   validatorSummaryURL,
   hasBeaconchaError,
 }: {
   isTableEmpty: boolean;
-  setOpen(open: boolean): void;
+  setDeleteOpen(open: boolean): void;
+  setOpenEditFees(open: boolean): void;
   validatorSummaryURL: string;
   hasBeaconchaError: boolean;
 }): JSX.Element {
@@ -35,11 +39,22 @@ export default function ButtonsBox({
         disabled={isTableEmpty}
         sx={{ marginRight: 4, borderRadius: 3 }}
         endIcon={<DeleteForeverIcon />}
-        onClick={() => setOpen(true)}
+        onClick={() => setDeleteOpen(true)}
       >
         Delete Keystores
       </Button>
 
+      <Button
+        variant="contained"
+        size="large"
+        color="success"
+        disabled={isTableEmpty}
+        sx={{ marginRight: 4, borderRadius: 3 }}
+        endIcon={<EditIcon />}
+        onClick={() => setOpenEditFees(true)}
+      >
+        Edit Fee Recipients
+      </Button>
       {!hasBeaconchaError &&
         (validatorSummaryURL ? (
           <Button

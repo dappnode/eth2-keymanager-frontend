@@ -1,13 +1,21 @@
+//External components
 import {
   DataGrid,
   GridCallbackDetails,
   GridSelectionModel,
   GridToolbar,
 } from "@mui/x-data-grid";
-import { useState } from "react";
+
+//Internal components
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
-import { beaconchaBaseUrls } from "../../params";
 import KeystoreColumns from "./KeystoreColumns";
+
+//Logic
+import { useState } from "react";
+
+//Styles
+import "./KeystoreList.css";
+import FeeRecipientDialog from "../Dialogs/FeeRecipientDialog";
 
 export default function KeystoreList({
   rows,
@@ -18,6 +26,9 @@ export default function KeystoreList({
   setSelectedRows: (arg0: GridSelectionModel) => void;
   network: string;
 }) {
+  //For validatorSettings
+  const [selectedValidatorPK, setSeletectedValidatorPK] = useState<string>("");
+
   const selection = (
     selectionModel: GridSelectionModel,
     details: GridCallbackDetails
@@ -25,24 +36,34 @@ export default function KeystoreList({
     setSelectedRows(selectionModel);
   };
 
+  const [isFeeDialogOpen, setIsFeeDialogOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const pageSizeChange = (pageSize: number, details: GridCallbackDetails) => {
     setPageSize(pageSize);
   };
 
-  const beaconchaBaseUrl = beaconchaBaseUrls.get(network);
-
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey
     validating_pubkey: row.validating_pubkey,
-    beaconcha_url: beaconchaBaseUrl
-      ? beaconchaBaseUrl + "/validator/" + row.validating_pubkey
-      : "",
+    beaconcha_url:
+      network === "mainnet"
+        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
+        : network === "gnosis"
+        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
+        : network === "prater"
+        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
+        : "-",
     id: index,
   }));
 
   return (
     <div style={{ height: 400, width: "100%" }}>
+      <FeeRecipientDialog
+        open={isFeeDialogOpen}
+        setOpen={setIsFeeDialogOpen}
+        selectedValidatorPubkey={selectedValidatorPK}
+        network={network}
+      />
       <DataGrid
         rows={customRows}
         onCellClick={(params) => {
@@ -50,7 +71,7 @@ export default function KeystoreList({
             navigator.clipboard.writeText(params.value);
           }
         }}
-        columns={KeystoreColumns()}
+        columns={KeystoreColumns(setSeletectedValidatorPK, setIsFeeDialogOpen)}
         pageSize={pageSize}
         rowsPerPageOptions={[10, 20, 50, 100]}
         onPageSizeChange={pageSizeChange}

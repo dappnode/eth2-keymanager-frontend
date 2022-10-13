@@ -1,6 +1,7 @@
 //Internal components
 import KeystoreList from "../KeystoreList/KeystoreList";
 import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
+import EditFeesDialog from "../Dialogs/EditFeesDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
@@ -27,7 +28,8 @@ export default function ValidatorList({
   network: string;
 }) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
-  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEditFees, setOpenEditFees] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
   const [hasBeaconchaError, setHasBeaconchaError] = useState(false);
@@ -73,11 +75,11 @@ export default function ValidatorList({
   }
 
   useEffect(() => {
-    if (!open) {
+    if (!openDelete) {
       getKeystores();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [openDelete]);
 
   useEffect(() => {
     if (
@@ -103,7 +105,6 @@ export default function ValidatorList({
             sx={{ flexGrow: 1, fontWeight: "bold", marginBottom: 2 }}
             text="Your validator accounts"
           />
-
           {loading ? (
             <CircularProgress
               sx={{
@@ -123,9 +124,26 @@ export default function ValidatorList({
               />
               <ButtonsBox
                 isTableEmpty={selectedRows.length === 0}
-                setOpen={setOpen}
+                setDeleteOpen={setOpenDelete}
+                setOpenEditFees={setOpenEditFees}
                 validatorSummaryURL={validatorSummaryURL}
                 hasBeaconchaError={hasBeaconchaError}
+              />
+              <KeystoresDeleteDialog
+                web3signerApi={web3signerApi}
+                rows={keystoresGet.data}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                open={openDelete}
+                setOpen={setOpenDelete}
+              />
+              <EditFeesDialog
+                network={network}
+                rows={keystoresGet.data}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                open={openEditFees}
+                setOpen={setOpenEditFees}
               />
               {hasBeaconchaError && (
                 <Alert
@@ -139,16 +157,6 @@ export default function ValidatorList({
                 </Alert>
               )}
 
-              {open && (
-                <KeystoresDeleteDialog
-                  web3signerApi={web3signerApi}
-                  rows={keystoresGet.data}
-                  selectedRows={selectedRows}
-                  setSelectedRows={setSelectedRows}
-                  open={open}
-                  setOpen={setOpen}
-                />
-              )}
             </>
           ) : (
             <Alert severity="warning" sx={{ marginTop: 2 }} variant="filled">

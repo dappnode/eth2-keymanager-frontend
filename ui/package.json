@@ -19,6 +19,8 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "history": "5",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^3.2.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
@@ -28,10 +30,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-ui": "react-scripts start",
+    "start": "yarn run build && (cd server && yarn start)",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/tests/*/*.ts'"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/tests/*/*.ts' --timeout 10000"
   },
   "eslintConfig": {
     "extends": [
