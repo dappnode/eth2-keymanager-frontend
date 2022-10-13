@@ -17,7 +17,11 @@ import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
-import { burnAddress, validatorProxyApiParams } from "../../params";
+import {
+  burnAddress,
+  defaultConsensusClient,
+  validatorProxyApiParams,
+} from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
@@ -71,7 +75,7 @@ export default function FeeRecipientDialog({
     };
   }, [successMessage]);
 
-  const consensusClient = "prysm"; //TODO: get consensus client from env
+  const consensusClient = defaultConsensusClient; //TODO: get consensus client from env
 
   const validatorApi = new ValidatorApi(
     validatorProxyApiParams,

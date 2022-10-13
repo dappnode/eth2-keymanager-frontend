@@ -14,7 +14,11 @@ import {
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
-import { burnAddress, validatorProxyApiParams } from "../../params";
+import {
+  burnAddress,
+  defaultConsensusClient,
+  validatorProxyApiParams,
+} from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
@@ -58,7 +62,7 @@ export default function FeeRecipientDialog({
     };
   }, [errorMessage, successMessage]);
 
-  const consensusClient = "teku"; //TODO: get consensus client from env
+  const consensusClient = defaultConsensusClient; //TODO: get consensus client from env
 
   const validatorApi = new ValidatorApi(
     validatorProxyApiParams,
