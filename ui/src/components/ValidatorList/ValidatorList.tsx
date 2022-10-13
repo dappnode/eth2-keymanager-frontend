@@ -2,6 +2,7 @@
 import Message from "../Messages/Message";
 import KeystoreList from "../KeystoreList/KeystoreList";
 import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
+import EditFeesDialog from "../Dialogs/EditFeesDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
@@ -28,7 +29,8 @@ export default function ValidatorList({
   network: string;
 }) {
   const [selectedRows, setSelectedRows] = useState<GridSelectionModel>([]);
-  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEditFees, setOpenEditFees] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
 
@@ -66,11 +68,11 @@ export default function ValidatorList({
   }
 
   useEffect(() => {
-    if (!open) {
+    if (!openDelete) {
       getKeystores();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [openDelete]);
 
   useEffect(() => {
     if (
@@ -116,19 +118,25 @@ export default function ValidatorList({
               />
               <ButtonsBox
                 isTableEmpty={selectedRows.length === 0}
-                setOpen={setOpen}
+                setDeleteOpen={setOpenDelete}
+                setOpenEditFees={setOpenEditFees}
                 validatorSummaryURL={validatorSummaryURL}
               />
-              {open && (
-                <KeystoresDeleteDialog
-                  web3signerApi={web3signerApi}
-                  rows={keystoresGet.data}
-                  selectedRows={selectedRows}
-                  setSelectedRows={setSelectedRows}
-                  open={open}
-                  setOpen={setOpen}
-                />
-              )}
+              <KeystoresDeleteDialog
+                web3signerApi={web3signerApi}
+                rows={keystoresGet.data}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                open={openDelete}
+                setOpen={setOpenDelete}
+              />
+              <EditFeesDialog
+                network={network}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                open={openEditFees}
+                setOpen={setOpenEditFees}
+              />
             </>
           ) : (
             <Message
