@@ -21,6 +21,7 @@ import { burnAddress, validatorProxyApiParams } from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import WaitBox from "../WaitBox/WaitBox";
 import { SlideTransition } from "./Transitions";
 
 export default function FeeRecipientDialog({
@@ -43,6 +44,7 @@ export default function FeeRecipientDialog({
   const [wrongPostPubkeys, setWrongPostPubkeys] = useState(new Array<string>());
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -107,7 +109,7 @@ export default function FeeRecipientDialog({
           (row) => rows[parseInt(row.toString())].validating_pubkey
         );
 
-        console.log("validatorPubkeys", validatorPubkeys);
+        setLoading(true);
 
         for (const pubkey of validatorPubkeys) {
           try {
@@ -125,6 +127,8 @@ export default function FeeRecipientDialog({
             error = true;
           }
         }
+
+        setLoading(false);
 
         if (!error) {
           setSuccessMessage("Fee recipients updated successfully");
@@ -187,25 +191,29 @@ export default function FeeRecipientDialog({
               )}
             </Box>
           </DialogContent>
-          <DialogActions>
-            {!errorMessage && (
+          {!loading ? (
+            <DialogActions>
+              {!errorMessage && (
+                <Button
+                  onClick={() => updateFeeRecipients(newFeeRecipient)}
+                  variant="contained"
+                  sx={{ margin: 2, borderRadius: 3 }}
+                  disabled={!isEthAddress(newFeeRecipient)}
+                >
+                  Apply changes
+                </Button>
+              )}
               <Button
-                onClick={() => updateFeeRecipients(newFeeRecipient)}
-                variant="contained"
+                onClick={handleClose}
+                variant="outlined"
                 sx={{ margin: 2, borderRadius: 3 }}
-                disabled={!isEthAddress(newFeeRecipient)}
               >
-                Apply changes
+                Close
               </Button>
-            )}
-            <Button
-              onClick={handleClose}
-              variant="outlined"
-              sx={{ margin: 2, borderRadius: 3 }}
-            >
-              Close
-            </Button>
-          </DialogActions>
+            </DialogActions>
+          ) : (
+            <WaitBox />
+          )}
         </>
       ) : (
         <>
