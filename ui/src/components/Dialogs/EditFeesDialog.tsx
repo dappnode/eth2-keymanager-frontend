@@ -15,8 +15,9 @@ import React from "react";
 //Logic
 import { useEffect, useState } from "react";
 import { ValidatorApi } from "../../apis/validatorApi";
+import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { isEthAddress } from "../../logic/Utils/dataUtils";
-import { validatorProxyApiParams } from "../../params";
+import { burnAddress, validatorProxyApiParams } from "../../params";
 
 //Styles
 import { importDialogBoxStyle } from "../../Styles/dialogStyles";
@@ -25,17 +26,21 @@ import { SlideTransition } from "./Transitions";
 export default function FeeRecipientDialog({
   open,
   setOpen,
+  rows,
   selectedRows,
   setSelectedRows,
   network,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  rows: Web3signerGetResponse["data"];
+
   selectedRows: GridSelectionModel;
   setSelectedRows: (selectedRows: GridSelectionModel) => void;
   network: string;
 }): JSX.Element {
   const [newFeeRecipient, setNewFeeRecipient] = useState("");
+  const [wrongPostPubkeys, setWrongPostPubkeys] = useState(new Array<string>());
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -59,7 +64,7 @@ export default function FeeRecipientDialog({
     return () => {
       clearTimeout(timeId);
     };
-  }, [errorMessage, successMessage]);
+  }, [successMessage]);
 
   const consensusClient = "prysm"; //TODO: get consensus client from env
 
@@ -69,7 +74,57 @@ export default function FeeRecipientDialog({
     consensusClient
   );
 
-  const updateFeeRecipients = async () => {};
+  const fetchCurrentFeeRecipient = async (pubkey: string): Promise<string> => {
+    if (!validatorApi) return "";
+
+    let feeRecipient: string | undefined = "";
+    try {
+      const feeRecipientResponse = await validatorApi.getFeeRecipient(pubkey);
+
+      feeRecipient = feeRecipientResponse.data?.ethaddress;
+    } catch (error) {
+      console.log("Error getting current fee recipient");
+    } finally {
+      return feeRecipient || "";
+    }
+  };
+
+  const updateFeeRecipients = async (newFeeRecipient: string) => {
+    if (!validatorApi) return;
+
+    if (consensusClient.includes("teku") && newFeeRecipient === burnAddress) {
+      setErrorMessage(
+        "Teku does not allow to set fee recipient to burn address"
+      );
+    } else {
+      if (isEthAddress(newFeeRecipient)) {
+        const validatorPubkeys = selectedRows.map(
+          (row) => rows[parseInt(row.toString())].validating_pubkey
+        );
+
+        console.log("validatorPubkeys", validatorPubkeys);
+
+        for (const pubkey of validatorPubkeys) {
+          try {
+            await validatorApi.setFeeRecipient(newFeeRecipient, pubkey);
+          } catch (err) {
+            setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+            continue;
+          }
+
+          const feeRecipientGet = await fetchCurrentFeeRecipient(pubkey);
+
+          console.log("feeRecipientGet", feeRecipientGet);
+
+          if (feeRecipientGet !== newFeeRecipient) {
+            setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+          }
+        }
+      } else {
+        setErrorMessage("Invalid address");
+      }
+    }
+  };
 
   return (
     <Dialog
@@ -115,12 +170,18 @@ export default function FeeRecipientDialog({
                   {errorMessage}
                 </Alert>
               )}
+              {wrongPostPubkeys.length > 0 && (
+                <Alert severity="error" variant="filled" sx={{ marginTop: 2 }}>
+                  There was an error updating fee recipient for the following
+                  validators: {wrongPostPubkeys.join(", ")}
+                </Alert>
+              )}
             </Box>
           </DialogContent>
           <DialogActions>
             {!errorMessage && (
               <Button
-                onClick={() => updateFeeRecipients()}
+                onClick={() => updateFeeRecipients(newFeeRecipient)}
                 variant="contained"
                 sx={{ margin: 2, borderRadius: 3 }}
                 disabled={!isEthAddress(newFeeRecipient)}

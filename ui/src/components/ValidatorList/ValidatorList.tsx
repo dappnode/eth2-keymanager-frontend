@@ -132,6 +132,7 @@ export default function ValidatorList({
               />
               <EditFeesDialog
                 network={network}
+                rows={keystoresGet.data}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 open={openEditFees}
