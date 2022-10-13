@@ -46,6 +46,9 @@ export default function FeeRecipientDialog({
 
   const handleClose = () => {
     setOpen(false);
+    setErrorMessage("");
+    setSuccessMessage("");
+    setWrongPostPubkeys(new Array<string>());
   };
 
   const handleNewFeeRecipientChange = (
@@ -98,6 +101,8 @@ export default function FeeRecipientDialog({
       );
     } else {
       if (isEthAddress(newFeeRecipient)) {
+        let error = false;
+
         const validatorPubkeys = selectedRows.map(
           (row) => rows[parseInt(row.toString())].validating_pubkey
         );
@@ -109,16 +114,20 @@ export default function FeeRecipientDialog({
             await validatorApi.setFeeRecipient(newFeeRecipient, pubkey);
           } catch (err) {
             setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+            error = true;
             continue;
           }
 
           const feeRecipientGet = await fetchCurrentFeeRecipient(pubkey);
 
-          console.log("feeRecipientGet", feeRecipientGet);
-
           if (feeRecipientGet !== newFeeRecipient) {
             setWrongPostPubkeys((prevState) => [...prevState, pubkey]);
+            error = true;
           }
+        }
+
+        if (!error) {
+          setSuccessMessage("Fee recipients updated successfully");
         }
       } else {
         setErrorMessage("Invalid address");
