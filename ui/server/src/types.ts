@@ -11,3 +11,14 @@ export enum AllowedRequestTypes {
   GET,
   POST,
 }
+
+export interface FeeRecipientPubkeyItem {
+  network: string;
+  consensusClient: string;
+  feeRecipients: FeeRecipientPubkey[];
+}
+
+export interface FeeRecipientPubkey {
+  pubkey: string;
+  feeRecipient: string;
+}

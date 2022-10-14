@@ -26,6 +26,7 @@ export default class RequestChecker {
           this.res.statusMessage =
             "Bad request. Invalid new fee recipient address.";
         }
+      // eslint-disable-next-line no-fallthrough
       case AllowedRequestTypes.GET:
         if (
           client === undefined ||
@@ -46,7 +47,7 @@ export default class RequestChecker {
         return false;
     }
 
-    if (this.res.statusMessage != undefined) {
+    if (this.res.statusMessage !== undefined) {
       return false;
     } else {
       return true;

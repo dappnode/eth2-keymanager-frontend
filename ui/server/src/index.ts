@@ -6,6 +6,7 @@ import ValidatorClientRequester from "./services/ValidatorClientRequester";
 import { validatorClientApiNetworkMap, keyManagerUiUrl } from "./params";
 import RequestChecker from "./RequestChecker";
 import { AllowedRequestTypes } from "./types";
+import FeeRecipientSaver from "./FeeRecipientSaver";
 
 require("isomorphic-fetch");
 
@@ -69,7 +70,9 @@ app.post("/feerecipient", async (req, res) => {
     return;
   }
 
-  const clientApiParams = validatorClientApiNetworkMap.get(network).get(client);
+  const clientApiParams = validatorClientApiNetworkMap
+    .get(network)
+    ?.get(client);
 
   if (clientApiParams === undefined) {
     res.status(500).end();
@@ -85,6 +88,11 @@ app.post("/feerecipient", async (req, res) => {
     });
 
   //TODO: Perform GET to check if address has been set?
+
+  const feeRecipientSaver = new FeeRecipientSaver();
+  feeRecipientSaver.appendFeeRecipientsToFile(network, client, [
+    { pubkey: validatorPublicKey, feeRecipient: newFeeRecipient },
+  ]);
 
   res.send("Fee recipient set successfully.");
 });
