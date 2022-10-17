@@ -16,3 +16,5 @@ export const beaconchaBaseUrls = new Map<string, string>([
 ]);
 
 export const availableNetworks = ["mainnet", "prater", "gnosis"];
+
+export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it the same for Gnosis?

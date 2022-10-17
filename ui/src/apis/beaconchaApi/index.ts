@@ -1,6 +1,7 @@
 import { BeaconchaGetResponse } from "./types";
 import { Web3signerGetResponse } from "../web3signerApi/types";
 import { StandardApi } from "../standardApi";
+import { maxValidatorsPerRequest } from "../../params";
 
 export class BeaconchaApi extends StandardApi {
   /*
@@ -17,7 +18,7 @@ export class BeaconchaApi extends StandardApi {
       (keystoreData) => keystoreData.validating_pubkey
     );
 
-    const chunkSize = 100; //Max number of validators per request - TODO move to params? Is the same for Gnosis?
+    const chunkSize = maxValidatorsPerRequest;
 
     for (let i = 0; i < allValidatorPKs.length; i += chunkSize) {
       const chunk = allValidatorPKs.slice(i, i + chunkSize);
