@@ -26,12 +26,12 @@ function App() {
   const [signerStatus, setSignerStatus] = React.useState("loading");
 
   useEffect(() => {
-    const { network, authToken, host, baseUrl } = getUrlParams();
+    const { network, authToken, host, signerUrl } = getUrlParams();
     setNetwork(network);
-    if (baseUrl) {
+    if (signerUrl) {
       setWeb3signerApi(
         new Web3SignerApi({
-          baseUrl: baseUrl,
+          baseUrl: signerUrl,
           authToken: authToken,
           host: host,
         } as ApiParams)
@@ -41,9 +41,7 @@ function App() {
 
   //Status check for web3signer
   const getSignerStatus = async () => {
-    setSignerStatus(
-      (await (await web3signerApi?.getStatus())?.status) || "loading..."
-    );
+    setSignerStatus((await web3signerApi?.getStatus())?.status || "loading...");
   };
 
   useEffect(() => {
