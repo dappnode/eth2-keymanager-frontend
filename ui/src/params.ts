@@ -23,10 +23,10 @@ export const network = process.env.NETWORK || "";
 
 export const consensusClient =
   process.env["_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_" + network.toUpperCase()] ||
-  "Nimbus";
+  "";
 
 export const executionClient =
   process.env["_DAPPNODE_GLOBAL_EXECUTION_CLIENT_" + network.toUpperCase()] ||
-  "Geth";
+  "";
 
 export const web3signerApiURL = process.env.WEB3SIGNER_API_URL || "";
