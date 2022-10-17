@@ -6,6 +6,7 @@ import { Container, Alert } from "@mui/material";
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
 import ValidatorList from "./components/ValidatorList/ValidatorList";
+import { consensusClient, executionClient } from "./params";
 
 //Themes
 import { darkTheme } from "./Themes/globalThemes";
@@ -18,6 +19,7 @@ import { ApiParams } from "./types";
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
+import ClientsBox from "./components/ClientsBox/ClientsBox";
 
 function App() {
   const [network, setNetwork] = React.useState("");
@@ -59,10 +61,24 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <ValidatorList
-                    web3signerApi={web3signerApi}
-                    network={network}
-                  />
+                  <>
+                    <ValidatorList
+                      web3signerApi={web3signerApi}
+                      network={network}
+                    />
+                    {consensusClient && executionClient && (
+                      <ClientsBox
+                        consensusClient={consensusClient
+                          .split(".")[0]
+                          ?.split("-")[0]
+                          ?.toUpperCase()}
+                        executionClient={executionClient
+                          .split(".")[0]
+                          ?.split("-")[0]
+                          ?.toUpperCase()}
+                      />
+                    )}
+                  </>
                 }
               />
               <Route
