@@ -1,6 +1,13 @@
 name: Build and push services images to GHCR
 
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "KeyManagerUI version"
+        required: true
+env:
+  UI_VERSION: ${{ github.event.inputs.version }}
 
 jobs:
   push-to-ghcr:
@@ -22,4 +29,4 @@ jobs:
           context: "./ui"
           file: ./ui/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/keymanager-ui:latest
+          tags: ghcr.io/${{ github.repository_owner }}/keymanager-ui:${UI_VERSION}
