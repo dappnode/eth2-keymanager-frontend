@@ -6,8 +6,6 @@ on:
       version:
         description: "KeyManagerUI version"
         required: true
-env:
-  UI_VERSION: ${{ github.event.inputs.version }}
 
 jobs:
   push-to-ghcr:
@@ -29,4 +27,4 @@ jobs:
           context: "./ui"
           file: ./ui/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/keymanager-ui:${UI_VERSION}
+          tags: ghcr.io/${{ github.repository_owner }}/keymanager-ui:${{ github.event.inputs.version }}
