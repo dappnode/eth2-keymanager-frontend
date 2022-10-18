@@ -19,7 +19,7 @@ export const availableNetworks = ["mainnet", "prater", "gnosis"];
 
 export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it the same for Gnosis?
 
-export const network = process.env.NETWORK || "";
+export const network = process.env.REACT_APP_NETWORK || "";
 
 export const consensusClient =
   process.env["_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_" + network.toUpperCase()] ||
@@ -29,4 +29,4 @@ export const executionClient =
   process.env["_DAPPNODE_GLOBAL_EXECUTION_CLIENT_" + network.toUpperCase()] ||
   "";
 
-export const web3signerApiURL = process.env.WEB3SIGNER_API_URL || "";
+export const web3signerApiURL = process.env.REACT_APP_WEB3SIGNER_API_URL || "";
