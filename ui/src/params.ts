@@ -1,6 +1,7 @@
 import { ApiParams } from "./types";
+import { env } from "./env";
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = env.NODE_ENV === "production";
 
 export const beaconchaApiParamsMap = new Map<string, ApiParams>([
   ["mainnet", { baseUrl: "https://beaconcha.in", apiPath: "/api/v1/" }],
@@ -21,20 +22,16 @@ export const availableNetworks = ["mainnet", "prater", "gnosis"];
 
 export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it the same for Gnosis?
 
-export const network = isProduction
-  ? process.env.REACT_APP_NETWORK || ""
-  : "prater";
+export const network = isProduction ? env.REACT_APP_NETWORK || "" : "prater";
 
 export const consensusClient = isProduction
-  ? process.env["_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_" + network.toUpperCase()] ||
-    ""
+  ? env.REACT_APP_CONSENSUS_CLIENT || ""
   : "prysm";
 
 export const executionClient = isProduction
-  ? process.env["_DAPPNODE_GLOBAL_EXECUTION_CLIENT_" + network.toUpperCase()] ||
-    ""
+  ? env.REACT_APP_EXECUTION_CLIENT || ""
   : "geth";
 
 export const web3signerApiURL = isProduction
-  ? process.env.REACT_APP_WEB3SIGNER_API_URL || ""
+  ? env.REACT_APP_WEB3SIGNER_API_URL || ""
   : "http://web3signer.web3signer-prater.dappnode:9000";

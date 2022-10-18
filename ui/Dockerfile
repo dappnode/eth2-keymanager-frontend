@@ -8,6 +8,7 @@ RUN yarn install
 COPY . .
 ENV REACT_APP_NETWORK=prater REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
 RUN yarn build
+RUN npx react-inject-env set
 
 FROM nginx:1.21.6-alpine
 COPY --from=build /app/build/ /usr/share/nginx/html/
