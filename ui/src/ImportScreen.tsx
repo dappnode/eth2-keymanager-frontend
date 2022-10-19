@@ -23,7 +23,7 @@ import { useState } from "react";
 import BackupIcon from "@mui/icons-material/Backup";
 
 //Logic
-import { uniquePasswordEntered } from "./logic/ImportScreen/PasswordManager";
+import { setUniquePassword } from "./logic/ImportScreen/PasswordManager";
 import { extractPubkey } from "./logic/Utils/dataUtils";
 import { KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
@@ -141,7 +141,7 @@ export default function ImportScreen({
                   label="Keystores Password"
                   type="password"
                   onChange={(event) =>
-                    uniquePasswordEntered(event, passwords, setPasswords)
+                    setUniquePassword(event, passwords, setPasswords)
                   }
                   sx={{ marginTop: 2, width: "60%" }}
                 />
