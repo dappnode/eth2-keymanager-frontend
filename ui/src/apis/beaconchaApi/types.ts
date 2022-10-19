@@ -17,5 +17,3 @@ export interface BeaconchaGetResponse {
   }[];
   error?: { message: string };
 }
-
-//TODO: is it OK to have all optional fields?
