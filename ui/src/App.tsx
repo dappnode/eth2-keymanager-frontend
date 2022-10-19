@@ -70,11 +70,9 @@ function App() {
                       <ClientsBox
                         consensusClient={consensusClient
                           .split(".")[0]
-                          ?.split("-")[0]
                           ?.toUpperCase()}
                         executionClient={executionClient
                           .split(".")[0]
-                          ?.split("-")[0]
                           ?.toUpperCase()}
                       />
                     )}
