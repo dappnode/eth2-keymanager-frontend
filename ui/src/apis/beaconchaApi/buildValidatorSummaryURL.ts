@@ -8,7 +8,7 @@ export default function buildValidatorSummaryURL({
   allValidatorsInfo: BeaconchaGetResponse[];
   network: string;
 }): string {
-  if (network == null || !availableNetworks.includes(network)) {
+  if (!availableNetworks.includes(network)) {
     throw new Error(`Invalid network: ${network}`);
   }
 
