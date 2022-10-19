@@ -5,7 +5,7 @@ export type KeystoreInfo = {
 
 export interface ApiParams {
   baseUrl: string;
-  apiPath: string;
+  apiPath?: string;
   authToken?: string;
   host?: string;
 }

@@ -14,7 +14,6 @@ import { darkTheme } from "./Themes/globalThemes";
 //Logic
 import { getUrlParams } from "./logic/Utils/getUrlParams";
 import { Web3SignerApi } from "./apis/web3signerApi";
-import { ApiParams } from "./types";
 
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -36,7 +35,7 @@ function App() {
           baseUrl: signerUrl,
           authToken: authToken,
           host: host,
-        } as ApiParams)
+        })
       );
     }
   }, []);
