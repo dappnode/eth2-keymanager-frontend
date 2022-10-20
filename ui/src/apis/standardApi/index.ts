@@ -18,20 +18,21 @@ export class StandardApi {
     url: string,
     body?: any
   ): Promise<any> {
-    let headers = {
+    const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: "",
+      Host: "",
     };
 
     if (this.authToken) {
-      headers = {
-        ...headers,
-        ...{ Authorization: `Bearer ${this.authToken}` },
-      };
+      headers.Authorization = `Bearer ${this.authToken}`;
     }
+
     if (this.host) {
-      headers = { ...headers, ...{ Host: this.host } };
+      headers.Host = this.host;
     }
+
     const response = await fetch(url, {
       method,
       headers,
