@@ -121,7 +121,7 @@ export class Web3SignerApi extends StandardApi {
       return {
         status: "Error",
         checks: [],
-        outcome: "Error",
+        outcome: e.message,
       };
     }
   }
