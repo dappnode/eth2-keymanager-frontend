@@ -1,5 +1,5 @@
 import { BeaconchaGetResponse } from "./types";
-import { availableNetworks, beaconchaApiParamsMap } from "../../params";
+import { beaconchaApiParamsMap } from "../../params";
 
 export default function buildValidatorSummaryURL({
   allValidatorsInfo,
@@ -8,7 +8,7 @@ export default function buildValidatorSummaryURL({
   allValidatorsInfo: BeaconchaGetResponse[];
   network: string;
 }): string {
-  if (!availableNetworks.includes(network)) {
+  if (!beaconchaApiParamsMap.has(network)) {
     throw new Error(`Invalid network: ${network}`);
   }
 

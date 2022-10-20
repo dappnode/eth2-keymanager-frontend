@@ -6,7 +6,7 @@ import {
 } from "@mui/x-data-grid";
 import { useState } from "react";
 import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
-import { beaconchaBaseUrls } from "../../params";
+import { beaconchaApiParamsMap } from "../../params";
 import KeystoreColumns from "./KeystoreColumns";
 
 export default function KeystoreList({
@@ -30,7 +30,7 @@ export default function KeystoreList({
     setPageSize(pageSize);
   };
 
-  const beaconchaBaseUrl = beaconchaBaseUrls.get(network);
+  const beaconchaBaseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
 
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey

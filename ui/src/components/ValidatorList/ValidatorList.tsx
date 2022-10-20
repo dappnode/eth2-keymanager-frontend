@@ -13,7 +13,7 @@ import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { useEffect, useState } from "react";
 import { BeaconchaApi } from "../../apis/beaconchaApi";
 import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSummaryURL";
-import { availableNetworks, beaconchaApiParamsMap } from "../../params";
+import { beaconchaApiParamsMap } from "../../params";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
@@ -80,11 +80,7 @@ export default function ValidatorList({
   }, [open]);
 
   useEffect(() => {
-    if (
-      keystoresGet &&
-      network != null &&
-      availableNetworks.includes(network)
-    ) {
+    if (keystoresGet && beaconchaApiParamsMap.has(network)) {
       const beaconchaParams = beaconchaApiParamsMap.get(network);
 
       if (beaconchaParams) {

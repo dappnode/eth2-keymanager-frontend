@@ -1,4 +1,4 @@
-import { network, web3signerApiURL } from "../../params";
+import { beaconchaApiParamsMap, network, web3signerApiURL } from "../../params";
 
 export function getUrlParams(): {
   signerUrl: string;
@@ -7,8 +7,13 @@ export function getUrlParams(): {
   host: string;
 } {
   const search = new URLSearchParams(window.location.search);
+
+  let currentNetwork = search.get("network") || network;
+
+  if (!beaconchaApiParamsMap.has(currentNetwork)) currentNetwork = "";
+
   return {
-    network: search.get("network") || network,
+    network: currentNetwork,
     signerUrl: search.get("signerUrl") || web3signerApiURL,
     authToken: search.get("authToken") || "",
     host: search.get("host") || "",

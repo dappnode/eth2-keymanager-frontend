@@ -10,14 +10,6 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
   ],
 ]);
 
-export const beaconchaBaseUrls = new Map<string, string>([
-  ["mainnet", "https://beaconcha.in"],
-  ["prater", "https://prater.beaconcha.in"],
-  ["gnosis", "https://beacon.gnosischain.com"],
-]);
-
-export const availableNetworks = ["mainnet", "prater", "gnosis"];
-
 export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it the same for Gnosis?
 
 export const network = env.REACT_APP_NETWORK || "";

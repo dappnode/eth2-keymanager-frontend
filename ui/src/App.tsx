@@ -54,7 +54,7 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <TopBar network={network} signerStatus={signerStatus} />
       <Container component="main" maxWidth="xl">
-        {web3signerApi ? (
+        {web3signerApi && network ? (
           <BrowserRouter>
             <Routes>
               <Route
@@ -87,7 +87,9 @@ function App() {
         ) : (
           <>
             <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
-              The API is not available. Please, check the URL and try again.
+              The network is not properly defined or the Web3Signer API is not
+              available. Please, check the URL or the env variables and try
+              again.
             </Alert>
           </>
         )}
