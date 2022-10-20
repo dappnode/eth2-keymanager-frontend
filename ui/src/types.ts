@@ -1,3 +1,10 @@
+export enum SignerStatus {
+  UP = "UP",
+  DOWN = "DOWN",
+  LOADING = "LOADING",
+  UNKNOWN = "UNKNOWN",
+}
+
 export type KeystoreInfo = {
   file: File;
   pubkey: string;

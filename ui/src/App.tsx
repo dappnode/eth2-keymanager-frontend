@@ -42,7 +42,7 @@ function App() {
 
   //Status check for web3signer
   const showSignerStatus = async () => {
-    setSignerStatus((await web3signerApi?.getStatus())?.status || "loading");
+    setSignerStatus((await web3signerApi?.getStatus())?.status || "LOADING");
   };
 
   useEffect(() => {
