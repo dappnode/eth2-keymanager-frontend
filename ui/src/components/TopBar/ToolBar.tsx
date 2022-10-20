@@ -1,8 +1,7 @@
 import Toolbar from "@mui/material/Toolbar";
 import { HeaderTypography } from "../../Styles/Typographies";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { Box, Card } from "@mui/material";
+import { CheckCircle, Cancel, QuestionMark } from "@mui/icons-material";
+import { Box, Card, CircularProgress, Tooltip } from "@mui/material";
 
 export default function ToolBar({
   network,
@@ -61,9 +60,21 @@ export default function ToolBar({
             text="Signer"
           />
           {signerStatus === "UP" ? (
-            <CheckCircleIcon color="success" />
+            <Tooltip title="Signer is UP">
+              <CheckCircle color="success" />
+            </Tooltip>
+          ) : signerStatus === "DOWN" ? (
+            <Tooltip title="Signer is DOWN">
+              <Cancel color="error" />
+            </Tooltip>
+          ) : signerStatus === "loading" ? (
+            <Tooltip title="Web3Signer status is loading">
+              <CircularProgress size={"20px"} />
+            </Tooltip>
           ) : (
-            <CancelIcon color="error" />
+            <Tooltip title="Web3Signer is not properly connected. Its URL might be wrong">
+              <QuestionMark color="warning" />
+            </Tooltip>
           )}
         </Box>
       </div>

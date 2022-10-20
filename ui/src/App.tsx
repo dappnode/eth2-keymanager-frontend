@@ -41,12 +41,12 @@ function App() {
   }, []);
 
   //Status check for web3signer
-  const getSignerStatus = async () => {
-    setSignerStatus((await web3signerApi?.getStatus())?.status || "loading...");
+  const showSignerStatus = async () => {
+    setSignerStatus((await web3signerApi?.getStatus())?.status || "loading");
   };
 
   useEffect(() => {
-    getSignerStatus();
+    showSignerStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3signerApi]);
 
