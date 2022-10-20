@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { BeaconchaApi } from "../../apis/beaconchaApi";
 import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSummaryURL";
 import { beaconchaApiParamsMap } from "../../params";
+import { BeaconchaUrlBuildingStatus } from "../../types";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
@@ -30,7 +31,9 @@ export default function ValidatorList({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
-  const [hasBeaconchaError, setHasBeaconchaError] = useState(false);
+  const [summaryUrlBuildingStatus, setSummaryUrlBuildingStatus] = useState(
+    BeaconchaUrlBuildingStatus.NOT_STARTED
+  );
   const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
 
   async function getKeystores() {
@@ -43,21 +46,15 @@ export default function ValidatorList({
   async function getValidatorSummaryURL(beaconchaApi: BeaconchaApi) {
     if (!keystoresGet) {
       setValidatorSummaryURL("");
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.ERROR);
       return;
     }
+
+    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.IN_PROGRESS);
 
     const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
       keystoresGet: keystoresGet,
     });
-
-    const hasError = allValidatorsInfo.some(
-      (validatorInfo) => validatorInfo.status === "error"
-    );
-    if (hasError) {
-      setHasBeaconchaError(true);
-      setValidatorSummaryURL("");
-      return;
-    }
 
     try {
       const validatorSummaryURL = buildValidatorSummaryURL({
@@ -65,9 +62,9 @@ export default function ValidatorList({
         network,
       });
       setValidatorSummaryURL(validatorSummaryURL);
-      setHasBeaconchaError(false);
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.SUCCESS);
     } catch (e) {
-      setHasBeaconchaError(true);
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.ERROR);
       setValidatorSummaryURL("");
       console.log(e);
     }
@@ -122,9 +119,10 @@ export default function ValidatorList({
                 isTableEmpty={selectedRows.length === 0}
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
-                hasBeaconchaError={hasBeaconchaError}
+                summaryUrlBuildingStatus={summaryUrlBuildingStatus}
               />
-              {hasBeaconchaError && (
+              {summaryUrlBuildingStatus ===
+                BeaconchaUrlBuildingStatus.ERROR && (
                 <Alert
                   severity="warning"
                   sx={{ marginTop: 2 }}

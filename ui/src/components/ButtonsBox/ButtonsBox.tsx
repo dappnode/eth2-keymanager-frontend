@@ -4,17 +4,18 @@ import { buttonsBoxStyle } from "../../Styles/buttonsBoxStyles";
 //Icons
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { BeaconchaUrlBuildingStatus } from "../../types";
 
 export default function ButtonsBox({
   isTableEmpty,
   setOpen,
   validatorSummaryURL,
-  hasBeaconchaError,
+  summaryUrlBuildingStatus,
 }: {
   isTableEmpty: boolean;
   setOpen(open: boolean): void;
   validatorSummaryURL: string;
-  hasBeaconchaError: boolean;
+  summaryUrlBuildingStatus: BeaconchaUrlBuildingStatus;
 }): JSX.Element {
   return (
     <Box sx={buttonsBoxStyle}>
@@ -40,30 +41,29 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {!hasBeaconchaError &&
-        (validatorSummaryURL ? (
+      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.SUCCESS ? (
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ marginRight: 4, borderRadius: 3 }}
+          target="_blank"
+          href={validatorSummaryURL}
+        >
+          Go to summary dashboard
+        </Button>
+      ) : (
+        <>
           <Button
             variant="contained"
             size="large"
             sx={{ marginRight: 4, borderRadius: 3 }}
-            target="_blank"
-            href={validatorSummaryURL}
+            disabled={true}
           >
-            Go to summary dashboard
+            Loading summary dashboard...
+            <CircularProgress size={24} sx={{ marginLeft: 2 }} />
           </Button>
-        ) : (
-          <>
-            <Button
-              variant="contained"
-              size="large"
-              sx={{ marginRight: 4, borderRadius: 3 }}
-              disabled={true}
-            >
-              Loading summary dashboard...
-              <CircularProgress size={24} sx={{ marginLeft: 2 }} />
-            </Button>
-          </>
-        ))}
+        </>
+      )}
     </Box>
   );
 }

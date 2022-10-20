@@ -1,3 +1,10 @@
+export enum BeaconchaUrlBuildingStatus {
+  NOT_STARTED,
+  SUCCESS,
+  ERROR,
+  IN_PROGRESS,
+}
+
 export enum SignerStatus {
   UP = "UP",
   DOWN = "DOWN",
