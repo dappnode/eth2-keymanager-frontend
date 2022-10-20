@@ -1,3 +1,9 @@
+export enum ImportStatus {
+  IMPORTED = "Imported",
+  NOT_IMPORTED = "Not imported",
+  IMPORTING = "Importing...",
+}
+
 export enum BeaconchaUrlBuildingStatus {
   NOT_STARTED,
   SUCCESS,

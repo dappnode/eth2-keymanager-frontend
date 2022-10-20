@@ -25,7 +25,7 @@ import BackupIcon from "@mui/icons-material/Backup";
 //Logic
 import { setUniquePassword } from "./logic/ImportScreen/PasswordManager";
 import { extractPubkey } from "./logic/Utils/dataUtils";
-import { KeystoreInfo } from "./types";
+import { ImportStatus, KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 import FileCardList from "./components/FileCards/FileCardList";
@@ -46,6 +46,7 @@ export default function ImportScreen({
   const [openDialog, setOpenDialog] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const [passwords, setPasswords] = useState<string[]>([]);
+  const [importStatus, setImportStatus] = useState(ImportStatus.NOT_IMPORTED);
 
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
@@ -204,13 +205,21 @@ export default function ImportScreen({
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
               setKeystoresPostResponse(undefined);
+              setImportStatus(ImportStatus.IMPORTING);
               handleClickOpenDialog();
               const results = await web3signerApi.importKeystores({
                 keystores: acceptedFiles.map((f) => f.file),
                 passwords,
                 slashingProtection: slashingFile,
               });
+
               setKeystoresPostResponse(results);
+
+              if (results?.data) {
+                setImportStatus(ImportStatus.IMPORTED);
+              } else {
+                setImportStatus(ImportStatus.NOT_IMPORTED);
+              }
             }}
             sx={{ borderRadius: 3 }}
           >
@@ -232,6 +241,7 @@ export default function ImportScreen({
         open={openDialog}
         setOpen={setOpenDialog}
         keystoresPostResponse={keystoresPostResponse}
+        importStatus={importStatus}
         acceptedFiles={acceptedFiles}
       />
     </div>
