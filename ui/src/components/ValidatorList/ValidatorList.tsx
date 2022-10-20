@@ -67,6 +67,7 @@ export default function ValidatorList({
       setValidatorSummaryURL(validatorSummaryURL);
       setHasBeaconchaError(false);
     } catch (e) {
+      setHasBeaconchaError(true);
       setValidatorSummaryURL("");
       console.log(e);
     }
@@ -130,8 +131,9 @@ export default function ValidatorList({
                   variant="filled"
                 >
                   There was an error loading the dashboard. The number of API
-                  calls allowed by the explorer might have been exceeded. Please
-                  wait for a minute and refresh the page.
+                  calls allowed by the explorer might have been exceeded or the
+                  network might be invalid. Please wait for a minute and refresh
+                  the page.
                 </Alert>
               )}
 
