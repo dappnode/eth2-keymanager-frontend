@@ -13,7 +13,16 @@ import {
  * https://ethereum.github.io/keymanager-APIs/
  */
 export class Web3SignerApi extends StandardApi {
+  /**
+   * Local Key Manager endpoint
+   * https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/
+   */
   keymanagerEndpoint = "/eth/v1/keystores";
+
+  /**
+   * Server Healthcheck endpoint
+   * https://consensys.github.io/web3signer/web3signer-eth2.html#tag/Server-Health-Status
+   */
   serverStatusEndpoint = "/healthcheck";
 
   /**
