@@ -8,6 +8,10 @@ import {
   Web3signerHealthcheckResponse,
 } from "./types";
 
+/**
+ * Key Manager API standard
+ * https://ethereum.github.io/keymanager-APIs/
+ */
 export class Web3SignerApi extends StandardApi {
   keymanagerEndpoint = "/eth/v1/keystores";
   serverStatusEndpoint = "/healthcheck";
