@@ -11,5 +11,6 @@ type EnvType = {
   REACT_APP_WEB3SIGNER_API_URL: string;
   REACT_APP_CONSENSUS_CLIENT: string;
   REACT_APP_EXECUTION_CLIENT: string;
+  REACT_APP_WEB3SIGNER_AUTH_TOKEN: string;
 };
 export const env: EnvType = { ...process.env, ...window.env };

@@ -6,13 +6,12 @@ import { Container, Alert } from "@mui/material";
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
 import ValidatorList from "./components/ValidatorList/ValidatorList";
-import { consensusClient, executionClient } from "./params";
 
 //Themes
 import { darkTheme } from "./Themes/globalThemes";
 
 //Logic
-import { getUrlParams } from "./logic/Utils/getUrlParams";
+import { getParams } from "./logic/Utils/getParams";
 import { Web3SignerApi } from "./apis/web3signerApi";
 
 //Other libraries
@@ -22,26 +21,33 @@ import ClientsBox from "./components/ClientsBox/ClientsBox";
 import { Web3SignerStatus } from "./types";
 
 function App() {
-  const [network, setNetwork] = React.useState("");
+  const [currentNetwork, setCurrentNetwork] = React.useState("");
   const [web3signerApi, setWeb3signerApi] =
     React.useState<Web3SignerApi | null>(null);
   const [signerStatus, setSignerStatus] =
     React.useState<Web3SignerStatus>("LOADING");
 
+  const {
+    network,
+    signerAuthToken,
+    signerUrl,
+    consensusClient,
+    executionClient,
+  } = getParams();
+
   useEffect(() => {
-    const { network, authToken, host, signerUrl } = getUrlParams();
-    setNetwork(network);
+    setCurrentNetwork(network);
     if (signerUrl) {
       setWeb3signerApi(
         new Web3SignerApi({
           baseUrl: signerUrl,
-          authToken: authToken,
-          host: host,
+          authToken: signerAuthToken,
         })
       );
     } else {
       setSignerStatus("ERROR");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //Status check for web3signer
@@ -59,9 +65,9 @@ function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <TopBar network={network} signerStatus={signerStatus} />
+      <TopBar network={currentNetwork} signerStatus={signerStatus} />
       <Container component="main" maxWidth="xl">
-        {web3signerApi && signerStatus === "UP" && network ? (
+        {web3signerApi && signerStatus === "UP" && currentNetwork ? (
           <BrowserRouter>
             <Routes>
               <Route
@@ -70,7 +76,7 @@ function App() {
                   <>
                     <ValidatorList
                       web3signerApi={web3signerApi}
-                      network={network}
+                      network={currentNetwork}
                     />
                     {consensusClient && executionClient && (
                       <ClientsBox
@@ -105,7 +111,7 @@ function App() {
                 </Alert>
               )
             )}
-            {!network && (
+            {!currentNetwork && (
               <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
                 Network has not been properly set. Check URL or global
                 variables.
