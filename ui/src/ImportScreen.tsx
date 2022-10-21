@@ -46,7 +46,7 @@ export default function ImportScreen({
   const [openDialog, setOpenDialog] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const [passwords, setPasswords] = useState<string[]>([]);
-  const [importStatus, setImportStatus] = useState(ImportStatus.NOT_IMPORTED);
+  const [importStatus, setImportStatus] = useState(ImportStatus.NotImported);
 
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
@@ -205,7 +205,7 @@ export default function ImportScreen({
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
               setKeystoresPostResponse(undefined);
-              setImportStatus(ImportStatus.IMPORTING);
+              setImportStatus(ImportStatus.Importing);
               handleClickOpenDialog();
               const results = await web3signerApi.importKeystores({
                 keystores: acceptedFiles.map((f) => f.file),
@@ -216,9 +216,9 @@ export default function ImportScreen({
               setKeystoresPostResponse(results);
 
               if (results?.data) {
-                setImportStatus(ImportStatus.IMPORTED);
+                setImportStatus(ImportStatus.Imported);
               } else {
-                setImportStatus(ImportStatus.NOT_IMPORTED);
+                setImportStatus(ImportStatus.NotImported);
               }
             }}
             sx={{ borderRadius: 3 }}

@@ -1,14 +1,14 @@
 export enum ImportStatus {
-  IMPORTED = "Imported",
-  NOT_IMPORTED = "Not imported",
-  IMPORTING = "Importing...",
+  Imported = "Imported",
+  NotImported = "Not imported",
+  Importing = "Importing...",
 }
 
 export enum BeaconchaUrlBuildingStatus {
-  NOT_STARTED,
-  SUCCESS,
-  ERROR,
-  IN_PROGRESS,
+  NotStarted,
+  Success,
+  Error,
+  InProgress,
 }
 
 export type Web3SignerStatus = "UP" | "DOWN" | "UNKNOWN" | "LOADING" | "ERROR";

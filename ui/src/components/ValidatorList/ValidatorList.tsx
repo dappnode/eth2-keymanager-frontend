@@ -32,7 +32,7 @@ export default function ValidatorList({
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
   const [summaryUrlBuildingStatus, setSummaryUrlBuildingStatus] = useState(
-    BeaconchaUrlBuildingStatus.NOT_STARTED
+    BeaconchaUrlBuildingStatus.NotStarted
   );
   const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
 
@@ -46,11 +46,11 @@ export default function ValidatorList({
   async function getValidatorSummaryURL(beaconchaApi: BeaconchaApi) {
     if (!keystoresGet) {
       setValidatorSummaryURL("");
-      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.ERROR);
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Error);
       return;
     }
 
-    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.IN_PROGRESS);
+    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.InProgress);
 
     const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
       keystoresGet: keystoresGet,
@@ -62,9 +62,9 @@ export default function ValidatorList({
         network,
       });
       setValidatorSummaryURL(validatorSummaryURL);
-      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.SUCCESS);
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Success);
     } catch (e) {
-      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.ERROR);
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Error);
       setValidatorSummaryURL("");
       console.log(e);
     }
@@ -122,7 +122,7 @@ export default function ValidatorList({
                 summaryUrlBuildingStatus={summaryUrlBuildingStatus}
               />
               {summaryUrlBuildingStatus ===
-                BeaconchaUrlBuildingStatus.ERROR && (
+                BeaconchaUrlBuildingStatus.Error && (
                 <Alert
                   severity="warning"
                   sx={{ marginTop: 2 }}
