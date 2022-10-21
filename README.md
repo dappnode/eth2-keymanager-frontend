@@ -18,8 +18,16 @@ yarn start
 
 go to `http://localhost:3000/`
 
+By default, the selected network is mainnet, but you can change it through the URL params, as well as other params:
+
+    - network
+    - signerUrl
+    - signerAuthToken
+    - consensusClient
+    - executionClient
+
 You can change the signerUrl or the network by adding URL params:
-`http://localhost:3000/?signerUrl=<url>&network=<network>`
+`http://localhost:3000/?network=<network>&signerUrl=<url>&signerAuthToken=<signerAuthToken>...`
 
 If you are connected to a DAppNode (example for prater):
 `http://localhost:3000/?signerUrl=http://web3signer.web3signer-prater.dappnode:9000&network=prater`
@@ -28,12 +36,15 @@ If you are connected to a DAppNode (example for prater):
 
 The image corresponding to this UI has already been built and pushed to GitHub Container Registry (https://github.com/dappnode/eth2-keymanager-frontend/pkgs/container/keymanager-ui)
 
-In order to run a container for the UI, there are 4 env variables to be set:
+In order to run a container for the UI, there are 5 env variables to be set (only 2 mandatory):
 
 - REACT_APP_NETWORK= prater | gnosis | mainnet
 - REACT_APP_WEB3SIGNER_API_URL
+- [ REACT_APP_WEB3SIGNER_AUTH_TOKEN ]
 - [ REACT_APP_CONSENSUS_CLIENT ]
 - [ REACT_APP_EXECUTION_CLIENT ]
+
+However, you can override this values with the URL params mentioned above.
 
 For example, if you are connected to a DAppNode and you want to run the KeyManager for prater, you can run the UI by having this 2 files:
 
