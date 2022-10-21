@@ -44,7 +44,12 @@ function App() {
 
   //Status check for web3signer
   const showSignerStatus = async () => {
-    setSignerStatus((await web3signerApi?.getStatus())?.status || "LOADING");
+    if (web3signerApi) {
+      const status = (await web3signerApi.getStatus())?.status;
+      setSignerStatus(status || "LOADING");
+    } else {
+      setSignerStatus("ERROR");
+    }
   };
 
   useEffect(() => {
@@ -88,11 +93,17 @@ function App() {
           </BrowserRouter>
         ) : (
           <>
-            <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
-              The network is not properly defined or the Web3Signer API is not
-              available. Please, check the URL or the env variables and try
-              again.
-            </Alert>
+            {signerStatus === "ERROR" && (
+              <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+                Web3Signer API is not available. Check URL or global variables.
+              </Alert>
+            )}
+            {!network && (
+              <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+                Network has not been properly set. Check URL or global
+                variables.
+              </Alert>
+            )}
           </>
         )}
       </Container>
