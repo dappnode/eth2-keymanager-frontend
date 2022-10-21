@@ -11,12 +11,7 @@ export enum BeaconchaUrlBuildingStatus {
   IN_PROGRESS,
 }
 
-export enum SignerStatus {
-  UP = "UP",
-  DOWN = "DOWN",
-  LOADING = "LOADING",
-  UNKNOWN = "UNKNOWN",
-}
+export type Web3SignerStatus = "UP" | "DOWN" | "UNKNOWN" | "LOADING";
 
 export type KeystoreInfo = {
   file: File;

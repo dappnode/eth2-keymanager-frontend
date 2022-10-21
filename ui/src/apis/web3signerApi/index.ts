@@ -119,7 +119,7 @@ export class Web3SignerApi extends StandardApi {
       )) as Web3signerHealthcheckResponse;
     } catch (e) {
       return {
-        status: "Error",
+        status: "UNKNOWN",
         checks: [],
         outcome: e.message,
       };

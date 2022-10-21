@@ -19,12 +19,14 @@ import { Web3SignerApi } from "./apis/web3signerApi";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
 import ClientsBox from "./components/ClientsBox/ClientsBox";
+import { Web3SignerStatus } from "./types";
 
 function App() {
   const [network, setNetwork] = React.useState("");
   const [web3signerApi, setWeb3signerApi] =
     React.useState<Web3SignerApi | null>(null);
-  const [signerStatus, setSignerStatus] = React.useState("loading");
+  const [signerStatus, setSignerStatus] =
+    React.useState<Web3SignerStatus>("LOADING");
 
   useEffect(() => {
     const { network, authToken, host, signerUrl } = getUrlParams();
