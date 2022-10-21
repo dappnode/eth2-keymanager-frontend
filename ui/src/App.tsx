@@ -39,6 +39,8 @@ function App() {
           host: host,
         })
       );
+    } else {
+      setSignerStatus("ERROR");
     }
   }, []);
 
@@ -46,9 +48,7 @@ function App() {
   const showSignerStatus = async () => {
     if (web3signerApi) {
       const status = (await web3signerApi.getStatus())?.status;
-      setSignerStatus(status || "LOADING");
-    } else {
-      setSignerStatus("ERROR");
+      setSignerStatus(status || "ERROR");
     }
   };
 
