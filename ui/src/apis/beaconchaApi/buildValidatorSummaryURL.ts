@@ -13,8 +13,7 @@ export default function buildValidatorSummaryURL({
   }
 
   const baseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
-
-  if (baseUrl == null) return "";
+  if (!baseUrl) return "";
 
   let summaryValidatorURL = baseUrl + "/dashboard?validators=";
 
