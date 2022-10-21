@@ -6,6 +6,7 @@ import { Container, Alert } from "@mui/material";
 import TopBar from "./components/TopBar/TopBar";
 import ImportScreen from "./ImportScreen";
 import ValidatorList from "./components/ValidatorList/ValidatorList";
+import ClientsBox from "./components/ClientsBox/ClientsBox";
 
 //Themes
 import { darkTheme } from "./Themes/globalThemes";
@@ -13,12 +14,11 @@ import { darkTheme } from "./Themes/globalThemes";
 //Logic
 import { getParams } from "./logic/Utils/getParams";
 import { Web3SignerApi } from "./apis/web3signerApi";
+import { Web3SignerStatus } from "./types";
 
 //Other libraries
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React, { useEffect } from "react";
-import ClientsBox from "./components/ClientsBox/ClientsBox";
-import { Web3SignerStatus } from "./types";
 
 function App() {
   const [currentNetwork, setCurrentNetwork] = React.useState("");
@@ -50,7 +50,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //Status check for web3signer
   const showSignerStatus = async () => {
     if (web3signerApi) {
       const status = (await web3signerApi.getStatus())?.status;
