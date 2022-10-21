@@ -61,7 +61,7 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <TopBar network={network} signerStatus={signerStatus} />
       <Container component="main" maxWidth="xl">
-        {web3signerApi && network ? (
+        {web3signerApi && signerStatus === "UP" && network ? (
           <BrowserRouter>
             <Routes>
               <Route
@@ -93,10 +93,17 @@ function App() {
           </BrowserRouter>
         ) : (
           <>
-            {signerStatus === "ERROR" && (
+            {signerStatus === "ERROR" ? (
               <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
                 Web3Signer API is not available. Check URL or global variables.
+                Is the Web3Signer API running?
               </Alert>
+            ) : (
+              signerStatus === "DOWN" && (
+                <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+                  Web3Signer is down.
+                </Alert>
+              )
             )}
             {!network && (
               <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">

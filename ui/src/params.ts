@@ -12,7 +12,7 @@ export const beaconchaApiParamsMap = new Map<string, ApiParams>([
 
 export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it the same for Gnosis?
 
-export const network = env.REACT_APP_NETWORK || "";
+export const network = env.REACT_APP_NETWORK || "mainnet";
 
 export const consensusClient = env.REACT_APP_CONSENSUS_CLIENT || "";
 
