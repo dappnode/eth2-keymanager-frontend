@@ -9,6 +9,7 @@ export enum BeaconchaUrlBuildingStatus {
   Success,
   Error,
   InProgress,
+  NoIndexes,
 }
 
 export type Web3SignerStatus = "UP" | "DOWN" | "UNKNOWN" | "LOADING" | "ERROR";

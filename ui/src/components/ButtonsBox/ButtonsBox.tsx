@@ -52,6 +52,8 @@ export default function ButtonsBox({
         >
           Load summary dashboard
         </Button>
+      ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NoIndexes ? (
+        <></>
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
         <Button
           variant="contained"
