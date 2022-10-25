@@ -77,7 +77,7 @@ export default function ValidatorList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  useEffect(() => {
+  async function loadSummaryUrl() {
     if (keystoresGet && beaconchaApiParamsMap.has(network)) {
       const beaconchaParams = beaconchaApiParamsMap.get(network);
 
@@ -86,8 +86,7 @@ export default function ValidatorList({
         getValidatorSummaryURL(beaconchaApi);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [keystoresGet]);
+  }
 
   return (
     <div>
@@ -120,6 +119,7 @@ export default function ValidatorList({
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
                 summaryUrlBuildingStatus={summaryUrlBuildingStatus}
+                loadSummaryUrl={loadSummaryUrl}
               />
               {summaryUrlBuildingStatus ===
                 BeaconchaUrlBuildingStatus.Error && (

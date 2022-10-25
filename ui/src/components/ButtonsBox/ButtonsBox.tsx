@@ -11,11 +11,13 @@ export default function ButtonsBox({
   setOpen,
   validatorSummaryURL,
   summaryUrlBuildingStatus,
+  loadSummaryUrl,
 }: {
   isTableEmpty: boolean;
   setOpen(open: boolean): void;
   validatorSummaryURL: string;
   summaryUrlBuildingStatus: BeaconchaUrlBuildingStatus;
+  loadSummaryUrl(): void;
 }): JSX.Element {
   return (
     <Box sx={buttonsBoxStyle}>
@@ -41,7 +43,16 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
+      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ marginRight: 4, borderRadius: 3 }}
+          onClick={loadSummaryUrl}
+        >
+          Load summary dashboard
+        </Button>
+      ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
         <Button
           variant="contained"
           size="large"
