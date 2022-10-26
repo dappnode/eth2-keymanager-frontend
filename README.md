@@ -51,7 +51,7 @@ For example, if you are connected to a DAppNode and you want to run the KeyManag
 Dockerfile:
 
 ```
-FROM ghcr.io/dappnode/keymanager-ui as build
+FROM ghcr.io/dappnode/keymanager-ui:0.1.0 as build
 
 ENV REACT_APP_NETWORK=prater
 ENV REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
@@ -83,7 +83,7 @@ As not all those env variables are necessary, you can run the UI in a simpler wa
 Dockerfile:
 
 ```
-FROM ghcr.io/dappnode/keymanager-ui as build
+FROM ghcr.io/dappnode/keymanager-ui:0.1.0 as build
 
 ENV REACT_APP_NETWORK=prater
 ENV REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
