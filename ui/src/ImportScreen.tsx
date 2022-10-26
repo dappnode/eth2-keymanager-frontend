@@ -1,28 +1,40 @@
-import "./App.css";
+//Internal components
+import FileDrop from "./components/FileDrop/FileDrop";
+import { SecondaryInfoTypography } from "./Styles/Typographies";
+
+//External components
 import {
   Box,
   Button,
   Card,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Switch,
   TextField,
   Typography,
+  FormGroup,
+  FormControlLabel,
 } from "@mui/material";
+
+//React
 import { Link } from "react-router-dom";
 import { DropEvent } from "react-dropzone";
 import { useState } from "react";
-import FileDrop from "./FileDrop";
+
+//Icons
 import BackupIcon from "@mui/icons-material/Backup";
-import CloseIcon from "@mui/icons-material/Close";
-import { extractPubkey, getEmoji, shortenPubkey } from "./DataStore";
-import { KeystoreInfo } from "./types";
+
+//Logic
+import { setUniquePassword } from "./logic/ImportScreen/PasswordManager";
+import { extractPubkey } from "./logic/Utils/dataUtils";
+import { ImportStatus, KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
+import FileCardList from "./components/FileCards/FileCardList";
+import ImportDialog from "./components/Dialogs/ImportDialog";
+import {
+  importButtonBoxStyle,
+  mainImportBoxStyle,
+  slashingProtectionBoxStyle,
+} from "./Styles/dialogStyles";
 
 export default function ImportScreen({
   web3signerApi,
@@ -31,9 +43,10 @@ export default function ImportScreen({
 }) {
   const [keystoresPostResponse, setKeystoresPostResponse] =
     useState<Web3signerPostResponse>();
-  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const [passwords, setPasswords] = useState<string[]>([]);
+  const [importStatus, setImportStatus] = useState(ImportStatus.NotImported);
 
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
@@ -56,59 +69,17 @@ export default function ImportScreen({
     setSlashingFile(files[0]);
   };
 
-  const passwordEntered = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    index: number
+  //USE SAME PASSWORD SWITCH
+  const [useSamePassword, setUseSamePassword] = useState(false); //Same password for all keystores
+  const handleUseSamePasswordSwitch = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
   ) => {
-    const p = event.target.value;
-    const newList = Array.from(passwords);
-    newList[index] = p;
-    setPasswords(newList);
+    setUseSamePassword(checked);
+    const emptyPasswords = Array.from(passwords);
+    emptyPasswords.fill("");
+    setPasswords(emptyPasswords);
   };
-
-  // FILE CARDS
-  const files = acceptedFiles
-    ? Array.from(acceptedFiles).map((fileInfo, index) => (
-        <Card
-          key={index}
-          raised
-          sx={{ padding: 2, marginTop: 4, width: "80%" }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "left",
-            }}
-          >
-            <Typography variant="h6" sx={{ flex: 1 }}>
-              <b>✅ {fileInfo.file.name}</b> - {shortenPubkey(fileInfo.pubkey)}
-            </Typography>
-            <a
-              href="/#"
-              onClick={() => {
-                var indexToRemove = acceptedFiles.indexOf(fileInfo);
-                setAcceptedFiles(
-                  acceptedFiles.filter((f, index) => index !== indexToRemove)
-                );
-                setPasswords(
-                  passwords.filter((f, index) => index !== indexToRemove)
-                );
-              }}
-            >
-              <CloseIcon />
-            </a>
-          </Box>
-          <TextField
-            id={`outlined-password-input-${index}`}
-            label="Keystore Password"
-            type="password"
-            onChange={(event) => passwordEntered(event, index)}
-            sx={{ marginTop: 2, width: "60%" }}
-          />
-        </Card>
-      ))
-    : [];
 
   // SLASHING PROTECTION SWITCH
   const [slashingProtectionIncluded, setSlashingProtectionIncluded] =
@@ -120,105 +91,17 @@ export default function ImportScreen({
     setSlashingProtectionIncluded(checked);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
   };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const dialog = (
-    <Dialog
-      disableEscapeKeyDown={true}
-      open={open}
-      fullWidth={true}
-      onClose={(event, reason) => {
-        if (!reason) {
-          handleClose();
-        }
-      }}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {keystoresPostResponse?.data ? "Import Completed" : "Importing..."}
-      </DialogTitle>
-      <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
-          {keystoresPostResponse ? (
-            keystoresPostResponse.error ? (
-              `Error: ${keystoresPostResponse.error.message}`
-            ) : (
-              <div>
-                {keystoresPostResponse.data.map((result, index) => (
-                  <div style={{ marginBottom: "20px" }} key={index}>
-                    <Typography variant="h5" color="GrayText">
-                      {shortenPubkey(acceptedFiles[index]?.pubkey)}
-                    </Typography>
-                    <Typography variant="h6">
-                      <b>Status:</b> {result.status} {getEmoji(result.status)}
-                    </Typography>
-                    {result.message ? (
-                      <Typography variant="h6">
-                        <b>Message:</b> {result.message}
-                      </Typography>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            )
-          ) : (
-            <Box
-              sx={{
-                margin: 8,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress
-                sx={{
-                  marginBottom: 4,
-                }}
-              />
-              <DialogContentText id="alert-dialog-description">
-                Please wait
-              </DialogContentText>
-            </Box>
-          )}
-        </Box>
-      </DialogContent>
-      {keystoresPostResponse ? (
-        <DialogActions>
-          <Button onClick={handleClose} variant="contained">
-            Close
-          </Button>
-        </DialogActions>
-      ) : null}
-    </Dialog>
-  );
 
   return (
     <div>
-      <Box
-        sx={{
-          margin: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
-        }}
-      >
+      <Box sx={mainImportBoxStyle}>
         <Card
           sx={{
             padding: 4,
+            borderRadius: 3,
           }}
         >
           <Typography
@@ -230,27 +113,52 @@ export default function ImportScreen({
             <b>Import Validator Keystore(s)</b>
           </Typography>
           <Typography>Upload any keystore JSON file(s).</Typography>
-          <Typography variant="body2" sx={{ marginBottom: 4 }} color="GrayText">
-            <i>
-              Keystores files are usually named keystore-xxxxxxxx.json and were
-              created in the Ethereum launchpad deposit CLI. Do not upload the
-              deposit_data.json file.
-              <br />
-            </i>
-          </Typography>
+
+          <SecondaryInfoTypography
+            sx={{ marginBottom: 4 }}
+            text="Keystores files are usually named keystore-xxxxxxxx.json and were
+                created in the Ethereum launchpad deposit CLI. Do not upload the
+                deposit_data.json file."
+          />
           <FileDrop callback={keystoreFilesCallback} />
 
-          {files}
+          <SecondaryInfoTypography
+            sx={{ marginBottom: 2, marginTop: 4 }}
+            text="Remember you need to introduce the password you set during
+                creation of the keystore files."
+          />
 
-          <Box
-            sx={{
-              marginTop: 8,
-              marginBottom: 2,
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "left",
-            }}
-          >
+          {acceptedFiles.length > 0 && (
+            <>
+              <FormGroup sx={{ marginTop: "6px" }}>
+                <FormControlLabel
+                  control={<Switch onChange={handleUseSamePasswordSwitch} />}
+                  label="Use same password for every file"
+                />
+              </FormGroup>
+              {useSamePassword && (
+                <TextField
+                  id="outlined-password-input"
+                  label="Keystores Password"
+                  type="password"
+                  onChange={(event) =>
+                    setUniquePassword(event, passwords, setPasswords)
+                  }
+                  sx={{ marginTop: 2, width: "60%" }}
+                />
+              )}
+            </>
+          )}
+
+          {FileCardList(
+            acceptedFiles,
+            setAcceptedFiles,
+            passwords,
+            setPasswords,
+            useSamePassword
+          )}
+
+          <Box sx={slashingProtectionBoxStyle}>
             <Typography variant="h5" sx={{ marginRight: 2 }}>
               <b>Import slashing protection data? (recommended)</b>
             </Typography>
@@ -262,19 +170,22 @@ export default function ImportScreen({
                 Upload your slashing protection file to protect your
                 keystore(s).
               </Typography>
-              <Typography
-                variant="body2"
-                color="GrayText"
+
+              <SecondaryInfoTypography
                 sx={{ marginBottom: 4 }}
-              >
-                <i>only for previously-used keystores</i>
-              </Typography>
+                text="Only for previously-used keystores"
+              />
               <FileDrop callback={slashingFilesCallback} />
               {slashingFile ? (
                 <Card
                   key={slashingFile.name}
                   raised
-                  sx={{ padding: 2, marginTop: 4, width: "80%" }}
+                  sx={{
+                    padding: 2,
+                    marginTop: 4,
+                    width: "80%",
+                    borderRadius: 3,
+                  }}
                 >
                   <Typography variant="h6">
                     <b>✅ {slashingFile.name}</b>
@@ -286,16 +197,7 @@ export default function ImportScreen({
           ) : null}
         </Card>
 
-        <Box
-          sx={{
-            marginTop: 4,
-            display: "flex",
-            flexDirection: "row-reverse",
-            alignContent: "end",
-            alignItems: "end",
-            width: "100%",
-          }}
-        >
+        <Box sx={importButtonBoxStyle}>
           <Button
             variant="contained"
             size="large"
@@ -303,14 +205,23 @@ export default function ImportScreen({
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
               setKeystoresPostResponse(undefined);
-              handleClickOpen();
+              setImportStatus(ImportStatus.Importing);
+              handleClickOpenDialog();
               const results = await web3signerApi.importKeystores({
                 keystores: acceptedFiles.map((f) => f.file),
                 passwords,
                 slashingProtection: slashingFile,
               });
+
               setKeystoresPostResponse(results);
+
+              if (results?.data) {
+                setImportStatus(ImportStatus.Imported);
+              } else {
+                setImportStatus(ImportStatus.NotImported);
+              }
             }}
+            sx={{ borderRadius: 3 }}
           >
             Submit Keystores
           </Button>
@@ -319,14 +230,20 @@ export default function ImportScreen({
               variant="outlined"
               size="large"
               color="warning"
-              sx={{ marginRight: 4 }}
+              sx={{ marginRight: 4, borderRadius: 3 }}
             >
               Back to Accounts
             </Button>
           </Link>
         </Box>
       </Box>
-      {dialog}
+      <ImportDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        keystoresPostResponse={keystoresPostResponse}
+        importStatus={importStatus}
+        acceptedFiles={acceptedFiles}
+      />
     </div>
   );
 }

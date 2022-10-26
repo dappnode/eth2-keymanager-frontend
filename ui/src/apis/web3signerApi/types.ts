@@ -1,3 +1,5 @@
+import { Web3SignerStatus } from "../../types";
+
 export interface Web3signerGetResponse {
   data: {
     validating_pubkey: string;
@@ -32,4 +34,13 @@ export interface Web3signerDeleteResponse {
   }[];
   slashing_protection?: string;
   error?: { message: string };
+}
+
+export interface Web3signerHealthcheckResponse {
+  status: Web3SignerStatus;
+  checks: {
+    id: string;
+    status: string;
+  }[];
+  outcome: string;
 }

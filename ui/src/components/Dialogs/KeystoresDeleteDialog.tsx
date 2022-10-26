@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -6,28 +6,33 @@ import {
   Box,
   Typography,
   Button,
-  CircularProgress,
   DialogContentText,
   DialogActions,
+  Alert,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
-import { shortenPubkey, getEmoji } from "./DataStore";
-import { Web3SignerApi } from "./apis/web3signerApi";
+import { shortenPubkey, getEmoji } from "../../logic/Utils/dataUtils";
+import { Web3SignerApi } from "../../apis/web3signerApi";
 import {
   Web3signerDeleteResponse,
   Web3signerGetResponse,
-} from "./apis/web3signerApi/types";
+} from "../../apis/web3signerApi/types";
+import { importDialogBoxStyle } from "../../Styles/dialogStyles";
+import WaitBox from "../WaitBox/WaitBox";
+import DeletionWarning from "./DeletionWarning";
 
 export default function KeystoresDeleteDialog({
   web3signerApi,
   rows,
   selectedRows,
+  setSelectedRows,
   open,
   setOpen,
 }: {
   web3signerApi: Web3SignerApi;
   rows: Web3signerGetResponse["data"];
   selectedRows: GridSelectionModel;
+  setSelectedRows: (selectedRows: GridSelectionModel) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
@@ -45,6 +50,7 @@ export default function KeystoresDeleteDialog({
     });
     setRequestInFlight(false);
     setKeystoresDelete(keystoresDelete);
+    setSelectedRows([]);
   }
   const handleClose = () => {
     setOpen(false);
@@ -66,14 +72,7 @@ export default function KeystoresDeleteDialog({
         {keystoresDelete ? "Done" : "Delete Keystores?"}
       </DialogTitle>
       <DialogContent>
-        <Box
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "left",
-          }}
-        >
+        <Box sx={importDialogBoxStyle}>
           {keystoresDelete?.error ? (
             `Error: ${keystoresDelete.error.message}`
           ) : keystoresDelete?.data ? (
@@ -95,12 +94,23 @@ export default function KeystoresDeleteDialog({
               ))}
               {keystoresDelete.slashing_protection ? (
                 <div>
+                  <Alert
+                    severity="warning"
+                    sx={{ marginTop: 2, marginBottom: 2 }}
+                    variant="filled"
+                  >
+                    It is strongly recommended to stop the validator and watch
+                    at least 3 missed attestations in the explorer before
+                    uploading the keys to another machine.
+                  </Alert>
+
                   <Button
                     variant="contained"
                     href={`data:text/json;charset=utf-8,${encodeURIComponent(
                       keystoresDelete.slashing_protection
                     )}`}
                     download="slashing_protection.json"
+                    sx={{ borderRadius: 3 }}
                   >
                     Download Slashing Protection Data
                   </Button>
@@ -110,43 +120,13 @@ export default function KeystoresDeleteDialog({
           ) : (
             <div>
               {requestInFlight ? (
-                <Box
-                  sx={{
-                    margin: 8,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircularProgress
-                    sx={{
-                      marginBottom: 4,
-                    }}
-                  />
-                  <DialogContentText id="alert-dialog-description">
-                    Please wait
-                  </DialogContentText>
-                </Box>
+                <WaitBox />
               ) : (
-                <DialogContentText id="alert-dialog-description">
-                  Are you sure you want to delete these keystores?
-                  <ul>
-                    {selectedRows.map((row, i) => (
-                      <li key={i}>
-                        {shortenPubkey(
-                          rows[parseInt(row.toString())].validating_pubkey
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                  After deletion, these keystores won't be used for signing
-                  anymore and your slashing protection data will be downloaded.{" "}
-                  <br />
-                  <br />
-                  <b>
-                    Keep the slashing protection data for when you want to
-                    import these keystores to a new validator.
-                  </b>
+                <DialogContentText
+                  id="alert-dialog-description"
+                  component={"span"}
+                >
+                  <DeletionWarning rows={rows} selectedRows={selectedRows} />
                 </DialogContentText>
               )}
             </div>
@@ -158,12 +138,16 @@ export default function KeystoresDeleteDialog({
           <Button
             onClick={() => deleteSelectedKeystores()}
             variant="contained"
-            sx={{ marginRight: 1 }}
+            sx={{ marginRight: 1, borderRadius: 3 }}
           >
             Confirm
           </Button>
         ) : null}
-        <Button onClick={handleClose} variant="outlined">
+        <Button
+          onClick={handleClose}
+          variant="outlined"
+          sx={{ borderRadius: 3 }}
+        >
           Close
         </Button>
       </DialogActions>

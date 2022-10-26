@@ -1,46 +1,13 @@
 import {
   DataGrid,
   GridCallbackDetails,
-  GridColDef,
   GridSelectionModel,
+  GridToolbar,
 } from "@mui/x-data-grid";
-import "./App.css";
 import { useState } from "react";
-import { Web3signerGetResponse } from "./apis/web3signerApi/types";
-import LinkIcon from "@mui/icons-material/Link";
-
-const columns: GridColDef[] = [
-  {
-    field: "validating_pubkey",
-    headerName: "Validating Public Key",
-    description: "Validating Public Key (click to copy)",
-
-    flex: 1,
-    headerClassName: "tableHeader",
-  },
-  {
-    field: "beaconcha_url",
-    headerName: "Beaconcha URL",
-    description: "Beaconcha URL to track the status of this validator",
-    disableReorder: true,
-    disableColumnMenu: true,
-    disableExport: true,
-    sortable: false,
-    align: "center",
-    headerAlign: "right",
-    renderCell: (rowData) => (
-      <a
-        style={{ color: "grey" }}
-        href={rowData.row.beaconcha_url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <LinkIcon />
-      </a>
-    ),
-    headerClassName: "tableHeader",
-  },
-];
+import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
+import { beaconchaApiParamsMap } from "../../params";
+import KeystoreColumns from "./KeystoreColumns";
 
 export default function KeystoreList({
   rows,
@@ -63,17 +30,14 @@ export default function KeystoreList({
     setPageSize(pageSize);
   };
 
+  const beaconchaBaseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
+
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey
     validating_pubkey: row.validating_pubkey,
-    beaconcha_url:
-      network === "mainnet"
-        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
-        : network === "gnosis"
-        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
-        : network === "prater"
-        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
-        : "-",
+    beaconcha_url: beaconchaBaseUrl
+      ? beaconchaBaseUrl + "/validator/" + row.validating_pubkey
+      : "",
     id: index,
   }));
 
@@ -86,13 +50,15 @@ export default function KeystoreList({
             navigator.clipboard.writeText(params.value);
           }
         }}
-        columns={columns}
+        columns={KeystoreColumns()}
         pageSize={pageSize}
         rowsPerPageOptions={[10, 20, 50, 100]}
         onPageSizeChange={pageSizeChange}
         checkboxSelection
         disableSelectionOnClick={true}
         onSelectionModelChange={selection}
+        components={{ Toolbar: GridToolbar }}
+        sx={{ borderRadius: 3 }}
       />
     </div>
   );

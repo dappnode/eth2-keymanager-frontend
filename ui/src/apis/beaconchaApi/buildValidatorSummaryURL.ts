@@ -8,14 +8,21 @@ export default function buildValidatorSummaryURL({
   allValidatorsInfo: BeaconchaGetResponse[];
   network: string;
 }): string {
-  let summaryValidatorURL =
-    beaconchaApiParamsMap.get(network)!.baseUrl + "/dashboard?validators="; //TODO Be careful with the !
+  if (!beaconchaApiParamsMap.has(network)) {
+    throw new Error(`Invalid network: ${network}`);
+  }
 
-  allValidatorsInfo.forEach((validatorInfo) => {
-    summaryValidatorURL += validatorInfo.data.validatorindex + ",";
+  const baseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
+  if (!baseUrl) return "";
+
+  let summaryValidatorURL = baseUrl + "/dashboard?validators=";
+
+  allValidatorsInfo.forEach((validatorChunk) => {
+    const chunkIndexes = validatorChunk.data.map(
+      (validator) => validator.validatorindex
+    );
+    summaryValidatorURL += chunkIndexes.join(",");
   });
-
-  summaryValidatorURL = summaryValidatorURL.slice(0, -1);
 
   return summaryValidatorURL;
 }
