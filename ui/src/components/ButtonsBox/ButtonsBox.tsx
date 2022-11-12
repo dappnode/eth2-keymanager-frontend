@@ -43,7 +43,8 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
+      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted &&
+      !isTableEmpty ? (
         <Button
           variant="contained"
           size="large"
