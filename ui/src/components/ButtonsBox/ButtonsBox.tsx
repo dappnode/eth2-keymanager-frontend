@@ -43,16 +43,17 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
-      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted &&
-      !isTableEmpty ? (
-        <Button
-          variant="contained"
-          size="large"
-          sx={{ marginRight: 4, borderRadius: 3 }}
-          onClick={loadSummaryUrl}
-        >
-          Load summary dashboard
-        </Button>
+      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
+        !isTableEmpty && (
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginRight: 4, borderRadius: 3 }}
+            onClick={loadSummaryUrl}
+          >
+            Load summary dashboard
+          </Button>
+        )
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NoIndexes ? (
         <></>
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
