@@ -14,7 +14,7 @@ export const maxValidatorsPerRequest = 100; //For beaconcha.in --> TODO: is it t
 export interface AppParams {
   network: string;
   signerUrl: string;
-  signerAuthToken: string;
+  signerAuthToken?: string;
   consensusClient?: string;
   executionClient?: string;
 }

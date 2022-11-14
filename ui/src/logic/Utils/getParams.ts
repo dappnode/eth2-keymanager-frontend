@@ -9,12 +9,12 @@ export function getParams(): AppParams {
 
   return {
     network: currentNetwork,
-    signerUrl: search.get("signerUrl") || window.env.WEB3SIGNER_API_URL, //Mandatory
+    signerUrl: search.get("signerUrl") || window.env?.WEB3SIGNER_API_URL || "",
     signerAuthToken:
-      search.get("authToken") || window.env.WEB3SIGNER_AUTH_TOKEN,
+      search.get("authToken") || window.env?.WEB3SIGNER_AUTH_TOKEN || "",
     consensusClient:
-      search.get("consensusClient") || window.env.CONSENSUS_CLIENT,
+      search.get("consensusClient") || window.env?.CONSENSUS_CLIENT || "",
     executionClient:
-      search.get("executionClient") || window.env.EXECUTION_CLIENT,
+      search.get("executionClient") || window.env?.EXECUTION_CLIENT || "",
   };
 }
