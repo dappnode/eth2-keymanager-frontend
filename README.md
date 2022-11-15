@@ -38,57 +38,99 @@ The image corresponding to this UI has already been built and pushed to GitHub C
 
 In order to run a container for the UI, there are 5 env variables to be set (only 2 mandatory):
 
-- REACT_APP_NETWORK= prater | gnosis | mainnet
-- REACT_APP_WEB3SIGNER_API_URL
-- [ REACT_APP_WEB3SIGNER_AUTH_TOKEN ]
-- [ REACT_APP_CONSENSUS_CLIENT ]
-- [ REACT_APP_EXECUTION_CLIENT ]
+- NETWORK= prater | gnosis | mainnet
+- WEB3SIGNER_API_URL
+- [ WEB3SIGNER_AUTH_TOKEN ]
+- [ CONSENSUS_CLIENT ]
+- [ EXECUTION_CLIENT ]
 
 However, you can override this values with the URL params mentioned above.
 
-For example, if you are connected to a DAppNode and you want to run the KeyManager for prater, you can run the UI by having this 2 files:
+For example, if you are connected to a DAppNode and you want to run the KeyManager for prater, you can run the UI by having this 3 files:
+
+.env:
+
+```
+NETWORK=prater
+WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
+CONSENSUS_CLIENT=$_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_PRATER
+EXECUTION_CLIENT=$_DAPPNODE_GLOBAL_EXECUTION_CLIENT_PRATER
+```
 
 Dockerfile:
 
 ```
-FROM ghcr.io/dappnode/keymanager-ui:0.1.0 as build
+FROM ghcr.io/dappnode/keymanager-ui:0.1.1 as build
 
-ENV REACT_APP_NETWORK=prater
-ENV REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
+FROM nginx:1.21.6-alpine
 
-COPY entrypoint.sh /usr/bin/entrypoint.sh
-ENTRYPOINT /usr/bin/entrypoint.sh
+# Static build
+COPY --from=build /app/build /usr/share/nginx/html/
+
+# Default port exposure
 EXPOSE 80
+
+# Copy .env file and shell script to container
+WORKDIR /usr/share/nginx/html
+COPY ./env.sh .
+COPY .env .
+
+# Add bash
+RUN apk add --no-cache bash
+
+# Make our shell script executable
+RUN chmod +x env.sh
+
+# Start Nginx server
+CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
 ```
 
-entrypoint.sh:
+env.sh:
 
 ```
-#!/bin/sh
+#!/bin/bash
 
-export REACT_APP_CONSENSUS_CLIENT=$_DAPPNODE_GLOBAL_CONSENSUS_CLIENT_PRATER
-export REACT_APP_EXECUTION_CLIENT=$_DAPPNODE_GLOBAL_EXECUTION_CLIENT_PRATER
+# Recreate config file
+rm -rf ./env-config.js
+touch ./env-config.js
 
-npx react-inject-env set
+# Add assignment
+echo "window.env = {" >> ./env-config.js
 
-npm install http-server@14.1.1
+# Read each line in .env file
+# Each line represents key=value pairs
+while read -r line || [[ -n "$line" ]];
+do
+  # Split env variables by character `=`
+  if printf '%s\n' "$line" | grep -q -e '='; then
+    varname=$(printf '%s\n' "$line" | sed -e 's/=.*//')
+    varvalue=$(printf '%s\n' "$line" | sed -e 's/^[^=]*=//')
+  fi
 
-npx http-server /app/build/ -p 80
+  #If varvalue starts with $, then it is a reference to another env variable. Set varvalue to the value of that env variable
+  if [[ $varvalue == \$* ]]; then
+    varvalue="${varvalue:1}"
+    varvalue=${!varvalue}
+  fi
 
-exec ./docker-entrypoint.sh
+  # Read value of current variable if exists as Environment variable
+  value=$(printf '%s\n' "${!varname}")
+  # Otherwise use value from .env file
+  [[ -z $value ]] && value=${varvalue}
+
+  # Append configuration property to JS file
+  echo "  $varname: \"$value\"," >> ./env-config.js
+done < .env
+
+echo "}" >> ./env-config.js
 ```
 
-As not all those env variables are necessary, you can run the UI in a simpler way, with just 1 file and a lighter nginx server:
+As it is possible to add the params through the URL, you can create an image for it with just 1 file:
 
 Dockerfile:
 
 ```
-FROM ghcr.io/dappnode/keymanager-ui:0.1.0 as build
-
-ENV REACT_APP_NETWORK=prater
-ENV REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
-
-RUN npx react-inject-env set
+FROM ghcr.io/dappnode/keymanager-ui:0.1.1 as build
 
 FROM nginx:1.21.6-alpine
 COPY --from=build /app/build/ /usr/share/nginx/html/

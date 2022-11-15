@@ -84,6 +84,12 @@ export default function ValidatorList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  useEffect(() => {
+    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.NotStarted);
+    setValidatorSummaryURL("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keystoresGet]);
+
   async function loadSummaryUrl() {
     if (keystoresGet && beaconchaApiParamsMap.has(network)) {
       const beaconchaParams = beaconchaApiParamsMap.get(network);
@@ -122,7 +128,8 @@ export default function ValidatorList({
                 network={network}
               />
               <ButtonsBox
-                isTableEmpty={selectedRows.length === 0}
+                areRowsSelected={selectedRows.length !== 0}
+                isTableEmpty={keystoresGet.data.length === 0}
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
                 summaryUrlBuildingStatus={summaryUrlBuildingStatus}

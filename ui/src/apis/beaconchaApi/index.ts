@@ -26,6 +26,15 @@ export class BeaconchaApi extends StandardApi {
       validatorsInfo.push(chunkResponse);
     }
 
+    //validatorInfo.data is an array only if there are multiple validators
+    // (Beaconcha.in response works like this)
+    validatorsInfo.forEach((validatorChunk) => {
+      //Check if validatorChunk.data is an array
+      if (!Array.isArray(validatorChunk.data)) {
+        validatorChunk.data = [validatorChunk.data];
+      }
+    });
+
     return validatorsInfo;
   }
 

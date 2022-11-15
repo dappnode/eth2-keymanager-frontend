@@ -7,12 +7,14 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { BeaconchaUrlBuildingStatus } from "../../types";
 
 export default function ButtonsBox({
+  areRowsSelected,
   isTableEmpty,
   setOpen,
   validatorSummaryURL,
   summaryUrlBuildingStatus,
   loadSummaryUrl,
 }: {
+  areRowsSelected: boolean;
   isTableEmpty: boolean;
   setOpen(open: boolean): void;
   validatorSummaryURL: string;
@@ -35,7 +37,7 @@ export default function ButtonsBox({
         variant="contained"
         size="large"
         color="error"
-        disabled={isTableEmpty}
+        disabled={!areRowsSelected}
         sx={{ marginRight: 4, borderRadius: 3 }}
         endIcon={<DeleteForeverIcon />}
         onClick={() => setOpen(true)}
@@ -44,14 +46,16 @@ export default function ButtonsBox({
       </Button>
 
       {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
-        <Button
-          variant="contained"
-          size="large"
-          sx={{ marginRight: 4, borderRadius: 3 }}
-          onClick={loadSummaryUrl}
-        >
-          Load summary dashboard
-        </Button>
+        !isTableEmpty && (
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginRight: 4, borderRadius: 3 }}
+            onClick={loadSummaryUrl}
+          >
+            Load summary dashboard
+          </Button>
+        )
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NoIndexes ? (
         <></>
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
