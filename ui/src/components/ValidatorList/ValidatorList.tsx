@@ -122,7 +122,8 @@ export default function ValidatorList({
                 network={network}
               />
               <ButtonsBox
-                isTableEmpty={selectedRows.length === 0}
+                areRowsSelected={selectedRows.length !== 0}
+                isTableEmpty={keystoresGet.data.length === 0}
                 setOpen={setOpen}
                 validatorSummaryURL={validatorSummaryURL}
                 summaryUrlBuildingStatus={summaryUrlBuildingStatus}
