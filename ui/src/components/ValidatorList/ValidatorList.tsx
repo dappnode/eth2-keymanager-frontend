@@ -164,23 +164,25 @@ export default function ValidatorList({
                 </Alert>
               )}
 
-              {open && (
+              {openDelete && (
                 <KeystoresDeleteDialog
                   web3signerApi={web3signerApi}
                   rows={keystoresGet.data}
                   selectedRows={selectedRows}
                   setSelectedRows={setSelectedRows}
-                  open={open}
-                  setOpen={setOpen}
+                  open={openDelete}
+                  setOpen={setOpenDelete}
                 />
-              <EditFeesDialog
-                network={network}
-                rows={keystoresGet.data}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                open={openEditFees}
-                setOpen={setOpenEditFees}
-              />
+              )}
+              {openEditFees && (
+                <EditFeesDialog
+                  network={network}
+                  rows={keystoresGet.data}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                  open={openEditFees}
+                  setOpen={setOpenEditFees}
+                />
               )}
             </>
           ) : (

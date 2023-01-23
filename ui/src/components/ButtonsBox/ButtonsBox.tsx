@@ -49,6 +49,18 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
+      <Button
+        variant="contained"
+        size="large"
+        color="success"
+        disabled={!areRowsSelected}
+        sx={{ marginRight: 4, borderRadius: 3 }}
+        endIcon={<EditIcon />}
+        onClick={() => setOpenEditFees(true)}
+      >
+        Edit Fee Recipients
+      </Button>
+
       {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
         !isTableEmpty && (
           <Button
@@ -63,18 +75,6 @@ export default function ButtonsBox({
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NoIndexes ? (
         <></>
       ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
-      <Button
-        variant="contained"
-        size="large"
-        color="success"
-        disabled={isTableEmpty}
-        sx={{ marginRight: 4, borderRadius: 3 }}
-        endIcon={<EditIcon />}
-        onClick={() => setOpenEditFees(true)}
-      >
-        Edit Fee Recipients
-      </Button>
-
         <Button
           variant="contained"
           size="large"

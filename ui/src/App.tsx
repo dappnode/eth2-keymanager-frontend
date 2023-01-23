@@ -37,14 +37,12 @@ function App() {
   } = getParams();
 
   useEffect(() => {
-    const { network, authToken, host, baseUrl } = getUrlParams();
-    setNetwork(network);
-    if (baseUrl)
+    setCurrentNetwork(network);
+    if (signerUrl) {
       setWeb3signerApi(
         new Web3SignerApi({
-          baseUrl: baseUrl,
-          authToken: authToken,
-          host: host,
+          baseUrl: signerUrl,
+          authToken: signerAuthToken,
         } as ApiParams)
       );
     } else {
