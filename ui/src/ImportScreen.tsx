@@ -23,9 +23,9 @@ import { useState } from "react";
 import BackupIcon from "@mui/icons-material/Backup";
 
 //Logic
-import { uniquePasswordEntered } from "./logic/ImportScreen/PasswordManager";
+import { setUniquePassword } from "./logic/ImportScreen/PasswordManager";
 import { extractPubkey } from "./logic/Utils/dataUtils";
-import { KeystoreInfo } from "./types";
+import { ImportStatus, KeystoreInfo } from "./types";
 import { Web3SignerApi } from "./apis/web3signerApi";
 import { Web3signerPostResponse } from "./apis/web3signerApi/types";
 import FileCardList from "./components/FileCards/FileCardList";
@@ -46,6 +46,7 @@ export default function ImportScreen({
   const [openDialog, setOpenDialog] = useState(false);
   const [acceptedFiles, setAcceptedFiles] = useState<KeystoreInfo[]>([]);
   const [passwords, setPasswords] = useState<string[]>([]);
+  const [importStatus, setImportStatus] = useState(ImportStatus.NotImported);
 
   const keystoreFilesCallback = async (files: File[], event: DropEvent) => {
     const keystoresToAdd: KeystoreInfo[] = [];
@@ -121,41 +122,40 @@ export default function ImportScreen({
           />
           <FileDrop callback={keystoreFilesCallback} />
 
-          {FileCardList(
-            acceptedFiles,
-            setAcceptedFiles,
-            passwords,
-            setPasswords,
-            useSamePassword
-          )}
+          <SecondaryInfoTypography
+            sx={{ marginBottom: 2, marginTop: 4 }}
+            text="Remember you need to introduce the password you set during
+                creation of the keystore files."
+          />
 
           {acceptedFiles.length > 0 && (
             <>
-              <SecondaryInfoTypography
-                sx={{ marginBottom: 2, marginTop: 4 }}
-                text="Remember you need to introduce the password you set during
-                creation of the keystore files."
-              />
-
               <FormGroup sx={{ marginTop: "6px" }}>
                 <FormControlLabel
                   control={<Switch onChange={handleUseSamePasswordSwitch} />}
                   label="Use same password for every file"
                 />
               </FormGroup>
-
               {useSamePassword && (
                 <TextField
                   id="outlined-password-input"
                   label="Keystores Password"
                   type="password"
                   onChange={(event) =>
-                    uniquePasswordEntered(event, passwords, setPasswords)
+                    setUniquePassword(event, passwords, setPasswords)
                   }
                   sx={{ marginTop: 2, width: "60%" }}
                 />
               )}
             </>
+          )}
+
+          {FileCardList(
+            acceptedFiles,
+            setAcceptedFiles,
+            passwords,
+            setPasswords,
+            useSamePassword
           )}
 
           <Box sx={slashingProtectionBoxStyle}>
@@ -205,13 +205,21 @@ export default function ImportScreen({
             disabled={acceptedFiles.length === 0}
             onClick={async () => {
               setKeystoresPostResponse(undefined);
+              setImportStatus(ImportStatus.Importing);
               handleClickOpenDialog();
               const results = await web3signerApi.importKeystores({
                 keystores: acceptedFiles.map((f) => f.file),
                 passwords,
                 slashingProtection: slashingFile,
               });
+
               setKeystoresPostResponse(results);
+
+              if (results?.data) {
+                setImportStatus(ImportStatus.Imported);
+              } else {
+                setImportStatus(ImportStatus.NotImported);
+              }
             }}
             sx={{ borderRadius: 3 }}
           >
@@ -233,6 +241,7 @@ export default function ImportScreen({
         open={openDialog}
         setOpen={setOpenDialog}
         keystoresPostResponse={keystoresPostResponse}
+        importStatus={importStatus}
         acceptedFiles={acceptedFiles}
       />
     </div>

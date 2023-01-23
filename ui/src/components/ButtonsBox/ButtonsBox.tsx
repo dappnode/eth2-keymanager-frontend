@@ -5,18 +5,25 @@ import { buttonsBoxStyle } from "../../Styles/buttonsBoxStyles";
 //Icons
 import BackupIcon from "@mui/icons-material/Backup";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { BeaconchaUrlBuildingStatus } from "../../types";
 import EditIcon from "@mui/icons-material/Edit";
 
 export default function ButtonsBox({
+  areRowsSelected,
   isTableEmpty,
   setDeleteOpen,
   setOpenEditFees,
   validatorSummaryURL,
+  summaryUrlBuildingStatus,
+  loadSummaryUrl,
 }: {
+  areRowsSelected: boolean;
   isTableEmpty: boolean;
   setDeleteOpen(open: boolean): void;
   setOpenEditFees(open: boolean): void;
   validatorSummaryURL: string;
+  summaryUrlBuildingStatus: BeaconchaUrlBuildingStatus;
+  loadSummaryUrl(): void;
 }): JSX.Element {
   return (
     <Box sx={buttonsBoxStyle}>
@@ -34,7 +41,7 @@ export default function ButtonsBox({
         variant="contained"
         size="large"
         color="error"
-        disabled={isTableEmpty}
+        disabled={!areRowsSelected}
         sx={{ marginRight: 4, borderRadius: 3 }}
         endIcon={<DeleteForeverIcon />}
         onClick={() => setDeleteOpen(true)}
@@ -42,6 +49,20 @@ export default function ButtonsBox({
         Delete Keystores
       </Button>
 
+      {summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NotStarted ? (
+        !isTableEmpty && (
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ marginRight: 4, borderRadius: 3 }}
+            onClick={loadSummaryUrl}
+          >
+            Load summary dashboard
+          </Button>
+        )
+      ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.NoIndexes ? (
+        <></>
+      ) : summaryUrlBuildingStatus === BeaconchaUrlBuildingStatus.Success ? (
       <Button
         variant="contained"
         size="large"
@@ -54,7 +75,6 @@ export default function ButtonsBox({
         Edit Fee Recipients
       </Button>
 
-      {validatorSummaryURL ? (
         <Button
           variant="contained"
           size="large"

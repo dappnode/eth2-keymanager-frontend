@@ -1,27 +1,39 @@
 import { BeaconchaGetResponse } from "./types";
 import { Web3signerGetResponse } from "../web3signerApi/types";
 import { StandardApi } from "../standardApi";
+import { maxValidatorsPerRequest } from "../../params";
 
 export class BeaconchaApi extends StandardApi {
   /*
    * Fetch info for every validator PK
    */
   public async fetchAllValidatorsInfo({
-    beaconchaApi,
     keystoresGet,
   }: {
-    beaconchaApi: BeaconchaApi;
     keystoresGet: Web3signerGetResponse;
   }): Promise<BeaconchaGetResponse[]> {
     const validatorsInfo = new Array<BeaconchaGetResponse>();
+
     let allValidatorPKs = keystoresGet.data.map(
       (keystoreData) => keystoreData.validating_pubkey
     );
 
-    for await (const validatorPK of allValidatorPKs) {
-      const validatorInfo = await beaconchaApi.fetchValidatorInfo(validatorPK);
-      validatorsInfo.push(validatorInfo);
+    const chunkSize = maxValidatorsPerRequest;
+
+    for (let i = 0; i < allValidatorPKs.length; i += chunkSize) {
+      const chunk = allValidatorPKs.slice(i, i + chunkSize);
+      const chunkResponse = await this.fetchValidatorsInfo(chunk);
+      validatorsInfo.push(chunkResponse);
     }
+
+    //validatorInfo.data is an array only if there are multiple validators
+    // (Beaconcha.in response works like this)
+    validatorsInfo.forEach((validatorChunk) => {
+      //Check if validatorChunk.data is an array
+      if (!Array.isArray(validatorChunk.data)) {
+        validatorChunk.data = [validatorChunk.data];
+      }
+    });
 
     return validatorsInfo;
   }
@@ -30,9 +42,13 @@ export class BeaconchaApi extends StandardApi {
    * Get validator indexes for a list of public keys
    * https://beaconcha.in/api/v1/docs/index.html#/Validator/get_api_v1_validator__indexOrPubkey_
    */
-  public async fetchValidatorInfo(
-    pubkey: string
+  public async fetchValidatorsInfo(
+    pubkeys: string[]
   ): Promise<BeaconchaGetResponse> {
+    const fullUrl = `${this.baseUrl}${
+      this.keymanagerEndpoint
+    }validator/${pubkeys.join(",")}`;
+
     try {
       return (await this.request(
         "GET",
@@ -41,7 +57,7 @@ export class BeaconchaApi extends StandardApi {
     } catch (e) {
       return {
         status: "error",
-        data: {},
+        data: [],
         error: {
           message: e.message,
         },

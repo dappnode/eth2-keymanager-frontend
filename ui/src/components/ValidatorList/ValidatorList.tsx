@@ -1,12 +1,11 @@
 //Internal components
-import Message from "../Messages/Message";
 import KeystoreList from "../KeystoreList/KeystoreList";
 import KeystoresDeleteDialog from "../Dialogs/KeystoresDeleteDialog";
 import EditFeesDialog from "../Dialogs/EditFeesDialog";
 import ButtonsBox from "../ButtonsBox/ButtonsBox";
 
 //External components
-import { Box, Card, CircularProgress } from "@mui/material";
+import { Alert, Box, Card, CircularProgress } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 
 //Logic
@@ -15,11 +14,13 @@ import { Web3signerGetResponse } from "../../apis/web3signerApi/types";
 import { useEffect, useState } from "react";
 import { BeaconchaApi } from "../../apis/beaconchaApi";
 import buildValidatorSummaryURL from "../../apis/beaconchaApi/buildValidatorSummaryURL";
-import { availableNetworks, beaconchaApiParamsMap } from "../../params";
+import { beaconchaApiParamsMap } from "../../params";
+import { BeaconchaUrlBuildingStatus } from "../../types";
 
 //Styles
 import { boxStyle } from "../../Styles/listStyles";
 import { HeaderTypography } from "../../Styles/Typographies";
+import { hasIndexes } from "../../logic/Utils/beaconchaUtils";
 
 export default function ValidatorList({
   web3signerApi,
@@ -33,7 +34,9 @@ export default function ValidatorList({
   const [openEditFees, setOpenEditFees] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validatorSummaryURL, setValidatorSummaryURL] = useState<string>("");
-
+  const [summaryUrlBuildingStatus, setSummaryUrlBuildingStatus] = useState(
+    BeaconchaUrlBuildingStatus.NotStarted
+  );
   const [keystoresGet, setKeystoresGet] = useState<Web3signerGetResponse>();
 
   async function getKeystores() {
@@ -44,26 +47,35 @@ export default function ValidatorList({
   }
 
   async function getValidatorSummaryURL(beaconchaApi: BeaconchaApi) {
+    if (!keystoresGet) {
+      setValidatorSummaryURL("");
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Error);
+      return;
+    }
+
+    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.InProgress);
+
     const allValidatorsInfo = await beaconchaApi.fetchAllValidatorsInfo({
-      beaconchaApi: beaconchaApi,
-      keystoresGet: keystoresGet!,
+      keystoresGet: keystoresGet,
     });
 
-    const hasError = allValidatorsInfo.some((item) => item.status === "error");
+    try {
+      const validatorSummaryURL = buildValidatorSummaryURL({
+        allValidatorsInfo,
+        network,
+      });
 
-    if (hasError) {
-      setValidatorSummaryURL("");
-    } else {
-      try {
-        const validatorSummaryURL = buildValidatorSummaryURL({
-          allValidatorsInfo,
-          network,
-        });
-        setValidatorSummaryURL(validatorSummaryURL);
-      } catch (e) {
+      if (hasIndexes(validatorSummaryURL)) {
         setValidatorSummaryURL("");
-        console.log(e);
+        setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.NoIndexes);
+      } else {
+        setValidatorSummaryURL(validatorSummaryURL);
+        setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Success);
       }
+    } catch (e) {
+      setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.Error);
+      setValidatorSummaryURL("");
+      console.log(e);
     }
   }
 
@@ -75,19 +87,21 @@ export default function ValidatorList({
   }, [openDelete]);
 
   useEffect(() => {
-    if (
-      keystoresGet &&
-      network != null &&
-      availableNetworks.includes(network)
-    ) {
-      const beaconchaApi = new BeaconchaApi(
-        beaconchaApiParamsMap.get(network)! //TODO Be careful with this !
-      );
-
-      getValidatorSummaryURL(beaconchaApi);
-    }
+    setSummaryUrlBuildingStatus(BeaconchaUrlBuildingStatus.NotStarted);
+    setValidatorSummaryURL("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keystoresGet]);
+
+  async function loadSummaryUrl() {
+    if (keystoresGet && beaconchaApiParamsMap.has(network)) {
+      const beaconchaParams = beaconchaApiParamsMap.get(network);
+
+      if (beaconchaParams) {
+        const beaconchaApi = new BeaconchaApi(beaconchaParams);
+        getValidatorSummaryURL(beaconchaApi);
+      }
+    }
+  }
 
   return (
     <div>
@@ -104,11 +118,9 @@ export default function ValidatorList({
               }}
             />
           ) : keystoresGet?.error ? (
-            <Message
-              message={keystoresGet.error.message}
-              severity="error"
-              sx={{ marginTop: "2em" }}
-            />
+            <Alert severity="error" sx={{ marginTop: 2 }} variant="filled">
+              {keystoresGet.error?.message}
+            </Alert>
           ) : keystoresGet?.data ? (
             <>
               <KeystoreList
@@ -117,19 +129,50 @@ export default function ValidatorList({
                 network={network}
               />
               <ButtonsBox
-                isTableEmpty={selectedRows.length === 0}
+                areRowsSelected={selectedRows.length !== 0}
+                isTableEmpty={keystoresGet.data.length === 0}
                 setDeleteOpen={setOpenDelete}
                 setOpenEditFees={setOpenEditFees}
                 validatorSummaryURL={validatorSummaryURL}
+                summaryUrlBuildingStatus={summaryUrlBuildingStatus}
+                loadSummaryUrl={loadSummaryUrl}
               />
-              <KeystoresDeleteDialog
-                web3signerApi={web3signerApi}
-                rows={keystoresGet.data}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                open={openDelete}
-                setOpen={setOpenDelete}
-              />
+              {summaryUrlBuildingStatus ===
+                BeaconchaUrlBuildingStatus.Error && (
+                <Alert
+                  severity="warning"
+                  sx={{ marginTop: 2 }}
+                  variant="filled"
+                >
+                  There was an error loading the dashboard. The number of API
+                  calls allowed by the explorer might have been exceeded or the
+                  network might be invalid. Please wait for a minute and refresh
+                  the page.
+                </Alert>
+              )}
+
+              {summaryUrlBuildingStatus ===
+                BeaconchaUrlBuildingStatus.NoIndexes && (
+                <Alert
+                  severity="warning"
+                  sx={{ marginTop: 2 }}
+                  variant="filled"
+                >
+                  There was an error loading the dashboard. The explorer may not
+                  be able to show a dashboard for all your validators or some of
+                  them might not have been indexed yet. Have you done a deposit?
+                </Alert>
+              )}
+
+              {open && (
+                <KeystoresDeleteDialog
+                  web3signerApi={web3signerApi}
+                  rows={keystoresGet.data}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                  open={open}
+                  setOpen={setOpen}
+                />
               <EditFeesDialog
                 network={network}
                 rows={keystoresGet.data}
@@ -138,13 +181,12 @@ export default function ValidatorList({
                 open={openEditFees}
                 setOpen={setOpenEditFees}
               />
+              )}
             </>
           ) : (
-            <Message
-              severity="warning"
-              message="No keystores found"
-              sx={{ marginTop: "2em" }}
-            />
+            <Alert severity="warning" sx={{ marginTop: 2 }} variant="filled">
+              There are no keystores to display.
+            </Alert>
           )}
         </Card>
       </Box>

@@ -1,11 +1,15 @@
-FROM node:14-alpine3.14 as build
+FROM node:16-alpine as build
+
 WORKDIR /app
-COPY package.json ./
-COPY yarn.lock ./
+
+COPY package.json yarn.lock ./
+
 RUN yarn install
 COPY . .
+#ENV REACT_APP_NETWORK=prater REACT_APP_WEB3SIGNER_API_URL=http://web3signer.web3signer-prater.dappnode:9000/
 RUN yarn build
+#RUN npx react-inject-env set
 
-FROM nginx:1.21.6-alpine
-COPY --from=build /app/build/ /usr/share/nginx/html/
-EXPOSE 80
+#FROM nginx:1.21.6-alpine
+#COPY --from=build /app/build/ /usr/share/nginx/html/
+#EXPOSE 80

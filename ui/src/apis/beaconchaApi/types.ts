@@ -14,8 +14,6 @@ export interface BeaconchaGetResponse {
     validatorindex?: number;
     withdrawableepoch?: number;
     withdrawalcredentials?: string;
-  };
+  }[];
   error?: { message: string };
 }
-
-//TODO: is it OK to have all optional fields?

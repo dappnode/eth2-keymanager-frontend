@@ -20,11 +20,13 @@ export default function ImportDialog({
   open,
   setOpen,
   keystoresPostResponse,
+  importStatus,
   acceptedFiles,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   keystoresPostResponse: Web3signerPostResponse | undefined;
+  importStatus: string;
   acceptedFiles: KeystoreInfo[];
 }): JSX.Element {
   const handleClose = () => {
@@ -45,8 +47,8 @@ export default function ImportDialog({
       aria-describedby="alert-dialog-description"
       TransitionComponent={SlideTransition}
     >
-      <DialogTitle id="alert-dialog-title">
-        {keystoresPostResponse?.data ? "Import Completed" : "Importing..."}
+      <DialogTitle id="alert-dialog-title" sx={{ fontWeight: "bolder" }}>
+        {importStatus}
       </DialogTitle>
       <DialogContent>
         <Box sx={importDialogBoxStyle}>

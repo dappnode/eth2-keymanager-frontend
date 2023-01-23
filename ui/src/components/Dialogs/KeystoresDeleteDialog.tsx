@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +8,7 @@ import {
   Button,
   DialogContentText,
   DialogActions,
+  Alert,
 } from "@mui/material";
 import { GridSelectionModel } from "@mui/x-data-grid";
 import { shortenPubkey, getEmoji } from "../../logic/Utils/dataUtils";
@@ -95,6 +96,16 @@ export default function KeystoresDeleteDialog({
               ))}
               {keystoresDelete.slashing_protection ? (
                 <div>
+                  <Alert
+                    severity="warning"
+                    sx={{ marginTop: 2, marginBottom: 2 }}
+                    variant="filled"
+                  >
+                    It is strongly recommended to stop the validator and watch
+                    at least 3 missed attestations in the explorer before
+                    uploading the keys to another machine.
+                  </Alert>
+
                   <Button
                     variant="contained"
                     href={`data:text/json;charset=utf-8,${encodeURIComponent(
@@ -113,7 +124,10 @@ export default function KeystoresDeleteDialog({
               {requestInFlight ? (
                 <WaitBox />
               ) : (
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText
+                  id="alert-dialog-description"
+                  component={"span"}
+                >
                   <DeletionWarning rows={rows} selectedRows={selectedRows} />
                 </DialogContentText>
               )}

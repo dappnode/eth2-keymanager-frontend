@@ -61,7 +61,6 @@ export default function FileCardList(
           <CloseIcon color="action" />
         </button>
       </Box>
-
       {!useSamePassword && (
         <TextField
           id={`outlined-password-input-${index}`}

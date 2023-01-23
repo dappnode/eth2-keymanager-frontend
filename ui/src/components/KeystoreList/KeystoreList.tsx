@@ -2,8 +2,8 @@
 import {
   DataGrid,
   GridCallbackDetails,
-  GridSelectionModel,
   GridToolbar,
+  GridSelectionModel,
 } from "@mui/x-data-grid";
 
 //Internal components
@@ -17,6 +17,7 @@ import { useState } from "react";
 import "./KeystoreList.css";
 import FeeRecipientDialog from "../Dialogs/FeeRecipientDialog";
 
+import { beaconchaApiParamsMap } from "../../params";
 export default function KeystoreList({
   rows,
   setSelectedRows,
@@ -42,17 +43,14 @@ export default function KeystoreList({
     setPageSize(pageSize);
   };
 
+  const beaconchaBaseUrl = beaconchaApiParamsMap.get(network)?.baseUrl;
+
   const customRows = rows.map((row, index) => ({
     // only show first 12 chars from pubkey
     validating_pubkey: row.validating_pubkey,
-    beaconcha_url:
-      network === "mainnet"
-        ? `https://beaconcha.in/validator/${row.validating_pubkey}`
-        : network === "gnosis"
-        ? `https://beacon.gnosischain.in/validator/${row.validating_pubkey}`
-        : network === "prater"
-        ? `https://prater.beaconcha.in/validator/${row.validating_pubkey}`
-        : "-",
+    beaconcha_url: beaconchaBaseUrl
+      ? beaconchaBaseUrl + "/validator/" + row.validating_pubkey
+      : "",
     id: index,
   }));
 

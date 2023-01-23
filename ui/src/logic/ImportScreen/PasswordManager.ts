@@ -10,7 +10,7 @@ export const passwordEntered = (
   setPasswords(newList);
 };
 
-export const uniquePasswordEntered = (
+export const setUniquePassword = (
   event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   passwords: string[],
   setPasswords: (passwords: string[]) => void
